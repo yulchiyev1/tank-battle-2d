@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
     jinEngine.GetEngineContext().renderManager->RegisterFont("[Font]defaultkr", "Fonts/NanumPenScript-Regular.ttf", 50);
 
 
-    jinEngine.GetEngineContext().windowManager->SetCursorVisible(false);
+    jinEngine.GetEngineContext().windowManager->SetCursorVisible(true);
     jinEngine.GetEngineContext().windowManager->SetBackgroundColor({ 0.2,0.2,0.4,1 });
 
 

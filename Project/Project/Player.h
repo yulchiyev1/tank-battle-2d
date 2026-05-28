@@ -1,0 +1,17 @@
+#pragma once
+#include "Engine.h"
+
+class Player : public GameObject
+{
+public:
+	void Init(const EngineContext& engineContext) override;
+	void LateInit(const EngineContext& engineContext) override;
+	void Update(float dt, const EngineContext& engineContext) override;
+	void Draw(const EngineContext& engineContext) override;
+	void Free(const EngineContext& engineContext) override;
+	void LateFree(const EngineContext& engineContext) override;
+
+	int upKey, downKey, leftKey, rightKey;
+	void SetControls(int up, int down, int left, int right);
+private:
+};

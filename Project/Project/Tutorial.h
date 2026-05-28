@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include"GameState.h"
+#include"Player.h"
 namespace TutorialState
 {
     void AsyncLoad(const EngineContext& engineContext, LoadingState* loading);
@@ -26,7 +27,9 @@ public:
     void Unload(const EngineContext& engineContext) override;
 
 private:
-  
+    Player* player1;
+    Player* player2;
+    GameObject* background;
 };
 
 
