@@ -1,0 +1,886 @@
+\doxysection{Object\+Manager Class Reference}
+\hypertarget{class_object_manager}{}\label{class_object_manager}\index{ObjectManager@{ObjectManager}}
+
+
+Owns, initializes, updates, renders, and removes runtime objects for the active game state.  
+
+
+
+
+{\ttfamily \#include $<$Object\+Manager.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_object}{Object}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_object_manager_ae1f29824763903213d6044d463742db4}{Add\+Object}} (std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_object}{Object}} $>$ obj, const std\+::string \&tag="{}"{})
+\begin{DoxyCompactList}\small\item\em Queues a new object for later initialization and activation. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_object_manager_ad7d870215c2f3033b6f2641e4c9dc8da}{Init\+All}} (const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&engine\+Context)
+\begin{DoxyCompactList}\small\item\em Activates all currently pending objects. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_object_manager_a00c892376f4874c2f033a69526e18111}{Update\+All}} (float dt, const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&engine\+Context)
+\begin{DoxyCompactList}\small\item\em Updates all active objects, removes dead ones, and activates newly queued ones. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_object_manager_ad883ccf6dee940514c8c5fea7137ca9b}{Draw\+All}} (const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&engine\+Context)
+\begin{DoxyCompactList}\small\item\em Submits all currently tracked active object pointers to \doxylink{class_render_manager}{Render\+Manager}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_object_manager_acea98a91604863db6b232b6e67582740}{Draw\+Objects}} (const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&engine\+Context, const std\+::vector$<$ \mbox{\hyperlink{class_object}{Object}} \texorpdfstring{$\ast$}{*} $>$ \&\mbox{\hyperlink{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b}{objects}})
+\begin{DoxyCompactList}\small\item\em Submits a caller-\/provided subset of objects to \doxylink{class_render_manager}{Render\+Manager}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_object_manager_abfc58bcbcd4e0b4f988939b9b16296e5}{Draw\+Objects\+With\+Tag}} (const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&engine\+Context, const std\+::string \&tag)
+\begin{DoxyCompactList}\small\item\em Finds all alive objects with a matching tag and submits them for rendering. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_object_manager_a2dcf63228b4ed4b45ae19304946f923f}{Free\+All}} (const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&engine\+Context)
+\begin{DoxyCompactList}\small\item\em Frees and clears every active and pending object owned by the manager. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_object}{Object}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_object_manager_afe47ccc9dd305eae5dda76a15c928e86}{Find\+By\+Tag}} (const std\+::string \&tag) const
+\begin{DoxyCompactList}\small\item\em Finds one alive object associated with the given tag. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_object_manager_a2ce4fd96dd58ad653e81f843c7f76604}{Find\+By\+Tag}} (const std\+::string \&tag, std\+::vector$<$ \mbox{\hyperlink{class_object}{Object}} \texorpdfstring{$\ast$}{*} $>$ \&result)
+\begin{DoxyCompactList}\small\item\em Appends all alive objects with the given tag into the provided output vector. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_object_manager_a1e9cd42ad2252270965253ddf57763de}{Check\+Collision}} ()
+\begin{DoxyCompactList}\small\item\em Runs the engine\textquotesingle{}s collision detection flow for all active collidable objects. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_collision_group_registry}{Collision\+Group\+Registry}} \& \mbox{\hyperlink{class_object_manager_a3fc2a5eb9c5993c4ae3ee803e631699f}{Get\+Collision\+Group\+Registry}} ()
+\begin{DoxyCompactList}\small\item\em Returns the collision group registry used by objects to build category and mask bits. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{class_object}{Object}} \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{class_object_manager_aa134339dbf5ed4f2542e2fd28fa490f1}{Get\+All\+Raw\+Ptr\+Objects}} ()
+\begin{DoxyCompactList}\small\item\em Returns the manager\textquotesingle{}s cached list of raw object pointers. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_object_manager_af5c6a21a87c2fa4204462cacbe07c439}{Add\+All\+Pending\+Objects}} (const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&engine\+Context)
+\begin{DoxyCompactList}\small\item\em Initializes and activates all currently pending objects. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_object_manager_a6150e34acf9947f2d2e36040d472df5f}{Erase\+Dead\+Objects}} (const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&engine\+Context)
+\begin{DoxyCompactList}\small\item\em Cleans up and removes all dead objects from the active containers. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_object_manager_a79459c25593a2ad3ccc8cfdb88cf10a9}{Draw\+Collider\+Debug}} (\mbox{\hyperlink{class_render_manager}{Render\+Manager}} \texorpdfstring{$\ast$}{*}rm, \mbox{\hyperlink{class_camera2_d}{Camera2D}} \texorpdfstring{$\ast$}{*}cam)
+\begin{DoxyCompactList}\small\item\em Draws collider debug geometry for every alive and visible object that has a collider. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+friend \mbox{\hyperlink{class_object_manager_a2a6ebf48c01098423ba7857c5df6aecb}{Game\+State}}
+\item 
+std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_object}{Object}} $>$ $>$ \mbox{\hyperlink{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b}{objects}}
+\item 
+std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_object}{Object}} $>$ $>$ \mbox{\hyperlink{class_object_manager_ab889c6da290efdd66daadc2e2296e25c}{pending\+Objects}}
+\item 
+std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{class_object}{Object}} \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{class_object_manager_a169b4f236ff9f2d87091c7f33ec2e42c}{object\+Map}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{class_object}{Object}} \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874}{raw\+Ptr\+Objects}}
+\item 
+\mbox{\hyperlink{class_spatial_hash_grid}{Spatial\+Hash\+Grid}} \mbox{\hyperlink{class_object_manager_a783ce1f6edb5db32d5c7c9826179b8c5}{broad\+Phase\+Grid}}
+\item 
+\mbox{\hyperlink{class_collision_group_registry}{Collision\+Group\+Registry}} \mbox{\hyperlink{class_object_manager_a697bf14420d66f3c4d88b68cf58bc6e3}{collision\+Group\+Registry}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Owns, initializes, updates, renders, and removes runtime objects for the active game state. 
+
+\doxylink{class_object_manager}{Object\+Manager} is the central container responsible for the lifetime flow of all state-\/owned \doxylink{class_object}{Object} instances. It manages several parallel views of the same object set\+:
+
+
+\begin{DoxyItemize}
+\item objects\+: The main owning container for active objects.
+\item pending\+Objects\+: Newly added objects that have not yet completed the manager\textquotesingle{}s initialization flow.
+\item object\+Map\+: A tag-\/to-\/object lookup table used for quick single-\/object queries.
+\item raw\+Ptr\+Objects\+: A non-\/owning cache of raw pointers used by rendering, collision checks, and broad iteration.
+\item broad\+Phase\+Grid\+: A spatial hash structure used to reduce the cost of collision pair generation.
+\item collision\+Group\+Registry\+: A tag-\/to-\/bit registry used to build collision category and mask values.
+\end{DoxyItemize}
+
+In the current implementation, \doxylink{class_object_manager_ae1f29824763903213d6044d463742db4}{Add\+Object()} does not immediately place the object into the active owning list. Instead, it pushes the object into pending\+Objects and returns its raw pointer. The actual Init()/\+Late\+Init() flow and insertion into objects, object\+Map, and raw\+Ptr\+Objects happen later through \doxylink{class_object_manager_af5c6a21a87c2fa4204462cacbe07c439}{Add\+All\+Pending\+Objects()}.
+
+\doxylink{class_object_manager_a00c892376f4874c2f033a69526e18111}{Update\+All()} is responsible for the main object tick flow. It updates alive objects, performs text-\/specific font/mesh refresh logic, advances attached sprite animators, synchronizes colliders with transform scale, removes dead objects, and finally integrates pending objects into the active list. \+:content\+Reference\mbox{[}oaicite\+:3\mbox{]}\{index=3\}
+
+Rendering is delegated to \doxylink{class_render_manager}{Render\+Manager} through Submit(), using either all active raw pointers or filtered subsets. Collision checks are handled separately through \doxylink{class_object_manager_a1e9cd42ad2252270965253ddf57763de}{Check\+Collision()}, which first performs broad-\/phase pair generation with \doxylink{class_spatial_hash_grid}{Spatial\+Hash\+Grid} and then applies collision mask/category filtering before calling collider narrow-\/phase checks and \doxylink{class_object_a0230b42c88134134da384129e1a4d64d}{Object\+::\+On\+Collision()}.
+
+\begin{DoxyNote}{Note}
+This class is closely tied to \doxylink{class_game_state}{Game\+State} and acts as one of its internal core systems. 
+\end{DoxyNote}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8h_source_l00059}{59}} of file \mbox{\hyperlink{_object_manager_8h_source}{Object\+Manager.\+h}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_object_manager_af5c6a21a87c2fa4204462cacbe07c439}\index{ObjectManager@{ObjectManager}!AddAllPendingObjects@{AddAllPendingObjects}}
+\index{AddAllPendingObjects@{AddAllPendingObjects}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{AddAllPendingObjects()}{AddAllPendingObjects()}}
+{\footnotesize\ttfamily \label{class_object_manager_af5c6a21a87c2fa4204462cacbe07c439} 
+void Object\+Manager\+::\+Add\+All\+Pending\+Objects (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&}]{engine\+Context}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initializes and activates all currently pending objects. 
+
+This is the internal activation pipeline for newly queued objects.
+
+The current implementation repeatedly drains pending\+Objects until it becomes empty. This allows object initialization code to enqueue additional objects without losing them.
+
+For each drained object\+:
+\begin{DoxyItemize}
+\item Init(engine\+Context) is called first
+\item if the object type is TEXT, Check\+Font\+Atlas\+And\+Mesh\+Update() is called immediately after Init()
+\item the object is collected into a temporary activation list
+\end{DoxyItemize}
+
+After all pending waves are collected\+:
+\begin{DoxyItemize}
+\item Late\+Init(engine\+Context) is called
+\item object\+Map\mbox{[}obj-\/\texorpdfstring{$>$}{>}Get\+Tag()\mbox{]} is updated
+\item raw\+Ptr\+Objects receives the raw pointer
+\item objects receives the unique\+\_\+ptr ownership
+\end{DoxyItemize}
+
+This delayed activation model keeps the main active list stable while new objects are being prepared.
+
+
+\begin{DoxyParams}{Parameters}
+{\em engine\+Context} & Shared engine services used during initialization. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8cpp_source_l00045}{45}} of file \mbox{\hyperlink{_object_manager_8cpp_source}{Object\+Manager.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00046\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ std::vector<std::unique\_ptr<Object>>\ allPendingObjects;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordflow}{while}\ (!\mbox{\hyperlink{class_object_manager_ab889c6da290efdd66daadc2e2296e25c}{pendingObjects}}.empty())}
+\DoxyCodeLine{00050\ \ \ \ \ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ std::vector<std::unique\_ptr<Object>>\ tmparr;}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ std::swap(tmparr,\ \mbox{\hyperlink{class_object_manager_ab889c6da290efdd66daadc2e2296e25c}{pendingObjects}});}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ obj\ :\ tmparr)}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ obj-\/>Init(engineContext);}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (obj-\/>GetType()\ ==\ \mbox{\hyperlink{_object_8h_a842c5e2e69277690b064bf363c017980a61a96ffcb251bb9bf0abf8fec19d0ea8}{ObjectType::TEXT}})}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}TextObject*\textcolor{keyword}{>}(obj.get())-\/>CheckFontAtlasAndMeshUpdate();}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ obj\ :\ tmparr)}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ allPendingObjects.push\_back(std::move(obj));}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ tmparr.clear();}
+\DoxyCodeLine{00066\ \ \ \ \ \}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ obj\ :\ allPendingObjects)}
+\DoxyCodeLine{00068\ \ \ \ \ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ obj-\/>LateInit(engineContext);}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ Object*\ rawPointer\ =\ obj.get();}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_object_manager_a169b4f236ff9f2d87091c7f33ec2e42c}{objectMap}}[obj-\/>GetTag()]\ =\ rawPointer;}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874}{rawPtrObjects}}.push\_back(rawPointer);}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b}{objects}}.push\_back(std::move(obj));}
+\DoxyCodeLine{00074\ \ \ \ \ \}}
+\DoxyCodeLine{00075\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_object_manager_ae1f29824763903213d6044d463742db4}\index{ObjectManager@{ObjectManager}!AddObject@{AddObject}}
+\index{AddObject@{AddObject}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{AddObject()}{AddObject()}}
+{\footnotesize\ttfamily \label{class_object_manager_ae1f29824763903213d6044d463742db4} 
+\mbox{\hyperlink{class_object}{Object}} \texorpdfstring{$\ast$}{*} Object\+Manager\+::\+Add\+Object (\begin{DoxyParamCaption}\item[{std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_object}{Object}} $>$}]{obj}{, }\item[{const std\+::string \&}]{tag}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})}
+
+
+
+Queues a new object for later initialization and activation. 
+
+This function takes ownership of the supplied object and stores it in pending\+Objects rather than directly placing it into the active object list. A raw pointer to the same object is returned immediately so caller code can continue configuring it before or after the next manager update phase.
+
+In the current implementation\+:
+\begin{DoxyItemize}
+\item the input object must not be null
+\item the tag is assigned immediately through \doxylink{class_object_a5a8c0663fb3e668d16c8a045937a9c82}{Object\+::\+Set\+Tag()}
+\item the object is pushed into pending\+Objects
+\item actual Init()/\+Late\+Init() and active-\/list insertion happen later in \doxylink{class_object_manager_af5c6a21a87c2fa4204462cacbe07c439}{Add\+All\+Pending\+Objects()}
+\end{DoxyItemize}
+
+Unlike some earlier versions of the system, raw\+Ptr\+Objects and object\+Map are not updated here. That work is deferred until the pending activation step.
+
+
+\begin{DoxyParams}{Parameters}
+{\em obj} & Unique ownership of the object to add. \\
+\hline
+{\em tag} & Optional tag assigned to the object before activation. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Raw pointer to the queued object.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+The returned pointer is non-\/owning. Lifetime remains controlled by \doxylink{class_object_manager}{Object\+Manager}. 
+\end{DoxyNote}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8cpp_source_l00007}{7}} of file \mbox{\hyperlink{_object_manager_8cpp_source}{Object\+Manager.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00008\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ assert(obj\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \textcolor{stringliteral}{"{}Cannot\ add\ null\ object"{}});}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ \ \ obj-\/>SetTag(tag);}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ Object*\ returnVal\ =\ obj.get();}
+\DoxyCodeLine{00014\ \ \ \ \ \mbox{\hyperlink{class_object_manager_ab889c6da290efdd66daadc2e2296e25c}{pendingObjects}}.push\_back(std::move(obj));}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordflow}{return}\ returnVal;}
+\DoxyCodeLine{00016\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_object_manager_a1e9cd42ad2252270965253ddf57763de}\index{ObjectManager@{ObjectManager}!CheckCollision@{CheckCollision}}
+\index{CheckCollision@{CheckCollision}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{CheckCollision()}{CheckCollision()}}
+{\footnotesize\ttfamily \label{class_object_manager_a1e9cd42ad2252270965253ddf57763de} 
+void Object\+Manager\+::\+Check\+Collision (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Runs the engine\textquotesingle{}s collision detection flow for all active collidable objects. 
+
+The current collision process works as follows\+:
+
+
+\begin{DoxyEnumerate}
+\item Create a checked\+Pairs set to avoid duplicate pair processing.
+\item Clear the broad\+Phase\+Grid.
+\item Insert every object that has a non-\/null collider into the spatial grid.
+\item Ask the grid to generate candidate pairs.
+\item For each pair\+:
+\begin{DoxyItemize}
+\item reject it if collision mask/category bits do not match
+\item normalize pointer order for stable pair-\/key generation
+\item skip it if already processed
+\item run collider narrow-\/phase \doxylink{class_object_manager_a1e9cd42ad2252270965253ddf57763de}{Check\+Collision()}
+\item if colliding, call On\+Collision() on both objects
+\end{DoxyItemize}
+\end{DoxyEnumerate}
+
+The broad-\/phase grid itself uses a spatial hash and treats very large objects specially so they can still be paired against other objects without exploding per-\/cell insertion cost. 
+
+Definition at line \mbox{\hyperlink{_object_manager_8cpp_source_l00185}{185}} of file \mbox{\hyperlink{_object_manager_8cpp_source}{Object\+Manager.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00186\ \{}
+\DoxyCodeLine{00187\ \ \ \ \ std::unordered\_set<uint64\_t>\ checkedPairs;}
+\DoxyCodeLine{00188\ \ \ \ \ checkedPairs.reserve(2000);}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \mbox{\hyperlink{class_object_manager_a783ce1f6edb5db32d5c7c9826179b8c5}{broadPhaseGrid}}.Clear();}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keywordflow}{for}\ (Object*\ obj\ :\ \mbox{\hyperlink{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874}{rawPtrObjects}})}
+\DoxyCodeLine{00193\ \ \ \ \ \{}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ Collider*\ collider\ =\ obj-\/>GetCollider();}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (collider)}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_object_manager_a783ce1f6edb5db32d5c7c9826179b8c5}{broadPhaseGrid}}.Insert(obj);}
+\DoxyCodeLine{00197\ \ \ \ \ \}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \mbox{\hyperlink{class_object_manager_a783ce1f6edb5db32d5c7c9826179b8c5}{broadPhaseGrid}}.ComputeCollisions([\&](Object*\ a,\ Object*\ b)}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((a-\/>\mbox{\hyperlink{class_object_a76b94bea7f5f5e6454cd2c134ddc6260}{GetCollisionMask}}()\ \&\ b-\/>\mbox{\hyperlink{class_object_a431dc9b1eab4227c9c5d002fae5ec017}{GetCollisionCategory}}())\ ==\ 0\ ||}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (b-\/>\mbox{\hyperlink{class_object_a76b94bea7f5f5e6454cd2c134ddc6260}{GetCollisionMask}}()\ \&\ a-\/>\mbox{\hyperlink{class_object_a431dc9b1eab4227c9c5d002fae5ec017}{GetCollisionCategory}}())\ ==\ 0)}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (a\ >\ b)\ std::swap(a,\ b);}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ key\ =\ std::hash<Object*>()(a)\ \string^\ (std::hash<Object*>()(b)\ <<\ 1);}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (checkedPairs.find(key)\ !=\ checkedPairs.end())}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ checkedPairs.insert(key);}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (a-\/>\mbox{\hyperlink{class_object_ad601234bc10ab7fbf84b1cf1e302f756}{GetCollider}}()-\/>\mbox{\hyperlink{class_collider_a41660505ae4b413d3d4b004162857426}{CheckCollision}}(b-\/>\mbox{\hyperlink{class_object_ad601234bc10ab7fbf84b1cf1e302f756}{GetCollider}}()))}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a-\/>\mbox{\hyperlink{class_object_a0230b42c88134134da384129e1a4d64d}{OnCollision}}(b);}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ b-\/>\mbox{\hyperlink{class_object_a0230b42c88134134da384129e1a4d64d}{OnCollision}}(a);}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{00219\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_object_manager_ad883ccf6dee940514c8c5fea7137ca9b}\index{ObjectManager@{ObjectManager}!DrawAll@{DrawAll}}
+\index{DrawAll@{DrawAll}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{DrawAll()}{DrawAll()}}
+{\footnotesize\ttfamily \label{class_object_manager_ad883ccf6dee940514c8c5fea7137ca9b} 
+void Object\+Manager\+::\+Draw\+All (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&}]{engine\+Context}{}\end{DoxyParamCaption})}
+
+
+
+Submits all currently tracked active object pointers to \doxylink{class_render_manager}{Render\+Manager}. 
+
+This function forwards raw\+Ptr\+Objects to \doxylink{class_render_manager_add99380d257141db9b2e939530311d2e}{Render\+Manager\+::\+Submit()}. The render manager then performs filtering, batching, and later flushes the accumulated draw commands from the state manager\textquotesingle{}s draw flow.
+
+
+\begin{DoxyParams}{Parameters}
+{\em engine\+Context} & Shared engine services used to access \doxylink{class_render_manager}{Render\+Manager}. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8cpp_source_l00133}{133}} of file \mbox{\hyperlink{_object_manager_8cpp_source}{Object\+Manager.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00134\ \{}
+\DoxyCodeLine{00135\ \ \ \ \ engineContext.\mbox{\hyperlink{struct_engine_context_a8f4c861adc4684975fa767ae4723e095}{renderManager}}-\/>\mbox{\hyperlink{class_render_manager_add99380d257141db9b2e939530311d2e}{Submit}}(\mbox{\hyperlink{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874}{rawPtrObjects}},\ engineContext);}
+\DoxyCodeLine{00136\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_object_manager_a79459c25593a2ad3ccc8cfdb88cf10a9}\index{ObjectManager@{ObjectManager}!DrawColliderDebug@{DrawColliderDebug}}
+\index{DrawColliderDebug@{DrawColliderDebug}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{DrawColliderDebug()}{DrawColliderDebug()}}
+{\footnotesize\ttfamily \label{class_object_manager_a79459c25593a2ad3ccc8cfdb88cf10a9} 
+void Object\+Manager\+::\+Draw\+Collider\+Debug (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_render_manager}{Render\+Manager}} \texorpdfstring{$\ast$}{*}}]{rm}{, }\item[{\mbox{\hyperlink{class_camera2_d}{Camera2D}} \texorpdfstring{$\ast$}{*}}]{cam}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Draws collider debug geometry for every alive and visible object that has a collider. 
+
+This helper iterates over raw\+Ptr\+Objects and skips objects that are not alive or not visible. For the remaining objects, if a collider exists, it forwards debug rendering to \doxylink{class_collider_a222e52491ae094943420952fd3182c90}{Collider\+::\+Draw\+Debug()}.
+
+This is an internal helper and is not part of the normal public rendering path. \+:content\+Reference\mbox{[}oaicite\+:17\mbox{]}\{index=17\}
+
+
+\begin{DoxyParams}{Parameters}
+{\em rm} & Render manager used by collider debug draw routines. \\
+\hline
+{\em cam} & Camera used when drawing debug collider shapes. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8cpp_source_l00221}{221}} of file \mbox{\hyperlink{_object_manager_8cpp_source}{Object\+Manager.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00222\ \{}
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}*\ obj\ :\ \mbox{\hyperlink{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874}{rawPtrObjects}})}
+\DoxyCodeLine{00224\ \ \ \ \ \{}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!obj-\/>IsAlive()\ ||\ !obj-\/>IsVisible())\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Collider*\ col\ =\ obj-\/>GetCollider())}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ col-\/>DrawDebug(rm,\ cam);}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00231\ \ \ \ \ \}}
+\DoxyCodeLine{00232\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_object_manager_acea98a91604863db6b232b6e67582740}\index{ObjectManager@{ObjectManager}!DrawObjects@{DrawObjects}}
+\index{DrawObjects@{DrawObjects}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{DrawObjects()}{DrawObjects()}}
+{\footnotesize\ttfamily \label{class_object_manager_acea98a91604863db6b232b6e67582740} 
+void Object\+Manager\+::\+Draw\+Objects (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&}]{engine\+Context}{, }\item[{const std\+::vector$<$ \mbox{\hyperlink{class_object}{Object}} \texorpdfstring{$\ast$}{*} $>$ \&}]{objects}{}\end{DoxyParamCaption})}
+
+
+
+Submits a caller-\/provided subset of objects to \doxylink{class_render_manager}{Render\+Manager}. 
+
+This is a convenience function for rendering a filtered object list without requiring the caller to interact with \doxylink{class_render_manager}{Render\+Manager} directly.
+
+
+\begin{DoxyParams}{Parameters}
+{\em engine\+Context} & Shared engine services used to access \doxylink{class_render_manager}{Render\+Manager}. \\
+\hline
+{\em objects} & Non-\/owning list of object pointers to submit for rendering. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8cpp_source_l00138}{138}} of file \mbox{\hyperlink{_object_manager_8cpp_source}{Object\+Manager.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00139\ \{}
+\DoxyCodeLine{00140\ \ \ \ \ engineContext.\mbox{\hyperlink{struct_engine_context_a8f4c861adc4684975fa767ae4723e095}{renderManager}}-\/>\mbox{\hyperlink{class_render_manager_add99380d257141db9b2e939530311d2e}{Submit}}(\mbox{\hyperlink{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b}{objects}},\ engineContext);}
+\DoxyCodeLine{00141\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_object_manager_abfc58bcbcd4e0b4f988939b9b16296e5}\index{ObjectManager@{ObjectManager}!DrawObjectsWithTag@{DrawObjectsWithTag}}
+\index{DrawObjectsWithTag@{DrawObjectsWithTag}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{DrawObjectsWithTag()}{DrawObjectsWithTag()}}
+{\footnotesize\ttfamily \label{class_object_manager_abfc58bcbcd4e0b4f988939b9b16296e5} 
+void Object\+Manager\+::\+Draw\+Objects\+With\+Tag (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&}]{engine\+Context}{, }\item[{const std\+::string \&}]{tag}{}\end{DoxyParamCaption})}
+
+
+
+Finds all alive objects with a matching tag and submits them for rendering. 
+
+This function builds a temporary filtered list by calling the multi-\/result \doxylink{class_object_manager_afe47ccc9dd305eae5dda76a15c928e86}{Find\+By\+Tag()} overload and then submits that list to \doxylink{class_render_manager}{Render\+Manager}.
+
+Unlike the single-\/result \doxylink{class_object_manager_afe47ccc9dd305eae5dda76a15c928e86}{Find\+By\+Tag()} overload, this version is intended for rendering or processing all matching objects rather than only one representative. \+:content\+Reference\mbox{[}oaicite\+:9\mbox{]}\{index=9\}
+
+
+\begin{DoxyParams}{Parameters}
+{\em engine\+Context} & Shared engine services used to access \doxylink{class_render_manager}{Render\+Manager}. \\
+\hline
+{\em tag} & \doxylink{class_object}{Object} tag to filter by. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8cpp_source_l00143}{143}} of file \mbox{\hyperlink{_object_manager_8cpp_source}{Object\+Manager.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00144\ \{}
+\DoxyCodeLine{00145\ \ \ \ \ std::vector<Object*>\ filteredObjects;}
+\DoxyCodeLine{00146\ \ \ \ \ \mbox{\hyperlink{class_object_manager_afe47ccc9dd305eae5dda76a15c928e86}{FindByTag}}(tag,\ filteredObjects);}
+\DoxyCodeLine{00147\ \ \ \ \ engineContext.\mbox{\hyperlink{struct_engine_context_a8f4c861adc4684975fa767ae4723e095}{renderManager}}-\/>\mbox{\hyperlink{class_render_manager_add99380d257141db9b2e939530311d2e}{Submit}}(filteredObjects,\ engineContext);}
+\DoxyCodeLine{00148\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_object_manager_a6150e34acf9947f2d2e36040d472df5f}\index{ObjectManager@{ObjectManager}!EraseDeadObjects@{EraseDeadObjects}}
+\index{EraseDeadObjects@{EraseDeadObjects}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{EraseDeadObjects()}{EraseDeadObjects()}}
+{\footnotesize\ttfamily \label{class_object_manager_a6150e34acf9947f2d2e36040d472df5f} 
+void Object\+Manager\+::\+Erase\+Dead\+Objects (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&}]{engine\+Context}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Cleans up and removes all dead objects from the active containers. 
+
+This function first collects pointers to every object whose Is\+Alive() is false. It then performs removal in ordered phases\+:
+
+
+\begin{DoxyEnumerate}
+\item Call Free(engine\+Context) on each dead object.
+\item Call Late\+Free(engine\+Context) on each dead object.
+\item Update object\+Map\+:
+\begin{DoxyItemize}
+\item if the tag entry points to the dead object, search raw\+Ptr\+Objects for another alive object with the same tag
+\item replace the map entry if a surviving match exists
+\item otherwise erase the tag entry
+\end{DoxyItemize}
+\item Remove dead raw pointers from raw\+Ptr\+Objects.
+\item Remove dead unique\+\_\+ptr entries from objects.
+\end{DoxyEnumerate}
+
+This replacement behavior matters when multiple objects share the same tag and the current mapped representative is the one being removed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em engine\+Context} & Shared engine services used during cleanup. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8cpp_source_l00077}{77}} of file \mbox{\hyperlink{_object_manager_8cpp_source}{Object\+Manager.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00078\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ std::vector<Object*>\ deadObjects;}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ obj\ :\ \mbox{\hyperlink{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b}{objects}})}
+\DoxyCodeLine{00081\ \ \ \ \ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!obj-\/>IsAlive())}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ deadObjects.push\_back(obj.get());}
+\DoxyCodeLine{00084\ \ \ \ \ \}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ obj\ :\ deadObjects)}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ obj-\/>Free(engineContext);}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ obj\ :\ deadObjects)}
+\DoxyCodeLine{00090\ \ \ \ \ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ obj-\/>LateFree(engineContext);}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ tag\ =\ obj-\/>GetTag();}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ \mbox{\hyperlink{class_object_manager_a169b4f236ff9f2d87091c7f33ec2e42c}{objectMap}}.find(tag);}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ \mbox{\hyperlink{class_object_manager_a169b4f236ff9f2d87091c7f33ec2e42c}{objectMap}}.end()\ \&\&\ it-\/>second\ ==\ obj)}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ Object*\ replacement\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (Object*\ candidate\ :\ \mbox{\hyperlink{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874}{rawPtrObjects}})}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (candidate\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (candidate\ ==\ obj)\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!candidate-\/>IsAlive())\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (candidate-\/>GetTag()\ !=\ tag)\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ replacement\ =\ candidate;}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (replacement)}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ it-\/>second\ =\ replacement;}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_object_manager_a169b4f236ff9f2d87091c7f33ec2e42c}{objectMap}}.erase(it);}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874}{rawPtrObjects}}.erase(std::remove(\mbox{\hyperlink{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874}{rawPtrObjects}}.begin(),\ \mbox{\hyperlink{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874}{rawPtrObjects}}.end(),\ obj),\ \mbox{\hyperlink{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874}{rawPtrObjects}}.end());}
+\DoxyCodeLine{00122\ \ \ \ \ \}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \mbox{\hyperlink{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b}{objects}}.erase(}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ std::remove\_if(\mbox{\hyperlink{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b}{objects}}.begin(),\ \mbox{\hyperlink{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b}{objects}}.end(),}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ [\&](\textcolor{keyword}{const}\ std::unique\_ptr<Object>\&\ obj)}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ std::find(deadObjects.begin(),\ deadObjects.end(),\ obj.get())\ !=\ deadObjects.end();}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \}),}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b}{objects}}.end());}
+\DoxyCodeLine{00131\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_object_manager_afe47ccc9dd305eae5dda76a15c928e86}\index{ObjectManager@{ObjectManager}!FindByTag@{FindByTag}}
+\index{FindByTag@{FindByTag}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{FindByTag()}{FindByTag()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_object_manager_afe47ccc9dd305eae5dda76a15c928e86} 
+\mbox{\hyperlink{class_object}{Object}} \texorpdfstring{$\ast$}{*} Object\+Manager\+::\+Find\+By\+Tag (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{tag}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Finds one alive object associated with the given tag. 
+
+This function performs a fast lookup through object\+Map. It returns the mapped object only if\+:
+\begin{DoxyItemize}
+\item the tag exists in the map
+\item the mapped object is still alive
+\end{DoxyItemize}
+
+In the current implementation, object\+Map stores one representative pointer per tag. During dead-\/object removal, if the stored pointer dies and another alive object with the same tag exists, the map entry may be replaced with that surviving object instead of being erased immediately. \+:content\+Reference\mbox{[}oaicite\+:11\mbox{]}\{index=11\}
+
+
+\begin{DoxyParams}{Parameters}
+{\em tag} & Tag to search for. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to one alive matching object, or nullptr if none is available. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8cpp_source_l00169}{169}} of file \mbox{\hyperlink{_object_manager_8cpp_source}{Object\+Manager.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00170\ \{}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ \mbox{\hyperlink{class_object_manager_a169b4f236ff9f2d87091c7f33ec2e42c}{objectMap}}.find(tag);}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ \mbox{\hyperlink{class_object_manager_a169b4f236ff9f2d87091c7f33ec2e42c}{objectMap}}.end()\ \&\&\ it-\/>second-\/>IsAlive())}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00175\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_object_manager_a2ce4fd96dd58ad653e81f843c7f76604}\index{ObjectManager@{ObjectManager}!FindByTag@{FindByTag}}
+\index{FindByTag@{FindByTag}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{FindByTag()}{FindByTag()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_object_manager_a2ce4fd96dd58ad653e81f843c7f76604} 
+void Object\+Manager\+::\+Find\+By\+Tag (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{tag}{, }\item[{std\+::vector$<$ \mbox{\hyperlink{class_object}{Object}} \texorpdfstring{$\ast$}{*} $>$ \&}]{result}{}\end{DoxyParamCaption})}
+
+
+
+Appends all alive objects with the given tag into the provided output vector. 
+
+This overload scans raw\+Ptr\+Objects and appends every pointer that\+:
+\begin{DoxyItemize}
+\item is non-\/null
+\item is alive
+\item has a matching \doxylink{class_object_a9744dc473026e6b7cba610d00f510e81}{Object\+::\+Get\+Tag()} value
+\end{DoxyItemize}
+
+It does not clear the destination vector before appending.
+
+
+\begin{DoxyParams}{Parameters}
+{\em tag} & Tag to search for. \\
+\hline
+{\em result} & Output vector that receives matching object pointers. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8cpp_source_l00177}{177}} of file \mbox{\hyperlink{_object_manager_8cpp_source}{Object\+Manager.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00178\ \{}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keywordflow}{for}\ (Object*\ obj\ :\ \mbox{\hyperlink{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874}{rawPtrObjects}})}
+\DoxyCodeLine{00180\ \ \ \ \ \{}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (obj\ \&\&\ obj-\/>IsAlive()\ \&\&\ obj-\/>GetTag()\ ==\ tag)}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ result.push\_back(obj);}
+\DoxyCodeLine{00183\ \ \ \ \ \}}
+\DoxyCodeLine{00184\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_object_manager_a2dcf63228b4ed4b45ae19304946f923f}\index{ObjectManager@{ObjectManager}!FreeAll@{FreeAll}}
+\index{FreeAll@{FreeAll}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{FreeAll()}{FreeAll()}}
+{\footnotesize\ttfamily \label{class_object_manager_a2dcf63228b4ed4b45ae19304946f923f} 
+void Object\+Manager\+::\+Free\+All (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&}]{engine\+Context}{}\end{DoxyParamCaption})}
+
+
+
+Frees and clears every active and pending object owned by the manager. 
+
+In the current implementation, this function performs cleanup in two phases\+:
+
+
+\begin{DoxyEnumerate}
+\item Calls Free(engine\+Context) for every object in\+:
+\begin{DoxyItemize}
+\item objects
+\item pending\+Objects
+\end{DoxyItemize}
+\item Calls Late\+Free(engine\+Context) for every object in\+:
+\begin{DoxyItemize}
+\item objects
+\item pending\+Objects
+\end{DoxyItemize}
+\end{DoxyEnumerate}
+
+After cleanup, all internal containers are cleared, including the active owning list, the pending list, the tag map, and the raw pointer cache. \+:content\+Reference\mbox{[}oaicite\+:10\mbox{]}\{index=10\}
+
+
+\begin{DoxyParams}{Parameters}
+{\em engine\+Context} & Shared engine services used during cleanup. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8cpp_source_l00150}{150}} of file \mbox{\hyperlink{_object_manager_8cpp_source}{Object\+Manager.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00151\ \{}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ obj\ :\ \mbox{\hyperlink{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b}{objects}})}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ obj-\/>Free(engineContext);}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ obj\ :\ \mbox{\hyperlink{class_object_manager_ab889c6da290efdd66daadc2e2296e25c}{pendingObjects}})}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ obj-\/>Free(engineContext);}
+\DoxyCodeLine{00156\ \ \ \ \ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ obj\ :\ \mbox{\hyperlink{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b}{objects}})}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ obj-\/>LateFree(engineContext);}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ obj\ :\ \mbox{\hyperlink{class_object_manager_ab889c6da290efdd66daadc2e2296e25c}{pendingObjects}})}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ obj-\/>LateFree(engineContext);}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \mbox{\hyperlink{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b}{objects}}.clear();}
+\DoxyCodeLine{00164\ \ \ \ \ \mbox{\hyperlink{class_object_manager_a169b4f236ff9f2d87091c7f33ec2e42c}{objectMap}}.clear();}
+\DoxyCodeLine{00165\ \ \ \ \ \mbox{\hyperlink{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874}{rawPtrObjects}}.clear();}
+\DoxyCodeLine{00166\ \ \ \ \ \mbox{\hyperlink{class_object_manager_ab889c6da290efdd66daadc2e2296e25c}{pendingObjects}}.clear();}
+\DoxyCodeLine{00167\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_object_manager_aa134339dbf5ed4f2542e2fd28fa490f1}\index{ObjectManager@{ObjectManager}!GetAllRawPtrObjects@{GetAllRawPtrObjects}}
+\index{GetAllRawPtrObjects@{GetAllRawPtrObjects}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{GetAllRawPtrObjects()}{GetAllRawPtrObjects()}}
+{\footnotesize\ttfamily \label{class_object_manager_aa134339dbf5ed4f2542e2fd28fa490f1} 
+std\+::vector$<$ \mbox{\hyperlink{class_object}{Object}} \texorpdfstring{$\ast$}{*} $>$ Object\+Manager\+::\+Get\+All\+Raw\+Ptr\+Objects (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Returns the manager\textquotesingle{}s cached list of raw object pointers. 
+
+This is a convenience snapshot-\/like return of the current raw\+Ptr\+Objects vector. It is used by other systems such as \doxylink{class_render_manager}{Render\+Manager} when checking whether resources are still referenced by objects before allowing unregistration. \+:content\+Reference\mbox{[}oaicite\+:14\mbox{]}\{index=14\}
+
+\begin{DoxyReturn}{Returns}
+Copy of the current raw object pointer list. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8h_source_l00274}{274}} of file \mbox{\hyperlink{_object_manager_8h_source}{Object\+Manager.\+h}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00274\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874}{rawPtrObjects}};\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_object_manager_a3fc2a5eb9c5993c4ae3ee803e631699f}\index{ObjectManager@{ObjectManager}!GetCollisionGroupRegistry@{GetCollisionGroupRegistry}}
+\index{GetCollisionGroupRegistry@{GetCollisionGroupRegistry}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{GetCollisionGroupRegistry()}{GetCollisionGroupRegistry()}}
+{\footnotesize\ttfamily \label{class_object_manager_a3fc2a5eb9c5993c4ae3ee803e631699f} 
+\mbox{\hyperlink{class_collision_group_registry}{Collision\+Group\+Registry}} \& Object\+Manager\+::\+Get\+Collision\+Group\+Registry (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Returns the collision group registry used by objects to build category and mask bits. 
+
+\doxylink{class_object_a7ce1a12c241c5a64ec03e67ee17e1260}{Object\+::\+Set\+Collision()} uses this registry to convert string group names into unique bit values. New groups are assigned incrementally until the 32-\/bit limit is reached.
+
+\begin{DoxyReturn}{Returns}
+Mutable reference to the collision group registry. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8h_source_l00262}{262}} of file \mbox{\hyperlink{_object_manager_8h_source}{Object\+Manager.\+h}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00262\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_object_manager_a697bf14420d66f3c4d88b68cf58bc6e3}{collisionGroupRegistry}};\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_object_manager_ad7d870215c2f3033b6f2641e4c9dc8da}\index{ObjectManager@{ObjectManager}!InitAll@{InitAll}}
+\index{InitAll@{InitAll}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{InitAll()}{InitAll()}}
+{\footnotesize\ttfamily \label{class_object_manager_ad7d870215c2f3033b6f2641e4c9dc8da} 
+void Object\+Manager\+::\+Init\+All (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&}]{engine\+Context}{}\end{DoxyParamCaption})}
+
+
+
+Activates all currently pending objects. 
+
+In the current implementation this function simply forwards to Add\+All\+Pending\+Objects(engine\+Context), which processes every queued object by\+:
+\begin{DoxyItemize}
+\item calling Init()
+\item performing text-\/specific atlas/mesh refresh if needed
+\item calling Late\+Init()
+\item inserting the object into object\+Map, raw\+Ptr\+Objects, and objects
+\end{DoxyItemize}
+
+Because \doxylink{class_object_manager_af5c6a21a87c2fa4204462cacbe07c439}{Add\+All\+Pending\+Objects()} loops until pending\+Objects becomes empty, it also supports the case where object initialization itself adds more objects.
+
+
+\begin{DoxyParams}{Parameters}
+{\em engine\+Context} & Shared engine services used during object initialization. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8cpp_source_l00018}{18}} of file \mbox{\hyperlink{_object_manager_8cpp_source}{Object\+Manager.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00019\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{class_object_manager_af5c6a21a87c2fa4204462cacbe07c439}{AddAllPendingObjects}}(engineContext);}
+\DoxyCodeLine{00021\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_object_manager_a00c892376f4874c2f033a69526e18111}\index{ObjectManager@{ObjectManager}!UpdateAll@{UpdateAll}}
+\index{UpdateAll@{UpdateAll}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{UpdateAll()}{UpdateAll()}}
+{\footnotesize\ttfamily \label{class_object_manager_a00c892376f4874c2f033a69526e18111} 
+void Object\+Manager\+::\+Update\+All (\begin{DoxyParamCaption}\item[{float}]{dt}{, }\item[{const \mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \&}]{engine\+Context}{}\end{DoxyParamCaption})}
+
+
+
+Updates all active objects, removes dead ones, and activates newly queued ones. 
+
+This is the main per-\/frame management function for runtime objects.
+
+For each active object in objects\+:
+\begin{DoxyItemize}
+\item only alive objects are processed
+\item if the object type is TEXT, Check\+Font\+Atlas\+And\+Mesh\+Update() is called first
+\item Update(dt, engine\+Context) is called
+\item if a \doxylink{class_sprite_animator}{Sprite\+Animator} is attached, it is advanced
+\item if a \doxylink{class_collider}{Collider} is attached, Sync\+With\+Transform\+Scale() is called
+\end{DoxyItemize}
+
+After the main loop\+:
+\begin{DoxyItemize}
+\item Erase\+Dead\+Objects(engine\+Context) removes dead objects safely
+\item Add\+All\+Pending\+Objects(engine\+Context) initializes and activates any newly queued objects
+\end{DoxyItemize}
+
+This means object creation and object destruction are both resolved through controlled post-\/update stages rather than during the middle of the main loop. \+:content\+Reference\mbox{[}oaicite\+:7\mbox{]}\{index=7\}
+
+
+\begin{DoxyParams}{Parameters}
+{\em dt} & Delta time for the current frame. \\
+\hline
+{\em engine\+Context} & Shared engine services used during update. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8cpp_source_l00023}{23}} of file \mbox{\hyperlink{_object_manager_8cpp_source}{Object\+Manager.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ obj\ :\ \mbox{\hyperlink{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b}{objects}})}
+\DoxyCodeLine{00026\ \ \ \ \ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (obj-\/>IsAlive())}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (obj-\/>GetType()==\mbox{\hyperlink{_object_8h_a842c5e2e69277690b064bf363c017980a61a96ffcb251bb9bf0abf8fec19d0ea8}{ObjectType::TEXT}})}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}TextObject*\textcolor{keyword}{>}(obj.get())-\/>CheckFontAtlasAndMeshUpdate();}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ obj-\/>Update(dt,\ engineContext);}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (obj-\/>HasAnimation())}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ obj-\/>GetSpriteAnimator()-\/>Update(dt);}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Collider*\ col\ =\ obj-\/>GetCollider())}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ col-\/>SyncWithTransformScale();}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00039\ \ \ \ \ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{class_object_manager_a6150e34acf9947f2d2e36040d472df5f}{EraseDeadObjects}}(engineContext);}
+\DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{class_object_manager_af5c6a21a87c2fa4204462cacbe07c439}{AddAllPendingObjects}}(engineContext);}
+\DoxyCodeLine{00043\ \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_object_manager_a783ce1f6edb5db32d5c7c9826179b8c5}\index{ObjectManager@{ObjectManager}!broadPhaseGrid@{broadPhaseGrid}}
+\index{broadPhaseGrid@{broadPhaseGrid}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{broadPhaseGrid}{broadPhaseGrid}}
+{\footnotesize\ttfamily \label{class_object_manager_a783ce1f6edb5db32d5c7c9826179b8c5} 
+\mbox{\hyperlink{class_spatial_hash_grid}{Spatial\+Hash\+Grid}} Object\+Manager\+::broad\+Phase\+Grid\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8h_source_l00347}{347}} of file \mbox{\hyperlink{_object_manager_8h_source}{Object\+Manager.\+h}}.
+
+\Hypertarget{class_object_manager_a697bf14420d66f3c4d88b68cf58bc6e3}\index{ObjectManager@{ObjectManager}!collisionGroupRegistry@{collisionGroupRegistry}}
+\index{collisionGroupRegistry@{collisionGroupRegistry}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{collisionGroupRegistry}{collisionGroupRegistry}}
+{\footnotesize\ttfamily \label{class_object_manager_a697bf14420d66f3c4d88b68cf58bc6e3} 
+\mbox{\hyperlink{class_collision_group_registry}{Collision\+Group\+Registry}} Object\+Manager\+::collision\+Group\+Registry\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8h_source_l00348}{348}} of file \mbox{\hyperlink{_object_manager_8h_source}{Object\+Manager.\+h}}.
+
+\Hypertarget{class_object_manager_a2a6ebf48c01098423ba7857c5df6aecb}\index{ObjectManager@{ObjectManager}!GameState@{GameState}}
+\index{GameState@{GameState}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{GameState}{GameState}}
+{\footnotesize\ttfamily \label{class_object_manager_a2a6ebf48c01098423ba7857c5df6aecb} 
+friend Object\+Manager\+::\+Game\+State\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8h_source_l00061}{61}} of file \mbox{\hyperlink{_object_manager_8h_source}{Object\+Manager.\+h}}.
+
+\Hypertarget{class_object_manager_a169b4f236ff9f2d87091c7f33ec2e42c}\index{ObjectManager@{ObjectManager}!objectMap@{objectMap}}
+\index{objectMap@{objectMap}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{objectMap}{objectMap}}
+{\footnotesize\ttfamily \label{class_object_manager_a169b4f236ff9f2d87091c7f33ec2e42c} 
+std\+::unordered\+\_\+map$<$std\+::string, \mbox{\hyperlink{class_object}{Object}}\texorpdfstring{$\ast$}{*}$>$ Object\+Manager\+::object\+Map\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8h_source_l00345}{345}} of file \mbox{\hyperlink{_object_manager_8h_source}{Object\+Manager.\+h}}.
+
+\Hypertarget{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b}\index{ObjectManager@{ObjectManager}!objects@{objects}}
+\index{objects@{objects}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{objects}{objects}}
+{\footnotesize\ttfamily \label{class_object_manager_ac0f18ac96a86c4aabe041642fdb8763b} 
+std\+::vector$<$std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{class_object}{Object}}$>$ $>$ Object\+Manager\+::objects\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8h_source_l00343}{343}} of file \mbox{\hyperlink{_object_manager_8h_source}{Object\+Manager.\+h}}.
+
+\Hypertarget{class_object_manager_ab889c6da290efdd66daadc2e2296e25c}\index{ObjectManager@{ObjectManager}!pendingObjects@{pendingObjects}}
+\index{pendingObjects@{pendingObjects}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{pendingObjects}{pendingObjects}}
+{\footnotesize\ttfamily \label{class_object_manager_ab889c6da290efdd66daadc2e2296e25c} 
+std\+::vector$<$std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{class_object}{Object}}$>$ $>$ Object\+Manager\+::pending\+Objects\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8h_source_l00344}{344}} of file \mbox{\hyperlink{_object_manager_8h_source}{Object\+Manager.\+h}}.
+
+\Hypertarget{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874}\index{ObjectManager@{ObjectManager}!rawPtrObjects@{rawPtrObjects}}
+\index{rawPtrObjects@{rawPtrObjects}!ObjectManager@{ObjectManager}}
+\doxysubsubsection{\texorpdfstring{rawPtrObjects}{rawPtrObjects}}
+{\footnotesize\ttfamily \label{class_object_manager_a7cfc43b48f822dcb9d91b580d4d1d874} 
+std\+::vector$<$\mbox{\hyperlink{class_object}{Object}}\texorpdfstring{$\ast$}{*}$>$ Object\+Manager\+::raw\+Ptr\+Objects\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_object_manager_8h_source_l00346}{346}} of file \mbox{\hyperlink{_object_manager_8h_source}{Object\+Manager.\+h}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Project/\+Jin\+Engine/\+Public/\mbox{\hyperlink{_object_manager_8h}{Object\+Manager.\+h}}\item 
+Project/\+Jin\+Engine/\+Private/\mbox{\hyperlink{_object_manager_8cpp}{Object\+Manager.\+cpp}}\end{DoxyCompactItemize}

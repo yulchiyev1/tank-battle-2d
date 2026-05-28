@@ -1,0 +1,69 @@
+\doxysection{Shader\+Result Struct Reference}
+\hypertarget{struct_shader_result}{}\label{struct_shader_result}\index{ShaderResult@{ShaderResult}}
+
+
+Stores the completed result of an asynchronous shader source load.  
+
+
+
+
+{\ttfamily \#include $<$Async\+Resource\+Loader.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{struct_shader_result_ac0cf072f6c38225b14a24f5dd6641432}{tag}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_shader_source}{Shader\+Source}} $>$ \mbox{\hyperlink{struct_shader_result_a02194f7377e8b3550f884a69ec5ede9d}{sources}}
+\item 
+bool \mbox{\hyperlink{struct_shader_result_a43e045ed457a35530d5a1ea62a7d361e}{ok}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Stores the completed result of an asynchronous shader source load. 
+
+\doxylink{struct_shader_result}{Shader\+Result} contains the shader tag, the in-\/memory source code for each shader stage, and a success flag indicating whether all requested files were read successfully.
+
+The worker thread marks ok as false if any shader source file could not be read. \+:content\+Reference\mbox{[}oaicite\+:8\mbox{]}\{index=8\} 
+
+Definition at line \mbox{\hyperlink{_async_resource_loader_8h_source_l00181}{181}} of file \mbox{\hyperlink{_async_resource_loader_8h_source}{Async\+Resource\+Loader.\+h}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_shader_result_a43e045ed457a35530d5a1ea62a7d361e}\index{ShaderResult@{ShaderResult}!ok@{ok}}
+\index{ok@{ok}!ShaderResult@{ShaderResult}}
+\doxysubsubsection{\texorpdfstring{ok}{ok}}
+{\footnotesize\ttfamily \label{struct_shader_result_a43e045ed457a35530d5a1ea62a7d361e} 
+bool Shader\+Result\+::ok = false}
+
+
+
+Definition at line \mbox{\hyperlink{_async_resource_loader_8h_source_l00185}{185}} of file \mbox{\hyperlink{_async_resource_loader_8h_source}{Async\+Resource\+Loader.\+h}}.
+
+\Hypertarget{struct_shader_result_a02194f7377e8b3550f884a69ec5ede9d}\index{ShaderResult@{ShaderResult}!sources@{sources}}
+\index{sources@{sources}!ShaderResult@{ShaderResult}}
+\doxysubsubsection{\texorpdfstring{sources}{sources}}
+{\footnotesize\ttfamily \label{struct_shader_result_a02194f7377e8b3550f884a69ec5ede9d} 
+std\+::vector$<$\mbox{\hyperlink{struct_shader_source}{Shader\+Source}}$>$ Shader\+Result\+::sources}
+
+
+
+Definition at line \mbox{\hyperlink{_async_resource_loader_8h_source_l00184}{184}} of file \mbox{\hyperlink{_async_resource_loader_8h_source}{Async\+Resource\+Loader.\+h}}.
+
+\Hypertarget{struct_shader_result_ac0cf072f6c38225b14a24f5dd6641432}\index{ShaderResult@{ShaderResult}!tag@{tag}}
+\index{tag@{tag}!ShaderResult@{ShaderResult}}
+\doxysubsubsection{\texorpdfstring{tag}{tag}}
+{\footnotesize\ttfamily \label{struct_shader_result_ac0cf072f6c38225b14a24f5dd6641432} 
+std\+::string Shader\+Result\+::tag}
+
+
+
+Definition at line \mbox{\hyperlink{_async_resource_loader_8h_source_l00183}{183}} of file \mbox{\hyperlink{_async_resource_loader_8h_source}{Async\+Resource\+Loader.\+h}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Project/\+Jin\+Engine/\+Public/\mbox{\hyperlink{_async_resource_loader_8h}{Async\+Resource\+Loader.\+h}}\end{DoxyCompactItemize}

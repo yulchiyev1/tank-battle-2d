@@ -1,0 +1,79 @@
+\doxysection{Project/\+Jin\+Engine/\+Private/\+Sound\+Manager.cpp File Reference}
+\hypertarget{_sound_manager_8cpp}{}\label{_sound_manager_8cpp}\index{Project/JinEngine/Private/SoundManager.cpp@{Project/JinEngine/Private/SoundManager.cpp}}
+{\ttfamily \#include "{}Engine.\+h"{}}\newline
+{\ttfamily \#include $<$algorithm$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$queue$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$functional$>$}\newline
+{\ttfamily \#include "{}miniaudio.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_sound_manager_1_1_sound_instance_m_a}{Sound\+Manager\+::\+Sound\+Instance\+MA}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{_sound_manager_8cpp_abc7a0f43b4e80a6b3ed65684e62cd255}{MA\+\_\+\+NO\+\_\+\+WASAPI}}
+\item 
+\#define \mbox{\hyperlink{_sound_manager_8cpp_abf77f70dc931f91a9f09e7b54d8278f5}{MINIAUDIO\+\_\+\+IMPLEMENTATION}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \mbox{\hyperlink{_sound_manager_8cpp_ac772bc1fd37c6da41f36dc2f1ee2874d}{MA\+\_\+\+Get\+Sound\+Sample\+Rate}} (ma\+\_\+sound \texorpdfstring{$\ast$}{*}snd, ma\+\_\+uint32 \&out\+SR)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{_sound_manager_8cpp_abc7a0f43b4e80a6b3ed65684e62cd255}\index{SoundManager.cpp@{SoundManager.cpp}!MA\_NO\_WASAPI@{MA\_NO\_WASAPI}}
+\index{MA\_NO\_WASAPI@{MA\_NO\_WASAPI}!SoundManager.cpp@{SoundManager.cpp}}
+\doxysubsubsection{\texorpdfstring{MA\_NO\_WASAPI}{MA\_NO\_WASAPI}}
+{\footnotesize\ttfamily \label{_sound_manager_8cpp_abc7a0f43b4e80a6b3ed65684e62cd255} 
+\#define MA\+\_\+\+NO\+\_\+\+WASAPI}
+
+
+
+Definition at line \mbox{\hyperlink{_sound_manager_8cpp_source_l00011}{11}} of file \mbox{\hyperlink{_sound_manager_8cpp_source}{Sound\+Manager.\+cpp}}.
+
+\Hypertarget{_sound_manager_8cpp_abf77f70dc931f91a9f09e7b54d8278f5}\index{SoundManager.cpp@{SoundManager.cpp}!MINIAUDIO\_IMPLEMENTATION@{MINIAUDIO\_IMPLEMENTATION}}
+\index{MINIAUDIO\_IMPLEMENTATION@{MINIAUDIO\_IMPLEMENTATION}!SoundManager.cpp@{SoundManager.cpp}}
+\doxysubsubsection{\texorpdfstring{MINIAUDIO\_IMPLEMENTATION}{MINIAUDIO\_IMPLEMENTATION}}
+{\footnotesize\ttfamily \label{_sound_manager_8cpp_abf77f70dc931f91a9f09e7b54d8278f5} 
+\#define MINIAUDIO\+\_\+\+IMPLEMENTATION}
+
+
+
+Definition at line \mbox{\hyperlink{_sound_manager_8cpp_source_l00012}{12}} of file \mbox{\hyperlink{_sound_manager_8cpp_source}{Sound\+Manager.\+cpp}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{_sound_manager_8cpp_ac772bc1fd37c6da41f36dc2f1ee2874d}\index{SoundManager.cpp@{SoundManager.cpp}!MA\_GetSoundSampleRate@{MA\_GetSoundSampleRate}}
+\index{MA\_GetSoundSampleRate@{MA\_GetSoundSampleRate}!SoundManager.cpp@{SoundManager.cpp}}
+\doxysubsubsection{\texorpdfstring{MA\_GetSoundSampleRate()}{MA\_GetSoundSampleRate()}}
+{\footnotesize\ttfamily \label{_sound_manager_8cpp_ac772bc1fd37c6da41f36dc2f1ee2874d} 
+static bool MA\+\_\+\+Get\+Sound\+Sample\+Rate (\begin{DoxyParamCaption}\item[{ma\+\_\+sound \texorpdfstring{$\ast$}{*}}]{snd}{, }\item[{ma\+\_\+uint32 \&}]{out\+SR}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Definition at line \mbox{\hyperlink{_sound_manager_8cpp_source_l00107}{107}} of file \mbox{\hyperlink{_sound_manager_8cpp_source}{Sound\+Manager.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00108\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ ma\_format\ fmt\{\};}
+\DoxyCodeLine{00110\ \ \ \ \ ma\_uint32\ ch\{\};}
+\DoxyCodeLine{00111\ \ \ \ \ ma\_uint32\ sr\{\};}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordflow}{if}\ (ma\_sound\_get\_data\_format(snd,\ \&fmt,\ \&ch,\ \&sr,\ \textcolor{keyword}{nullptr},\ 0)\ ==\ MA\_SUCCESS\ \&\&\ sr\ >\ 0)}
+\DoxyCodeLine{00113\ \ \ \ \ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ outSR\ =\ sr;}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00116\ \ \ \ \ \}}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00118\ \}}
+
+\end{DoxyCode}

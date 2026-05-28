@@ -1,0 +1,463 @@
+\doxysection{Jin\+Engine Class Reference}
+\hypertarget{class_jin_engine}{}\label{class_jin_engine}\index{JinEngine@{JinEngine}}
+
+
+Core engine class that manages initialization, main loop execution, and system lifecycle.  
+
+
+
+
+{\ttfamily \#include $<$Jin\+Engine.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_jin_engine_a96d62d7f74d9cad8036483f977da378a}{Jin\+Engine}} ()=default
+\item 
+bool \mbox{\hyperlink{class_jin_engine_af2b70669383ccdbbc05309c7e4eb50db}{Init}} (int window\+Width, int window\+Height)
+\begin{DoxyCompactList}\small\item\em Initializes all core engine systems. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_jin_engine_ad8355b55406f0be0b2f39b910ff7913e}{Run}} ()
+\begin{DoxyCompactList}\small\item\em Starts the main game loop. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_jin_engine_a0fff451b96b00ef74a4a9975239adfdd}{Request\+Quit}} ()
+\begin{DoxyCompactList}\small\item\em Requests termination of the main loop. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \& \mbox{\hyperlink{class_jin_engine_a304c17961ba994ba426ac9c42bb95c0f}{Get\+Engine\+Context}} ()
+\begin{DoxyCompactList}\small\item\em Returns a reference to the engine context. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_jin_engine_abb48d74bdf8780af4dc942c60752d6ae}{Render\+Debug\+Draws}} (bool should\+Show)
+\begin{DoxyCompactList}\small\item\em Enables or disables debug drawing. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_jin_engine_a35998b207827eaccd30459251853c9da}{Should\+Render\+Debug\+Draws}} () const
+\begin{DoxyCompactList}\small\item\em Checks whether debug drawing is enabled. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_jin_engine_a00fa0799a110bb78192a6a643f55d309}{Free}} () const
+\begin{DoxyCompactList}\small\item\em Terminates the engine and releases platform-\/level resources. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_jin_engine_a71b75d88fc59fe7c07d7b39585b9a6d4}{Set\+Engine\+Context}} ()
+\begin{DoxyCompactList}\small\item\em Initializes the \doxylink{struct_engine_context}{Engine\+Context} structure. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \mbox{\hyperlink{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53}{engine\+Context}}
+\item 
+\mbox{\hyperlink{class_state_manager}{State\+Manager}} \mbox{\hyperlink{class_jin_engine_ad502186dc160a7220927bb097efdf8c8}{state\+Manager}}
+\item 
+\mbox{\hyperlink{class_window_manager}{Window\+Manager}} \mbox{\hyperlink{class_jin_engine_a9763340f0811b106956345b6408501e9}{window\+Manager}}
+\item 
+\mbox{\hyperlink{class_input_manager}{Input\+Manager}} \mbox{\hyperlink{class_jin_engine_a426193d5cd44181e51632e8ea5608386}{input\+Manager}}
+\item 
+\mbox{\hyperlink{class_render_manager}{Render\+Manager}} \mbox{\hyperlink{class_jin_engine_a85df41758913ae8039aec5730977343c}{render\+Manager}}
+\item 
+\mbox{\hyperlink{class_sound_manager}{Sound\+Manager}} \mbox{\hyperlink{class_jin_engine_af6d08539edce1338de7b7363d70a68cb}{sound\+Manager}}
+\item 
+bool \mbox{\hyperlink{class_jin_engine_a77f01c1522c951fd70f0556b8e0fbae7}{should\+Run}} = true
+\item 
+bool \mbox{\hyperlink{class_jin_engine_a8f3e51bf086d9173e625e844b1e866c2}{show\+Debug\+Draw}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Core engine class that manages initialization, main loop execution, and system lifecycle. 
+
+\doxylink{class_jin_engine}{Jin\+Engine} is the central coordinator of all engine subsystems including windowing, input, rendering, sound, and state management. It owns all major managers and provides a unified \doxylink{struct_engine_context}{Engine\+Context} that is passed to all systems and game states.
+
+The engine lifecycle is as follows\+:
+\begin{DoxyEnumerate}
+\item \doxylink{class_jin_engine_af2b70669383ccdbbc05309c7e4eb50db}{Init()} ¡æ Initializes all subsystems and sets up \doxylink{struct_engine_context}{Engine\+Context}
+\item \doxylink{class_jin_engine_ad8355b55406f0be0b2f39b910ff7913e}{Run()} ¡æ Executes the main game loop
+\item \doxylink{class_jin_engine_a0fff451b96b00ef74a4a9975239adfdd}{Request\+Quit()} ¡æ Signals the loop to terminate
+\item \doxylink{class_jin_engine_a00fa0799a110bb78192a6a643f55d309}{Free()} ¡æ Cleans up resources and terminates GLFW
+\end{DoxyEnumerate}
+
+Internally, \doxylink{class_jin_engine_ad8355b55406f0be0b2f39b910ff7913e}{Run()} performs\+:
+\begin{DoxyItemize}
+\item Frame timing (\doxylink{struct_engine_timer}{Engine\+Timer})
+\item Input processing
+\item State update and rendering
+\item Sound update
+\item Buffer swapping
+\end{DoxyItemize}
+
+\begin{DoxyNote}{Note}
+This class should typically be instantiated once per application. 
+\end{DoxyNote}
+
+
+Definition at line \mbox{\hyperlink{_jin_engine_8h_source_l00028}{28}} of file \mbox{\hyperlink{_jin_engine_8h_source}{Jin\+Engine.\+h}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_jin_engine_a96d62d7f74d9cad8036483f977da378a}\index{JinEngine@{JinEngine}!JinEngine@{JinEngine}}
+\index{JinEngine@{JinEngine}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{JinEngine()}{JinEngine()}}
+{\footnotesize\ttfamily \label{class_jin_engine_a96d62d7f74d9cad8036483f977da378a} 
+Jin\+Engine\+::\+Jin\+Engine (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_jin_engine_a00fa0799a110bb78192a6a643f55d309}\index{JinEngine@{JinEngine}!Free@{Free}}
+\index{Free@{Free}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{Free()}{Free()}}
+{\footnotesize\ttfamily \label{class_jin_engine_a00fa0799a110bb78192a6a643f55d309} 
+void Jin\+Engine\+::\+Free (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Terminates the engine and releases platform-\/level resources. 
+
+Currently responsible for terminating GLFW. Called at the end of \doxylink{class_jin_engine_ad8355b55406f0be0b2f39b910ff7913e}{Run()}. 
+
+Definition at line \mbox{\hyperlink{_jin_engine_8cpp_source_l00074}{74}} of file \mbox{\hyperlink{_jin_engine_8cpp_source}{Jin\+Engine.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00075\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ glfwTerminate();}
+\DoxyCodeLine{00077\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_jin_engine_a304c17961ba994ba426ac9c42bb95c0f}\index{JinEngine@{JinEngine}!GetEngineContext@{GetEngineContext}}
+\index{GetEngineContext@{GetEngineContext}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{GetEngineContext()}{GetEngineContext()}}
+{\footnotesize\ttfamily \label{class_jin_engine_a304c17961ba994ba426ac9c42bb95c0f} 
+\mbox{\hyperlink{struct_engine_context}{Engine\+Context}} \& Jin\+Engine\+::\+Get\+Engine\+Context (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Returns a reference to the engine context. 
+
+\doxylink{struct_engine_context}{Engine\+Context} provides access to all core systems such as\+:
+\begin{DoxyItemize}
+\item \doxylink{class_state_manager}{State\+Manager}
+\item \doxylink{class_render_manager}{Render\+Manager}
+\item \doxylink{class_input_manager}{Input\+Manager}
+\item \doxylink{class_window_manager}{Window\+Manager}
+\item \doxylink{class_sound_manager}{Sound\+Manager}
+\end{DoxyItemize}
+
+This is the primary interface used by game states and objects.
+
+\begin{DoxyReturn}{Returns}
+Reference to \doxylink{struct_engine_context}{Engine\+Context}. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_jin_engine_8h_source_l00097}{97}} of file \mbox{\hyperlink{_jin_engine_8h_source}{Jin\+Engine.\+h}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00097\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53}{engineContext}};\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_jin_engine_af2b70669383ccdbbc05309c7e4eb50db}\index{JinEngine@{JinEngine}!Init@{Init}}
+\index{Init@{Init}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{Init()}{Init()}}
+{\footnotesize\ttfamily \label{class_jin_engine_af2b70669383ccdbbc05309c7e4eb50db} 
+bool Jin\+Engine\+::\+Init (\begin{DoxyParamCaption}\item[{int}]{window\+Width}{, }\item[{int}]{window\+Height}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Initializes all core engine systems. 
+
+This function sets up the \doxylink{struct_engine_context}{Engine\+Context} and initializes\+:
+\begin{DoxyItemize}
+\item \doxylink{class_window_manager}{Window\+Manager} (creates Open\+GL context and window)
+\item \doxylink{class_input_manager}{Input\+Manager} (binds input callbacks)
+\item \doxylink{class_sound_manager}{Sound\+Manager} (initializes audio engine)
+\item \doxylink{class_render_manager}{Render\+Manager} (prepares rendering pipeline)
+\end{DoxyItemize}
+
+If any critical subsystem fails to initialize, the function returns false.
+
+
+\begin{DoxyParams}{Parameters}
+{\em window\+Width} & Width of the application window. \\
+\hline
+{\em window\+Height} & Height of the application window. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if initialization succeeded, false otherwise. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_jin_engine_8cpp_source_l00021}{21}} of file \mbox{\hyperlink{_jin_engine_8cpp_source}{Jin\+Engine.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a71b75d88fc59fe7c07d7b39585b9a6d4}{SetEngineContext}}();}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{class_jin_engine_a9763340f0811b106956345b6408501e9}{windowManager}}.Init(windowWidth,\ windowHeight,\ *\textcolor{keyword}{this}))}
+\DoxyCodeLine{00025\ \ \ \ \ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ JIN\_ERR(\textcolor{stringliteral}{"{}WindowManager\ Initialization\ failed."{}});}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00028\ \ \ \ \ \}}
+\DoxyCodeLine{00029\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a426193d5cd44181e51632e8ea5608386}{inputManager}}.Init(\mbox{\hyperlink{class_jin_engine_a9763340f0811b106956345b6408501e9}{windowManager}}.GetHandle());}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{class_jin_engine_af6d08539edce1338de7b7363d70a68cb}{soundManager}}.Init())}
+\DoxyCodeLine{00031\ \ \ \ \ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ JIN\_ERR(\textcolor{stringliteral}{"{}SoundManager\ Initialization\ failed."{}});}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00034\ \ \ \ \ \}}
+\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a85df41758913ae8039aec5730977343c}{renderManager}}.Init(\mbox{\hyperlink{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53}{engineContext}});}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00038\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_jin_engine_abb48d74bdf8780af4dc942c60752d6ae}\index{JinEngine@{JinEngine}!RenderDebugDraws@{RenderDebugDraws}}
+\index{RenderDebugDraws@{RenderDebugDraws}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{RenderDebugDraws()}{RenderDebugDraws()}}
+{\footnotesize\ttfamily \label{class_jin_engine_abb48d74bdf8780af4dc942c60752d6ae} 
+void Jin\+Engine\+::\+Render\+Debug\+Draws (\begin{DoxyParamCaption}\item[{bool}]{should\+Show}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Enables or disables debug drawing. 
+
+When enabled, debug rendering such as collider outlines or debug lines will be rendered during the frame.
+
+
+\begin{DoxyParams}{Parameters}
+{\em should\+Show} & Whether debug drawing should be enabled. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_jin_engine_8h_source_l00108}{108}} of file \mbox{\hyperlink{_jin_engine_8h_source}{Jin\+Engine.\+h}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00108\ \{\ \mbox{\hyperlink{class_jin_engine_a8f3e51bf086d9173e625e844b1e866c2}{showDebugDraw}}\ =\ shouldShow;\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_jin_engine_a0fff451b96b00ef74a4a9975239adfdd}\index{JinEngine@{JinEngine}!RequestQuit@{RequestQuit}}
+\index{RequestQuit@{RequestQuit}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{RequestQuit()}{RequestQuit()}}
+{\footnotesize\ttfamily \label{class_jin_engine_a0fff451b96b00ef74a4a9975239adfdd} 
+void Jin\+Engine\+::\+Request\+Quit (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Requests termination of the main loop. 
+
+Sets an internal flag that causes \doxylink{class_jin_engine_ad8355b55406f0be0b2f39b910ff7913e}{Run()} to exit on the next frame. This is typically triggered by window close callbacks or user-\/defined logic. 
+
+Definition at line \mbox{\hyperlink{_jin_engine_8cpp_source_l00079}{79}} of file \mbox{\hyperlink{_jin_engine_8cpp_source}{Jin\+Engine.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00080\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a77f01c1522c951fd70f0556b8e0fbae7}{shouldRun}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00082\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_jin_engine_ad8355b55406f0be0b2f39b910ff7913e}\index{JinEngine@{JinEngine}!Run@{Run}}
+\index{Run@{Run}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{Run()}{Run()}}
+{\footnotesize\ttfamily \label{class_jin_engine_ad8355b55406f0be0b2f39b910ff7913e} 
+void Jin\+Engine\+::\+Run (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Starts the main game loop. 
+
+This function runs the core loop until\+:
+\begin{DoxyItemize}
+\item \doxylink{class_jin_engine_a0fff451b96b00ef74a4a9975239adfdd}{Request\+Quit()} is called, or
+\item The window is closed by the user.
+\end{DoxyItemize}
+
+Each frame performs\+:
+\begin{DoxyItemize}
+\item Delta time calculation (\doxylink{struct_engine_timer}{Engine\+Timer})
+\item Event polling and input update
+\item \doxylink{class_state_manager}{State\+Manager} update and draw
+\item \doxylink{class_sound_manager}{Sound\+Manager} update
+\item Buffer swap
+\end{DoxyItemize}
+
+After exiting the loop, all subsystems are properly freed.
+
+\begin{DoxyNote}{Note}
+This function blocks until the engine terminates. 
+\end{DoxyNote}
+
+
+Definition at line \mbox{\hyperlink{_jin_engine_8cpp_source_l00041}{41}} of file \mbox{\hyperlink{_jin_engine_8cpp_source}{Jin\+Engine.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00042\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ EngineTimer\ timer;}
+\DoxyCodeLine{00044\ \ \ \ \ timer.\mbox{\hyperlink{struct_engine_timer_ad25e0e9f721178342c6f3c7b953befd9}{Start}}();}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordflow}{while}\ (\mbox{\hyperlink{class_jin_engine_a77f01c1522c951fd70f0556b8e0fbae7}{shouldRun}}\ \&\&\ !glfwWindowShouldClose(\mbox{\hyperlink{class_jin_engine_a9763340f0811b106956345b6408501e9}{windowManager}}.GetHandle()))}
+\DoxyCodeLine{00046\ \ \ \ \ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ dt\ =\ timer.\mbox{\hyperlink{struct_engine_timer_abe3aa7aae238367ee3d3cee3ce7678de}{Tick}}(\mbox{\hyperlink{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53}{engineContext}});}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ fps\ =\ 0.0f;}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (timer.\mbox{\hyperlink{struct_engine_timer_aaf262d9972999ca9e988923b79c7c9eb}{ShouldUpdateFPS}}(fps))}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a9763340f0811b106956345b6408501e9}{windowManager}}.SetTitle(\textcolor{stringliteral}{"{}JinEngine\ -\/\ FPS:\ "{}}\ +\ std::to\_string(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(fps)));}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a9763340f0811b106956345b6408501e9}{windowManager}}.PollEvents();}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a426193d5cd44181e51632e8ea5608386}{inputManager}}.Update();}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a9763340f0811b106956345b6408501e9}{windowManager}}.ClearScreen();}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_jin_engine_ad502186dc160a7220927bb097efdf8c8}{stateManager}}.Update(dt,\ \mbox{\hyperlink{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53}{engineContext}});}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_jin_engine_ad502186dc160a7220927bb097efdf8c8}{stateManager}}.Draw(\mbox{\hyperlink{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53}{engineContext}});}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_jin_engine_af6d08539edce1338de7b7363d70a68cb}{soundManager}}.Update();}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a9763340f0811b106956345b6408501e9}{windowManager}}.SwapBuffers();}
+\DoxyCodeLine{00065\ \ \ \ \ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_af6d08539edce1338de7b7363d70a68cb}{soundManager}}.Free();}
+\DoxyCodeLine{00068\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_ad502186dc160a7220927bb097efdf8c8}{stateManager}}.Free(\mbox{\hyperlink{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53}{engineContext}});}
+\DoxyCodeLine{00069\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a85df41758913ae8039aec5730977343c}{renderManager}}.Free();}
+\DoxyCodeLine{00070\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a9763340f0811b106956345b6408501e9}{windowManager}}.Free();}
+\DoxyCodeLine{00071\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a00fa0799a110bb78192a6a643f55d309}{Free}}();}
+\DoxyCodeLine{00072\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_jin_engine_a71b75d88fc59fe7c07d7b39585b9a6d4}\index{JinEngine@{JinEngine}!SetEngineContext@{SetEngineContext}}
+\index{SetEngineContext@{SetEngineContext}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{SetEngineContext()}{SetEngineContext()}}
+{\footnotesize\ttfamily \label{class_jin_engine_a71b75d88fc59fe7c07d7b39585b9a6d4} 
+void Jin\+Engine\+::\+Set\+Engine\+Context (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Initializes the \doxylink{struct_engine_context}{Engine\+Context} structure. 
+
+Assigns pointers of all subsystem managers into \doxylink{struct_engine_context}{Engine\+Context} so that other systems can access them in a unified way.
+
+This must be called before any subsystem initialization. 
+
+Definition at line \mbox{\hyperlink{_jin_engine_8cpp_source_l00010}{10}} of file \mbox{\hyperlink{_jin_engine_8cpp_source}{Jin\+Engine.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53}{engineContext}}.stateManager\ =\ \&\mbox{\hyperlink{class_jin_engine_ad502186dc160a7220927bb097efdf8c8}{stateManager}};}
+\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53}{engineContext}}.windowManager\ =\ \&\mbox{\hyperlink{class_jin_engine_a9763340f0811b106956345b6408501e9}{windowManager}};}
+\DoxyCodeLine{00014\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53}{engineContext}}.inputManager\ =\ \&\mbox{\hyperlink{class_jin_engine_a426193d5cd44181e51632e8ea5608386}{inputManager}};}
+\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53}{engineContext}}.renderManager\ =\ \&\mbox{\hyperlink{class_jin_engine_a85df41758913ae8039aec5730977343c}{renderManager}};}
+\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53}{engineContext}}.soundManager\ =\ \&\mbox{\hyperlink{class_jin_engine_af6d08539edce1338de7b7363d70a68cb}{soundManager}};}
+\DoxyCodeLine{00017\ \ \ \ \ \mbox{\hyperlink{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53}{engineContext}}.engine\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{00018\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_jin_engine_a35998b207827eaccd30459251853c9da}\index{JinEngine@{JinEngine}!ShouldRenderDebugDraws@{ShouldRenderDebugDraws}}
+\index{ShouldRenderDebugDraws@{ShouldRenderDebugDraws}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{ShouldRenderDebugDraws()}{ShouldRenderDebugDraws()}}
+{\footnotesize\ttfamily \label{class_jin_engine_a35998b207827eaccd30459251853c9da} 
+bool Jin\+Engine\+::\+Should\+Render\+Debug\+Draws (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Checks whether debug drawing is enabled. 
+
+Used internally by \doxylink{class_render_manager}{Render\+Manager} to determine whether debug draw commands should be flushed.
+
+\begin{DoxyReturn}{Returns}
+true if debug drawing is enabled, false otherwise. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_jin_engine_8h_source_l00119}{119}} of file \mbox{\hyperlink{_jin_engine_8h_source}{Jin\+Engine.\+h}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00119\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_jin_engine_a8f3e51bf086d9173e625e844b1e866c2}{showDebugDraw}};\ \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53}\index{JinEngine@{JinEngine}!engineContext@{engineContext}}
+\index{engineContext@{engineContext}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{engineContext}{engineContext}}
+{\footnotesize\ttfamily \label{class_jin_engine_a7ec216ca83286f8ad98aead4cfb13d53} 
+\mbox{\hyperlink{struct_engine_context}{Engine\+Context}} Jin\+Engine\+::engine\+Context\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_jin_engine_8h_source_l00142}{142}} of file \mbox{\hyperlink{_jin_engine_8h_source}{Jin\+Engine.\+h}}.
+
+\Hypertarget{class_jin_engine_a426193d5cd44181e51632e8ea5608386}\index{JinEngine@{JinEngine}!inputManager@{inputManager}}
+\index{inputManager@{inputManager}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{inputManager}{inputManager}}
+{\footnotesize\ttfamily \label{class_jin_engine_a426193d5cd44181e51632e8ea5608386} 
+\mbox{\hyperlink{class_input_manager}{Input\+Manager}} Jin\+Engine\+::input\+Manager\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_jin_engine_8h_source_l00145}{145}} of file \mbox{\hyperlink{_jin_engine_8h_source}{Jin\+Engine.\+h}}.
+
+\Hypertarget{class_jin_engine_a85df41758913ae8039aec5730977343c}\index{JinEngine@{JinEngine}!renderManager@{renderManager}}
+\index{renderManager@{renderManager}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{renderManager}{renderManager}}
+{\footnotesize\ttfamily \label{class_jin_engine_a85df41758913ae8039aec5730977343c} 
+\mbox{\hyperlink{class_render_manager}{Render\+Manager}} Jin\+Engine\+::render\+Manager\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_jin_engine_8h_source_l00146}{146}} of file \mbox{\hyperlink{_jin_engine_8h_source}{Jin\+Engine.\+h}}.
+
+\Hypertarget{class_jin_engine_a77f01c1522c951fd70f0556b8e0fbae7}\index{JinEngine@{JinEngine}!shouldRun@{shouldRun}}
+\index{shouldRun@{shouldRun}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{shouldRun}{shouldRun}}
+{\footnotesize\ttfamily \label{class_jin_engine_a77f01c1522c951fd70f0556b8e0fbae7} 
+bool Jin\+Engine\+::should\+Run = true\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_jin_engine_8h_source_l00149}{149}} of file \mbox{\hyperlink{_jin_engine_8h_source}{Jin\+Engine.\+h}}.
+
+\Hypertarget{class_jin_engine_a8f3e51bf086d9173e625e844b1e866c2}\index{JinEngine@{JinEngine}!showDebugDraw@{showDebugDraw}}
+\index{showDebugDraw@{showDebugDraw}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{showDebugDraw}{showDebugDraw}}
+{\footnotesize\ttfamily \label{class_jin_engine_a8f3e51bf086d9173e625e844b1e866c2} 
+bool Jin\+Engine\+::show\+Debug\+Draw = false\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_jin_engine_8h_source_l00150}{150}} of file \mbox{\hyperlink{_jin_engine_8h_source}{Jin\+Engine.\+h}}.
+
+\Hypertarget{class_jin_engine_af6d08539edce1338de7b7363d70a68cb}\index{JinEngine@{JinEngine}!soundManager@{soundManager}}
+\index{soundManager@{soundManager}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{soundManager}{soundManager}}
+{\footnotesize\ttfamily \label{class_jin_engine_af6d08539edce1338de7b7363d70a68cb} 
+\mbox{\hyperlink{class_sound_manager}{Sound\+Manager}} Jin\+Engine\+::sound\+Manager\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_jin_engine_8h_source_l00147}{147}} of file \mbox{\hyperlink{_jin_engine_8h_source}{Jin\+Engine.\+h}}.
+
+\Hypertarget{class_jin_engine_ad502186dc160a7220927bb097efdf8c8}\index{JinEngine@{JinEngine}!stateManager@{stateManager}}
+\index{stateManager@{stateManager}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{stateManager}{stateManager}}
+{\footnotesize\ttfamily \label{class_jin_engine_ad502186dc160a7220927bb097efdf8c8} 
+\mbox{\hyperlink{class_state_manager}{State\+Manager}} Jin\+Engine\+::state\+Manager\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_jin_engine_8h_source_l00143}{143}} of file \mbox{\hyperlink{_jin_engine_8h_source}{Jin\+Engine.\+h}}.
+
+\Hypertarget{class_jin_engine_a9763340f0811b106956345b6408501e9}\index{JinEngine@{JinEngine}!windowManager@{windowManager}}
+\index{windowManager@{windowManager}!JinEngine@{JinEngine}}
+\doxysubsubsection{\texorpdfstring{windowManager}{windowManager}}
+{\footnotesize\ttfamily \label{class_jin_engine_a9763340f0811b106956345b6408501e9} 
+\mbox{\hyperlink{class_window_manager}{Window\+Manager}} Jin\+Engine\+::window\+Manager\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_jin_engine_8h_source_l00144}{144}} of file \mbox{\hyperlink{_jin_engine_8h_source}{Jin\+Engine.\+h}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Project/\+Jin\+Engine/\+Public/\mbox{\hyperlink{_jin_engine_8h}{Jin\+Engine.\+h}}\item 
+Project/\+Jin\+Engine/\+Private/\mbox{\hyperlink{_jin_engine_8cpp}{Jin\+Engine.\+cpp}}\end{DoxyCompactItemize}

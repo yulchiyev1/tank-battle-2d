@@ -1,0 +1,136 @@
+\doxysection{Project/\+Jin\+Engine/\+Public/\+Render\+Manager.h File Reference}
+\hypertarget{_render_manager_8h}{}\label{_render_manager_8h}\index{Project/JinEngine/Public/RenderManager.h@{Project/JinEngine/Public/RenderManager.h}}
+{\ttfamily \#include $<$functional$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$optional$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$array$>$}\newline
+{\ttfamily \#include "{}Animation.\+h"{}}\newline
+{\ttfamily \#include "{}Material.\+h"{}}\newline
+{\ttfamily \#include "{}Mesh.\+h"{}}\newline
+{\ttfamily \#include "{}Shader.\+h"{}}\newline
+{\ttfamily \#include "{}Texture.\+h"{}}\newline
+{\ttfamily \#include "{}Camera2\+D.\+h"{}}\newline
+{\ttfamily \#include "{}Font.\+h"{}}\newline
+{\ttfamily \#include "{}Game\+Object.\+h"{}}\newline
+{\ttfamily \#include "{}Instance\+Batch\+Key.\+h"{}}\newline
+{\ttfamily \#include "{}Render\+Layer\+Manager.\+h"{}}\newline
+{\ttfamily \#include "{}Window\+Manager.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_line_instance}{Line\+Instance}}
+\begin{DoxyCompactList}\small\item\em Represents one queued debug line draw request. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_render_manager}{Render\+Manager}}
+\begin{DoxyCompactList}\small\item\em Central rendering system responsible for resource registration, batching, culling integration, and frame submission. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_render_manager_1_1_camera_and_width_hash}{Render\+Manager\+::\+Camera\+And\+Width\+Hash}}
+\begin{DoxyCompactList}\small\item\em Hash functor for grouping debug lines by camera pointer and line width. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_frustum_culler}{Frustum\+Culler}}
+\begin{DoxyCompactList}\small\item\em Performs visibility culling against a 2D camera view. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{_render_manager_8h_ae4e6e1a3e9edc17c8fd355b231eebc82}{Texture\+Tag}} = std\+::string
+\item 
+using \mbox{\hyperlink{_render_manager_8h_abe8cf4755d44c6997e2dc40d1ee0c797}{Uniform\+Name}} = std\+::string
+\item 
+using \mbox{\hyperlink{_render_manager_8h_a1db05f4e4bd57f5e7db00f908dab03be}{File\+Path}} = std\+::string
+\item 
+using \mbox{\hyperlink{_render_manager_8h_ab1dda4d750e0cc5f202e4ebd8172bef6}{Render\+Command}} = std\+::function$<$void()$>$
+\item 
+using \mbox{\hyperlink{_render_manager_8h_a6dc798d95abd4b3fe7fe5051c9920759}{Shader\+Map}} = std\+::unordered\+\_\+map$<$\mbox{\hyperlink{class_shader}{Shader}}\texorpdfstring{$\ast$}{*}, std\+::map$<$\mbox{\hyperlink{struct_instance_batch_key}{Instance\+Batch\+Key}}, std\+::vector$<$\mbox{\hyperlink{class_object}{Object}}\texorpdfstring{$\ast$}{*}$>$$>$$>$
+\begin{DoxyCompactList}\small\item\em Groups render batches first by shader, then by batch key, then by object list. \end{DoxyCompactList}\item 
+using \mbox{\hyperlink{_render_manager_8h_ac442dd962bc57bfa60125f977d6edea5}{Render\+Map}} = std\+::array$<$std\+::map$<$int, \mbox{\hyperlink{_render_manager_8h_a6dc798d95abd4b3fe7fe5051c9920759}{Shader\+Map}}$>$, \mbox{\hyperlink{class_render_layer_manager_a0fa4422181dc1af5f490062a8fe84e6d}{Render\+Layer\+Manager\+::\+MAX\+\_\+\+LAYERS}}$>$
+\begin{DoxyCompactList}\small\item\em Stores the full frame\textquotesingle{}s render organization by render layer and depth bucket. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{_render_manager_8h_a1db05f4e4bd57f5e7db00f908dab03be}\index{RenderManager.h@{RenderManager.h}!FilePath@{FilePath}}
+\index{FilePath@{FilePath}!RenderManager.h@{RenderManager.h}}
+\doxysubsubsection{\texorpdfstring{FilePath}{FilePath}}
+{\footnotesize\ttfamily \label{_render_manager_8h_a1db05f4e4bd57f5e7db00f908dab03be} 
+using \mbox{\hyperlink{_render_manager_8h_a1db05f4e4bd57f5e7db00f908dab03be}{File\+Path}} = std\+::string}
+
+
+
+Definition at line \mbox{\hyperlink{_render_manager_8h_source_l00029}{29}} of file \mbox{\hyperlink{_render_manager_8h_source}{Render\+Manager.\+h}}.
+
+\Hypertarget{_render_manager_8h_ab1dda4d750e0cc5f202e4ebd8172bef6}\index{RenderManager.h@{RenderManager.h}!RenderCommand@{RenderCommand}}
+\index{RenderCommand@{RenderCommand}!RenderManager.h@{RenderManager.h}}
+\doxysubsubsection{\texorpdfstring{RenderCommand}{RenderCommand}}
+{\footnotesize\ttfamily \label{_render_manager_8h_ab1dda4d750e0cc5f202e4ebd8172bef6} 
+using \mbox{\hyperlink{_render_manager_8h_ab1dda4d750e0cc5f202e4ebd8172bef6}{Render\+Command}} = std\+::function$<$void()$>$}
+
+
+
+Definition at line \mbox{\hyperlink{_render_manager_8h_source_l00030}{30}} of file \mbox{\hyperlink{_render_manager_8h_source}{Render\+Manager.\+h}}.
+
+\Hypertarget{_render_manager_8h_ac442dd962bc57bfa60125f977d6edea5}\index{RenderManager.h@{RenderManager.h}!RenderMap@{RenderMap}}
+\index{RenderMap@{RenderMap}!RenderManager.h@{RenderManager.h}}
+\doxysubsubsection{\texorpdfstring{RenderMap}{RenderMap}}
+{\footnotesize\ttfamily \label{_render_manager_8h_ac442dd962bc57bfa60125f977d6edea5} 
+using \mbox{\hyperlink{_render_manager_8h_ac442dd962bc57bfa60125f977d6edea5}{Render\+Map}} = std\+::array$<$std\+::map$<$int, \mbox{\hyperlink{_render_manager_8h_a6dc798d95abd4b3fe7fe5051c9920759}{Shader\+Map}}$>$, \mbox{\hyperlink{class_render_layer_manager_a0fa4422181dc1af5f490062a8fe84e6d}{Render\+Layer\+Manager\+::\+MAX\+\_\+\+LAYERS}}$>$}
+
+
+
+Stores the full frame\textquotesingle{}s render organization by render layer and depth bucket. 
+
+\doxylink{_render_manager_8h_ac442dd962bc57bfa60125f977d6edea5}{Render\+Map} is indexed by render layer first. Each layer stores a map keyed by quantized depth. Each depth entry then contains a \doxylink{_render_manager_8h_a6dc798d95abd4b3fe7fe5051c9920759}{Shader\+Map}.
+
+This means the effective ordering is\+:
+\begin{DoxyItemize}
+\item render layer
+\item quantized depth
+\item shader
+\item instance batch key
+\item object list
+\end{DoxyItemize}
+
+\doxylink{class_render_manager_a8e033cb685d2619f9b5dfec8a165e387}{Render\+Manager\+::\+Build\+Render\+Map()} fills this structure, and \doxylink{class_render_manager_a620231f7f4119dbf26ef416478578cde}{Render\+Manager\+::\+Flush\+Draw\+Commands()} consumes and clears it. 
+
+Definition at line \mbox{\hyperlink{_render_manager_8h_source_l00064}{64}} of file \mbox{\hyperlink{_render_manager_8h_source}{Render\+Manager.\+h}}.
+
+\Hypertarget{_render_manager_8h_a6dc798d95abd4b3fe7fe5051c9920759}\index{RenderManager.h@{RenderManager.h}!ShaderMap@{ShaderMap}}
+\index{ShaderMap@{ShaderMap}!RenderManager.h@{RenderManager.h}}
+\doxysubsubsection{\texorpdfstring{ShaderMap}{ShaderMap}}
+{\footnotesize\ttfamily \label{_render_manager_8h_a6dc798d95abd4b3fe7fe5051c9920759} 
+using \mbox{\hyperlink{_render_manager_8h_a6dc798d95abd4b3fe7fe5051c9920759}{Shader\+Map}} = std\+::unordered\+\_\+map$<$\mbox{\hyperlink{class_shader}{Shader}}\texorpdfstring{$\ast$}{*}, std\+::map$<$\mbox{\hyperlink{struct_instance_batch_key}{Instance\+Batch\+Key}}, std\+::vector$<$\mbox{\hyperlink{class_object}{Object}}\texorpdfstring{$\ast$}{*}$>$$>$$>$}
+
+
+
+Groups render batches first by shader, then by batch key, then by object list. 
+
+The engine uses this structure while building the frame\textquotesingle{}s render map. For a given depth bucket inside a given render layer, objects are grouped by\+:
+\begin{DoxyItemize}
+\item Shader\texorpdfstring{$\ast$}{*}
+\item \doxylink{struct_instance_batch_key}{Instance\+Batch\+Key}
+\item std\+::vector$<$\+Object\texorpdfstring{$\ast$}{*}$>$
+\end{DoxyItemize}
+
+This grouping lets \doxylink{class_render_manager}{Render\+Manager} later decide whether to draw objects one by one or through the instancing path. 
+
+Definition at line \mbox{\hyperlink{_render_manager_8h_source_l00045}{45}} of file \mbox{\hyperlink{_render_manager_8h_source}{Render\+Manager.\+h}}.
+
+\Hypertarget{_render_manager_8h_ae4e6e1a3e9edc17c8fd355b231eebc82}\index{RenderManager.h@{RenderManager.h}!TextureTag@{TextureTag}}
+\index{TextureTag@{TextureTag}!RenderManager.h@{RenderManager.h}}
+\doxysubsubsection{\texorpdfstring{TextureTag}{TextureTag}}
+{\footnotesize\ttfamily \label{_render_manager_8h_ae4e6e1a3e9edc17c8fd355b231eebc82} 
+using \mbox{\hyperlink{_render_manager_8h_ae4e6e1a3e9edc17c8fd355b231eebc82}{Texture\+Tag}} = std\+::string}
+
+
+
+Definition at line \mbox{\hyperlink{_render_manager_8h_source_l00027}{27}} of file \mbox{\hyperlink{_render_manager_8h_source}{Render\+Manager.\+h}}.
+
+\Hypertarget{_render_manager_8h_abe8cf4755d44c6997e2dc40d1ee0c797}\index{RenderManager.h@{RenderManager.h}!UniformName@{UniformName}}
+\index{UniformName@{UniformName}!RenderManager.h@{RenderManager.h}}
+\doxysubsubsection{\texorpdfstring{UniformName}{UniformName}}
+{\footnotesize\ttfamily \label{_render_manager_8h_abe8cf4755d44c6997e2dc40d1ee0c797} 
+using \mbox{\hyperlink{_render_manager_8h_abe8cf4755d44c6997e2dc40d1ee0c797}{Uniform\+Name}} = std\+::string}
+
+
+
+Definition at line \mbox{\hyperlink{_render_manager_8h_source_l00028}{28}} of file \mbox{\hyperlink{_render_manager_8h_source}{Render\+Manager.\+h}}.
+

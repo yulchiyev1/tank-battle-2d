@@ -1,0 +1,98 @@
+\doxysection{Texture\+Settings Struct Reference}
+\hypertarget{struct_texture_settings}{}\label{struct_texture_settings}\index{TextureSettings@{TextureSettings}}
+
+
+Describes sampler-\/state options used when creating a texture object.  
+
+
+
+
+{\ttfamily \#include $<$Texture.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{_texture_8h_a5085aa1953bce0fe12fbdb71e56333c6}{Texture\+Min\+Filter}} \mbox{\hyperlink{struct_texture_settings_a9d30e90e0b8346cad1e6c10a6c543087}{min\+Filter}} = \mbox{\hyperlink{_texture_8h_a5085aa1953bce0fe12fbdb71e56333c6a32a843da6ea40ab3b17a3421ccdf671b}{Texture\+Min\+Filter\+::\+Linear}}
+\item 
+\mbox{\hyperlink{_texture_8h_aee79dc6a68e22c98941b4a3e1489e915}{Texture\+Mag\+Filter}} \mbox{\hyperlink{struct_texture_settings_ae47adc7174dcf5bde39e6f8bd1ffc7a0}{mag\+Filter}} = \mbox{\hyperlink{_texture_8h_aee79dc6a68e22c98941b4a3e1489e915a32a843da6ea40ab3b17a3421ccdf671b}{Texture\+Mag\+Filter\+::\+Linear}}
+\item 
+\mbox{\hyperlink{_texture_8h_ae99e0f833ccd2a830a871dba98d1c5bf}{Texture\+Wrap}} \mbox{\hyperlink{struct_texture_settings_a3b54cb18a7fd881b2f7e01d1dd29db3a}{wrapS}} = \mbox{\hyperlink{_texture_8h_ae99e0f833ccd2a830a871dba98d1c5bfa74556551231333c36debc3d373261134}{Texture\+Wrap\+::\+Clamp\+To\+Edge}}
+\item 
+\mbox{\hyperlink{_texture_8h_ae99e0f833ccd2a830a871dba98d1c5bf}{Texture\+Wrap}} \mbox{\hyperlink{struct_texture_settings_a89e689b4de2e7f2a7c856d091a19632c}{wrapT}} = \mbox{\hyperlink{_texture_8h_ae99e0f833ccd2a830a871dba98d1c5bfa74556551231333c36debc3d373261134}{Texture\+Wrap\+::\+Clamp\+To\+Edge}}
+\item 
+bool \mbox{\hyperlink{struct_texture_settings_a7e4fe01f2ced85bd77fedc1ea9e36518}{generate\+Mipmap}} = true
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Describes sampler-\/state options used when creating a texture object. 
+
+This structure is consumed by \doxylink{class_texture}{Texture} constructors and by the internal texture regeneration path. It controls minification and magnification filters, wrap modes for the S and T axes, and whether mipmaps are generated after uploading the texture data.
+
+The implementation applies these values directly to the Open\+GL texture object after storage allocation and pixel upload. When generate\+Mipmap is enabled, the texture allocates enough mip levels for the full chain and generates them immediately after the base level upload.
+
+\begin{DoxyNote}{Note}
+These settings are only applied when a GPU texture is created or recreated. Updating a wrapper to reference an external Open\+GL texture ID does not reapply these settings automatically. 
+\end{DoxyNote}
+
+
+Definition at line \mbox{\hyperlink{_texture_8h_source_l00049}{49}} of file \mbox{\hyperlink{_texture_8h_source}{Texture.\+h}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_texture_settings_a7e4fe01f2ced85bd77fedc1ea9e36518}\index{TextureSettings@{TextureSettings}!generateMipmap@{generateMipmap}}
+\index{generateMipmap@{generateMipmap}!TextureSettings@{TextureSettings}}
+\doxysubsubsection{\texorpdfstring{generateMipmap}{generateMipmap}}
+{\footnotesize\ttfamily \label{struct_texture_settings_a7e4fe01f2ced85bd77fedc1ea9e36518} 
+bool Texture\+Settings\+::generate\+Mipmap = true}
+
+
+
+Definition at line \mbox{\hyperlink{_texture_8h_source_l00055}{55}} of file \mbox{\hyperlink{_texture_8h_source}{Texture.\+h}}.
+
+\Hypertarget{struct_texture_settings_ae47adc7174dcf5bde39e6f8bd1ffc7a0}\index{TextureSettings@{TextureSettings}!magFilter@{magFilter}}
+\index{magFilter@{magFilter}!TextureSettings@{TextureSettings}}
+\doxysubsubsection{\texorpdfstring{magFilter}{magFilter}}
+{\footnotesize\ttfamily \label{struct_texture_settings_ae47adc7174dcf5bde39e6f8bd1ffc7a0} 
+\mbox{\hyperlink{_texture_8h_aee79dc6a68e22c98941b4a3e1489e915}{Texture\+Mag\+Filter}} Texture\+Settings\+::mag\+Filter = \mbox{\hyperlink{_texture_8h_aee79dc6a68e22c98941b4a3e1489e915a32a843da6ea40ab3b17a3421ccdf671b}{Texture\+Mag\+Filter\+::\+Linear}}}
+
+
+
+Definition at line \mbox{\hyperlink{_texture_8h_source_l00052}{52}} of file \mbox{\hyperlink{_texture_8h_source}{Texture.\+h}}.
+
+\Hypertarget{struct_texture_settings_a9d30e90e0b8346cad1e6c10a6c543087}\index{TextureSettings@{TextureSettings}!minFilter@{minFilter}}
+\index{minFilter@{minFilter}!TextureSettings@{TextureSettings}}
+\doxysubsubsection{\texorpdfstring{minFilter}{minFilter}}
+{\footnotesize\ttfamily \label{struct_texture_settings_a9d30e90e0b8346cad1e6c10a6c543087} 
+\mbox{\hyperlink{_texture_8h_a5085aa1953bce0fe12fbdb71e56333c6}{Texture\+Min\+Filter}} Texture\+Settings\+::min\+Filter = \mbox{\hyperlink{_texture_8h_a5085aa1953bce0fe12fbdb71e56333c6a32a843da6ea40ab3b17a3421ccdf671b}{Texture\+Min\+Filter\+::\+Linear}}}
+
+
+
+Definition at line \mbox{\hyperlink{_texture_8h_source_l00051}{51}} of file \mbox{\hyperlink{_texture_8h_source}{Texture.\+h}}.
+
+\Hypertarget{struct_texture_settings_a3b54cb18a7fd881b2f7e01d1dd29db3a}\index{TextureSettings@{TextureSettings}!wrapS@{wrapS}}
+\index{wrapS@{wrapS}!TextureSettings@{TextureSettings}}
+\doxysubsubsection{\texorpdfstring{wrapS}{wrapS}}
+{\footnotesize\ttfamily \label{struct_texture_settings_a3b54cb18a7fd881b2f7e01d1dd29db3a} 
+\mbox{\hyperlink{_texture_8h_ae99e0f833ccd2a830a871dba98d1c5bf}{Texture\+Wrap}} Texture\+Settings\+::wrapS = \mbox{\hyperlink{_texture_8h_ae99e0f833ccd2a830a871dba98d1c5bfa74556551231333c36debc3d373261134}{Texture\+Wrap\+::\+Clamp\+To\+Edge}}}
+
+
+
+Definition at line \mbox{\hyperlink{_texture_8h_source_l00053}{53}} of file \mbox{\hyperlink{_texture_8h_source}{Texture.\+h}}.
+
+\Hypertarget{struct_texture_settings_a89e689b4de2e7f2a7c856d091a19632c}\index{TextureSettings@{TextureSettings}!wrapT@{wrapT}}
+\index{wrapT@{wrapT}!TextureSettings@{TextureSettings}}
+\doxysubsubsection{\texorpdfstring{wrapT}{wrapT}}
+{\footnotesize\ttfamily \label{struct_texture_settings_a89e689b4de2e7f2a7c856d091a19632c} 
+\mbox{\hyperlink{_texture_8h_ae99e0f833ccd2a830a871dba98d1c5bf}{Texture\+Wrap}} Texture\+Settings\+::wrapT = \mbox{\hyperlink{_texture_8h_ae99e0f833ccd2a830a871dba98d1c5bfa74556551231333c36debc3d373261134}{Texture\+Wrap\+::\+Clamp\+To\+Edge}}}
+
+
+
+Definition at line \mbox{\hyperlink{_texture_8h_source_l00054}{54}} of file \mbox{\hyperlink{_texture_8h_source}{Texture.\+h}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Project/\+Jin\+Engine/\+Public/\mbox{\hyperlink{_texture_8h}{Texture.\+h}}\end{DoxyCompactItemize}

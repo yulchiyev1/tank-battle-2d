@@ -1,0 +1,69 @@
+\doxysection{Sprite\+Clip Struct Reference}
+\hypertarget{struct_sprite_clip}{}\label{struct_sprite_clip}\index{SpriteClip@{SpriteClip}}
+
+
+Describes a named sprite animation clip.  
+
+
+
+
+{\ttfamily \#include $<$Animation.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ int $>$ \mbox{\hyperlink{struct_sprite_clip_a64edc4b888946923170ee69fc00a75b3}{frame\+Indices}}
+\item 
+float \mbox{\hyperlink{struct_sprite_clip_a523b8e6b2ae91841db8d0a695af55728}{frame\+Duration}}
+\item 
+bool \mbox{\hyperlink{struct_sprite_clip_a0f0f0cf07d19607cef868cbd1090dbaf}{looping}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Describes a named sprite animation clip. 
+
+A \doxylink{struct_sprite_clip}{Sprite\+Clip} groups multiple frame indices into a reusable animation sequence. The animation advances through frame\+Indices in order using frame\+Duration as the time interval for each step.
+
+If looping is enabled, playback returns to the first local frame after reaching the end of the sequence. Otherwise, playback remains on the last frame and the animator marks the clip as finished. 
+
+Definition at line \mbox{\hyperlink{_animation_8h_source_l00042}{42}} of file \mbox{\hyperlink{_animation_8h_source}{Animation.\+h}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_sprite_clip_a523b8e6b2ae91841db8d0a695af55728}\index{SpriteClip@{SpriteClip}!frameDuration@{frameDuration}}
+\index{frameDuration@{frameDuration}!SpriteClip@{SpriteClip}}
+\doxysubsubsection{\texorpdfstring{frameDuration}{frameDuration}}
+{\footnotesize\ttfamily \label{struct_sprite_clip_a523b8e6b2ae91841db8d0a695af55728} 
+float Sprite\+Clip\+::frame\+Duration}
+
+
+
+Definition at line \mbox{\hyperlink{_animation_8h_source_l00045}{45}} of file \mbox{\hyperlink{_animation_8h_source}{Animation.\+h}}.
+
+\Hypertarget{struct_sprite_clip_a64edc4b888946923170ee69fc00a75b3}\index{SpriteClip@{SpriteClip}!frameIndices@{frameIndices}}
+\index{frameIndices@{frameIndices}!SpriteClip@{SpriteClip}}
+\doxysubsubsection{\texorpdfstring{frameIndices}{frameIndices}}
+{\footnotesize\ttfamily \label{struct_sprite_clip_a64edc4b888946923170ee69fc00a75b3} 
+std\+::vector$<$int$>$ Sprite\+Clip\+::frame\+Indices}
+
+
+
+Definition at line \mbox{\hyperlink{_animation_8h_source_l00044}{44}} of file \mbox{\hyperlink{_animation_8h_source}{Animation.\+h}}.
+
+\Hypertarget{struct_sprite_clip_a0f0f0cf07d19607cef868cbd1090dbaf}\index{SpriteClip@{SpriteClip}!looping@{looping}}
+\index{looping@{looping}!SpriteClip@{SpriteClip}}
+\doxysubsubsection{\texorpdfstring{looping}{looping}}
+{\footnotesize\ttfamily \label{struct_sprite_clip_a0f0f0cf07d19607cef868cbd1090dbaf} 
+bool Sprite\+Clip\+::looping}
+
+
+
+Definition at line \mbox{\hyperlink{_animation_8h_source_l00046}{46}} of file \mbox{\hyperlink{_animation_8h_source}{Animation.\+h}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Project/\+Jin\+Engine/\+Public/\mbox{\hyperlink{_animation_8h}{Animation.\+h}}\end{DoxyCompactItemize}

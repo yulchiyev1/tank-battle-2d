@@ -1,0 +1,61 @@
+\doxysection{Text\+Instance Struct Reference}
+\hypertarget{struct_text_instance}{}\label{struct_text_instance}\index{TextInstance@{TextInstance}}
+
+
+Stores the font reference and UTF-\/8 text content used by a \doxylink{class_text_object}{Text\+Object}.  
+
+
+
+
+{\ttfamily \#include $<$Text\+Object.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::weak\+\_\+ptr$<$ \mbox{\hyperlink{class_font}{Font}} $>$ \mbox{\hyperlink{struct_text_instance_aa8d14df286ab02611473e5c9fce8d9fe}{font}}
+\item 
+std\+::string \mbox{\hyperlink{struct_text_instance_a023baf061b0a91453e3c9abf64d1a230}{text}} = "{}"{}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Stores the font reference and UTF-\/8 text content used by a \doxylink{class_text_object}{Text\+Object}. 
+
+\doxylink{struct_text_instance}{Text\+Instance} is a lightweight data container that groups the minimum information required to generate and refresh a text mesh\+:
+\begin{DoxyItemize}
+\item the font resource used for glyph lookup and atlas access,
+\item the actual text string to render.
+\end{DoxyItemize}
+
+The font is stored as a weak\+\_\+ptr so that \doxylink{class_text_object}{Text\+Object} does not force ownership of the font resource. Because of that, \doxylink{class_text_object}{Text\+Object} must lock the weak\+\_\+ptr before using it, and safely handles the case where the font has expired. 
+
+Definition at line \mbox{\hyperlink{_text_object_8h_source_l00022}{22}} of file \mbox{\hyperlink{_text_object_8h_source}{Text\+Object.\+h}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_text_instance_aa8d14df286ab02611473e5c9fce8d9fe}\index{TextInstance@{TextInstance}!font@{font}}
+\index{font@{font}!TextInstance@{TextInstance}}
+\doxysubsubsection{\texorpdfstring{font}{font}}
+{\footnotesize\ttfamily \label{struct_text_instance_aa8d14df286ab02611473e5c9fce8d9fe} 
+std\+::weak\+\_\+ptr$<$\mbox{\hyperlink{class_font}{Font}}$>$ Text\+Instance\+::font}
+
+
+
+Definition at line \mbox{\hyperlink{_text_object_8h_source_l00024}{24}} of file \mbox{\hyperlink{_text_object_8h_source}{Text\+Object.\+h}}.
+
+\Hypertarget{struct_text_instance_a023baf061b0a91453e3c9abf64d1a230}\index{TextInstance@{TextInstance}!text@{text}}
+\index{text@{text}!TextInstance@{TextInstance}}
+\doxysubsubsection{\texorpdfstring{text}{text}}
+{\footnotesize\ttfamily \label{struct_text_instance_a023baf061b0a91453e3c9abf64d1a230} 
+std\+::string Text\+Instance\+::text = "{}"{}}
+
+
+
+Definition at line \mbox{\hyperlink{_text_object_8h_source_l00025}{25}} of file \mbox{\hyperlink{_text_object_8h_source}{Text\+Object.\+h}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Project/\+Jin\+Engine/\+Public/\mbox{\hyperlink{_text_object_8h}{Text\+Object.\+h}}\end{DoxyCompactItemize}

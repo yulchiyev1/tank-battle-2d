@@ -1,0 +1,79 @@
+\doxysection{Texture\+Job Struct Reference}
+\hypertarget{struct_texture_job}{}\label{struct_texture_job}\index{TextureJob@{TextureJob}}
+
+
+Describes a texture loading request for the asynchronous resource loader.  
+
+
+
+
+{\ttfamily \#include $<$Async\+Resource\+Loader.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{struct_texture_job_a8ae4dec0cf3a3eb77dac31badc6844a9}{tag}}
+\item 
+std\+::string \mbox{\hyperlink{struct_texture_job_a03882f684a0f026bf62c66b235cd211f}{file\+Path}}
+\item 
+\mbox{\hyperlink{struct_texture_settings}{Texture\+Settings}} \mbox{\hyperlink{struct_texture_job_aa1d5dd11a257cc26ffbb0839f07d39c7}{settings}} \{\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Describes a texture loading request for the asynchronous resource loader. 
+
+\doxylink{struct_texture_job}{Texture\+Job} stores all information required for the worker thread to load an image file from disk and prepare raw pixel data for later GPU upload.
+
+The asynchronous loader reads the file using stb\+\_\+image on the worker thread, fills a \doxylink{struct_texture_result}{Texture\+Result} with decoded pixel data, and pushes that result into the completed result list for consumption on the main thread. \+:content\+Reference\mbox{[}oaicite\+:1\mbox{]}\{index=1\}
+
+\begin{DoxyNote}{Note}
+This job does not create a GPU texture object directly. It only carries the information required to decode the source image. 
+\end{DoxyNote}
+
+
+Definition at line \mbox{\hyperlink{_async_resource_loader_8h_source_l00028}{28}} of file \mbox{\hyperlink{_async_resource_loader_8h_source}{Async\+Resource\+Loader.\+h}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_texture_job_a03882f684a0f026bf62c66b235cd211f}\index{TextureJob@{TextureJob}!filePath@{filePath}}
+\index{filePath@{filePath}!TextureJob@{TextureJob}}
+\doxysubsubsection{\texorpdfstring{filePath}{filePath}}
+{\footnotesize\ttfamily \label{struct_texture_job_a03882f684a0f026bf62c66b235cd211f} 
+std\+::string Texture\+Job\+::file\+Path}
+
+
+
+Definition at line \mbox{\hyperlink{_async_resource_loader_8h_source_l00031}{31}} of file \mbox{\hyperlink{_async_resource_loader_8h_source}{Async\+Resource\+Loader.\+h}}.
+
+\Hypertarget{struct_texture_job_aa1d5dd11a257cc26ffbb0839f07d39c7}\index{TextureJob@{TextureJob}!settings@{settings}}
+\index{settings@{settings}!TextureJob@{TextureJob}}
+\doxysubsubsection{\texorpdfstring{settings}{settings}}
+{\footnotesize\ttfamily \label{struct_texture_job_aa1d5dd11a257cc26ffbb0839f07d39c7} 
+\mbox{\hyperlink{struct_texture_settings}{Texture\+Settings}} Texture\+Job\+::settings \{\}}
+
+
+
+Definition at line \mbox{\hyperlink{_async_resource_loader_8h_source_l00032}{32}} of file \mbox{\hyperlink{_async_resource_loader_8h_source}{Async\+Resource\+Loader.\+h}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00032\ \{\};}
+
+\end{DoxyCode}
+\Hypertarget{struct_texture_job_a8ae4dec0cf3a3eb77dac31badc6844a9}\index{TextureJob@{TextureJob}!tag@{tag}}
+\index{tag@{tag}!TextureJob@{TextureJob}}
+\doxysubsubsection{\texorpdfstring{tag}{tag}}
+{\footnotesize\ttfamily \label{struct_texture_job_a8ae4dec0cf3a3eb77dac31badc6844a9} 
+std\+::string Texture\+Job\+::tag}
+
+
+
+Definition at line \mbox{\hyperlink{_async_resource_loader_8h_source_l00030}{30}} of file \mbox{\hyperlink{_async_resource_loader_8h_source}{Async\+Resource\+Loader.\+h}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Project/\+Jin\+Engine/\+Public/\mbox{\hyperlink{_async_resource_loader_8h}{Async\+Resource\+Loader.\+h}}\end{DoxyCompactItemize}

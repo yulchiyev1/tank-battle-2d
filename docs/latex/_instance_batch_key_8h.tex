@@ -1,0 +1,54 @@
+\doxysection{Project/\+Jin\+Engine/\+Public/\+Instance\+Batch\+Key.h File Reference}
+\hypertarget{_instance_batch_key_8h}{}\label{_instance_batch_key_8h}\index{Project/JinEngine/Public/InstanceBatchKey.h@{Project/JinEngine/Public/InstanceBatchKey.h}}
+{\ttfamily \#include "{}Game\+Object.\+h"{}}\newline
+{\ttfamily \#include "{}Mesh.\+h"{}}\newline
+{\ttfamily \#include "{}Material.\+h"{}}\newline
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_instance_batch_key}{Instance\+Batch\+Key}}
+\begin{DoxyCompactList}\small\item\em Key type used to group objects into the same instanced rendering batch. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structstd_1_1hash_3_01_instance_batch_key_01_4}{std\+::hash$<$ Instance\+Batch\+Key $>$}}
+\begin{DoxyCompactList}\small\item\em Hash specialization for \doxylink{struct_instance_batch_key}{Instance\+Batch\+Key}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacestd}{std}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{_instance_batch_key_8h_a89183dea2a482689b325a6fa102a641a}{Instanced\+Batch\+Map}} = std\+::unordered\+\_\+map$<$int, std\+::unordered\+\_\+map$<$\mbox{\hyperlink{struct_instance_batch_key}{Instance\+Batch\+Key}}, std\+::vector$<$\mbox{\hyperlink{class_game_object}{Game\+Object}}\texorpdfstring{$\ast$}{*}$>$$>$$>$
+\begin{DoxyCompactList}\small\item\em Nested unordered map type used to store instanced rendering batches by depth and batch key. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{_instance_batch_key_8h_a89183dea2a482689b325a6fa102a641a}\index{InstanceBatchKey.h@{InstanceBatchKey.h}!InstancedBatchMap@{InstancedBatchMap}}
+\index{InstancedBatchMap@{InstancedBatchMap}!InstanceBatchKey.h@{InstanceBatchKey.h}}
+\doxysubsubsection{\texorpdfstring{InstancedBatchMap}{InstancedBatchMap}}
+{\footnotesize\ttfamily \label{_instance_batch_key_8h_a89183dea2a482689b325a6fa102a641a} 
+using \mbox{\hyperlink{_instance_batch_key_8h_a89183dea2a482689b325a6fa102a641a}{Instanced\+Batch\+Map}} = std\+::unordered\+\_\+map$<$int, std\+::unordered\+\_\+map$<$\mbox{\hyperlink{struct_instance_batch_key}{Instance\+Batch\+Key}}, std\+::vector$<$\mbox{\hyperlink{class_game_object}{Game\+Object}}\texorpdfstring{$\ast$}{*}$>$$>$$>$}
+
+
+
+Nested unordered map type used to store instanced rendering batches by depth and batch key. 
+
+The outer int key typically represents a depth bucket, z-\/order bucket, or another integer-\/based grouping level chosen by the render pipeline.
+
+The inner unordered\+\_\+map groups objects by \doxylink{struct_instance_batch_key}{Instance\+Batch\+Key}, meaning objects that share the same mesh, material, and sprite sheet are collected into the same vector.
+
+In other words, this structure can be interpreted as\+:
+
+
+\begin{DoxyItemize}
+\item first level\+: integer grouping (such as depth)
+\item second level\+: shared instancing resource key
+\item value\+: list of \doxylink{class_game_object}{Game\+Object} pointers belonging to that batch
+\end{DoxyItemize}
+
+This type is intended to make instanced draw submission easier by pre-\/grouping objects that can be rendered together. 
+
+Definition at line \mbox{\hyperlink{_instance_batch_key_8h_source_l00145}{145}} of file \mbox{\hyperlink{_instance_batch_key_8h_source}{Instance\+Batch\+Key.\+h}}.
+

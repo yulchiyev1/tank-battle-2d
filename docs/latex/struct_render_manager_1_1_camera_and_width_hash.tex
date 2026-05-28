@@ -1,0 +1,46 @@
+\doxysection{Render\+Manager\+::Camera\+And\+Width\+Hash Struct Reference}
+\hypertarget{struct_render_manager_1_1_camera_and_width_hash}{}\label{struct_render_manager_1_1_camera_and_width_hash}\index{RenderManager::CameraAndWidthHash@{RenderManager::CameraAndWidthHash}}
+
+
+Hash functor for grouping debug lines by camera pointer and line width.  
+
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::size\+\_\+t \mbox{\hyperlink{struct_render_manager_1_1_camera_and_width_hash_afd0fb1104c3122fb53a5f1ff35a7b621}{operator()}} (const \mbox{\hyperlink{class_render_manager_a5a098c2d7e968765c5821403453b00e0}{Camera\+And\+Width}} \&key) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Hash functor for grouping debug lines by camera pointer and line width. 
+
+This is used as the hash function for debug\+Line\+Map. 
+
+Definition at line \mbox{\hyperlink{_render_manager_8h_source_l00768}{768}} of file \mbox{\hyperlink{_render_manager_8h_source}{Render\+Manager.\+h}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_render_manager_1_1_camera_and_width_hash_afd0fb1104c3122fb53a5f1ff35a7b621}\index{RenderManager::CameraAndWidthHash@{RenderManager::CameraAndWidthHash}!operator()@{operator()}}
+\index{operator()@{operator()}!RenderManager::CameraAndWidthHash@{RenderManager::CameraAndWidthHash}}
+\doxysubsubsection{\texorpdfstring{operator()()}{operator()()}}
+{\footnotesize\ttfamily \label{struct_render_manager_1_1_camera_and_width_hash_afd0fb1104c3122fb53a5f1ff35a7b621} 
+std\+::size\+\_\+t Render\+Manager\+::\+Camera\+And\+Width\+Hash\+::operator() (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_render_manager_a5a098c2d7e968765c5821403453b00e0}{Camera\+And\+Width}} \&}]{key}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{_render_manager_8h_source_l00770}{770}} of file \mbox{\hyperlink{_render_manager_8h_source}{Render\+Manager.\+h}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00772\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::hash<Camera2D*>()(key.first)\ \string^\ std::hash<float>()(key.second);}
+\DoxyCodeLine{00773\ \ \ \ \ \ \ \ \ \}}
+
+\end{DoxyCode}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Project/\+Jin\+Engine/\+Public/\mbox{\hyperlink{_render_manager_8h}{Render\+Manager.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,55 @@
+\doxysection{Project/\+Jin\+Engine/\+Public/\+Object.h File Reference}
+\hypertarget{_object_8h}{}\label{_object_8h}\index{Project/JinEngine/Public/Object.h@{Project/JinEngine/Public/Object.h}}
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include "{}Animation.\+h"{}}\newline
+{\ttfamily \#include "{}Collider.\+h"{}}\newline
+{\ttfamily \#include "{}Mesh.\+h"{}}\newline
+{\ttfamily \#include "{}Transform.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_object}{Object}}
+\begin{DoxyCompactList}\small\item\em Base abstract object class for all engine-\/managed runtime objects. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{_object_8h_a842c5e2e69277690b064bf363c017980}{Object\+Type}} \{ \mbox{\hyperlink{_object_8h_a842c5e2e69277690b064bf363c017980a4504e1ed59cd9732b8a844e5424e6f13}{GAME}}
+, \mbox{\hyperlink{_object_8h_a842c5e2e69277690b064bf363c017980a61a96ffcb251bb9bf0abf8fec19d0ea8}{TEXT}}
+ \}
+\begin{DoxyCompactList}\small\item\em Identifies the runtime category of an engine object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{_object_8h_a842c5e2e69277690b064bf363c017980}\index{Object.h@{Object.h}!ObjectType@{ObjectType}}
+\index{ObjectType@{ObjectType}!Object.h@{Object.h}}
+\doxysubsubsection{\texorpdfstring{ObjectType}{ObjectType}}
+{\footnotesize\ttfamily \label{_object_8h_a842c5e2e69277690b064bf363c017980} 
+enum class \mbox{\hyperlink{_object_8h_a842c5e2e69277690b064bf363c017980}{Object\+Type}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Identifies the runtime category of an engine object. 
+
+This value is used to distinguish between general scene/renderable objects and text-\/specific objects. Some engine systems, such as resource validation or specialized rendering paths, may branch their behavior based on this type. \begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GAME@{GAME}!Object.h@{Object.h}}\index{Object.h@{Object.h}!GAME@{GAME}}}\Hypertarget{_object_8h_a842c5e2e69277690b064bf363c017980a4504e1ed59cd9732b8a844e5424e6f13}\label{_object_8h_a842c5e2e69277690b064bf363c017980a4504e1ed59cd9732b8a844e5424e6f13} 
+GAME&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{TEXT@{TEXT}!Object.h@{Object.h}}\index{Object.h@{Object.h}!TEXT@{TEXT}}}\Hypertarget{_object_8h_a842c5e2e69277690b064bf363c017980a61a96ffcb251bb9bf0abf8fec19d0ea8}\label{_object_8h_a842c5e2e69277690b064bf363c017980a61a96ffcb251bb9bf0abf8fec19d0ea8} 
+TEXT&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{_object_8h_source_l00021}{21}} of file \mbox{\hyperlink{_object_8h_source}{Object.\+h}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{_object_8h_a842c5e2e69277690b064bf363c017980a4504e1ed59cd9732b8a844e5424e6f13}{GAME}},}
+\DoxyCodeLine{00024\ \ \ \ \ \mbox{\hyperlink{_object_8h_a842c5e2e69277690b064bf363c017980a61a96ffcb251bb9bf0abf8fec19d0ea8}{TEXT}}}
+\DoxyCodeLine{00025\ \};}
+
+\end{DoxyCode}

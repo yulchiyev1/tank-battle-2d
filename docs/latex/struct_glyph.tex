@@ -1,0 +1,119 @@
+\doxysection{Glyph Struct Reference}
+\hypertarget{struct_glyph}{}\label{struct_glyph}\index{Glyph@{Glyph}}
+
+
+Stores baked glyph metrics and UV information inside the font atlas.  
+
+
+
+
+{\ttfamily \#include $<$Font.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+glm\+::ivec2 \mbox{\hyperlink{struct_glyph_a6dacfc5a354c3458b8345e804b2637af}{size}}
+\begin{DoxyCompactList}\small\item\em Bitmap size of the glyph in pixels. \end{DoxyCompactList}\item 
+glm\+::ivec2 \mbox{\hyperlink{struct_glyph_a7757876feac1bfaadb127530f5f48b33}{bearing}}
+\begin{DoxyCompactList}\small\item\em \doxylink{struct_glyph}{Glyph} bearing relative to the text origin and baseline. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{struct_glyph_a8ca87856d75474821f736a7d64c63946}{advance}}
+\begin{DoxyCompactList}\small\item\em Horizontal advance in 1/64 pixel units from Free\+Type. \end{DoxyCompactList}\item 
+glm\+::vec2 \mbox{\hyperlink{struct_glyph_a34a9c2f5bb4db32834e6bfbd67914f99}{uv\+Top\+Left}}
+\begin{DoxyCompactList}\small\item\em Top-\/left UV coordinate of the baked glyph in the atlas. \end{DoxyCompactList}\item 
+glm\+::vec2 \mbox{\hyperlink{struct_glyph_ae5a6124bbab282e4263439dd0a30634f}{uv\+Bottom\+Right}}
+\begin{DoxyCompactList}\small\item\em Bottom-\/right UV coordinate of the baked glyph in the atlas. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Stores baked glyph metrics and UV information inside the font atlas. 
+
+Each \doxylink{struct_glyph}{Glyph} entry describes one Unicode codepoint that has been baked into the atlas texture. The stored data is later used to measure text and generate quad geometry.
+
+The current implementation stores\+:
+\begin{DoxyItemize}
+\item pixel size of the bitmap
+\item bearing from the baseline/origin
+\item advance value from Free\+Type
+\item normalized atlas UV coordinates for the glyph rectangle \+:content\+Reference\mbox{[}oaicite\+:3\mbox{]}\{index=3\} 
+\end{DoxyItemize}
+
+Definition at line \mbox{\hyperlink{_font_8h_source_l00070}{70}} of file \mbox{\hyperlink{_font_8h_source}{Font.\+h}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_glyph_a8ca87856d75474821f736a7d64c63946}\index{Glyph@{Glyph}!advance@{advance}}
+\index{advance@{advance}!Glyph@{Glyph}}
+\doxysubsubsection{\texorpdfstring{advance}{advance}}
+{\footnotesize\ttfamily \label{struct_glyph_a8ca87856d75474821f736a7d64c63946} 
+uint32\+\_\+t Glyph\+::advance}
+
+
+
+Horizontal advance in 1/64 pixel units from Free\+Type. 
+
+The current implementation converts this using (advance \texorpdfstring{$>$}{>}\texorpdfstring{$>$}{>} 6) when measuring text width or advancing the text cursor. \+:content\+Reference\mbox{[}oaicite\+:4\mbox{]}\{index=4\} 
+
+Definition at line \mbox{\hyperlink{_font_8h_source_l00089}{89}} of file \mbox{\hyperlink{_font_8h_source}{Font.\+h}}.
+
+\Hypertarget{struct_glyph_a7757876feac1bfaadb127530f5f48b33}\index{Glyph@{Glyph}!bearing@{bearing}}
+\index{bearing@{bearing}!Glyph@{Glyph}}
+\doxysubsubsection{\texorpdfstring{bearing}{bearing}}
+{\footnotesize\ttfamily \label{struct_glyph_a7757876feac1bfaadb127530f5f48b33} 
+glm\+::ivec2 Glyph\+::bearing}
+
+
+
+\doxylink{struct_glyph}{Glyph} bearing relative to the text origin and baseline. 
+
+
+
+Definition at line \mbox{\hyperlink{_font_8h_source_l00080}{80}} of file \mbox{\hyperlink{_font_8h_source}{Font.\+h}}.
+
+\Hypertarget{struct_glyph_a6dacfc5a354c3458b8345e804b2637af}\index{Glyph@{Glyph}!size@{size}}
+\index{size@{size}!Glyph@{Glyph}}
+\doxysubsubsection{\texorpdfstring{size}{size}}
+{\footnotesize\ttfamily \label{struct_glyph_a6dacfc5a354c3458b8345e804b2637af} 
+glm\+::ivec2 Glyph\+::size}
+
+
+
+Bitmap size of the glyph in pixels. 
+
+
+
+Definition at line \mbox{\hyperlink{_font_8h_source_l00075}{75}} of file \mbox{\hyperlink{_font_8h_source}{Font.\+h}}.
+
+\Hypertarget{struct_glyph_ae5a6124bbab282e4263439dd0a30634f}\index{Glyph@{Glyph}!uvBottomRight@{uvBottomRight}}
+\index{uvBottomRight@{uvBottomRight}!Glyph@{Glyph}}
+\doxysubsubsection{\texorpdfstring{uvBottomRight}{uvBottomRight}}
+{\footnotesize\ttfamily \label{struct_glyph_ae5a6124bbab282e4263439dd0a30634f} 
+glm\+::vec2 Glyph\+::uv\+Bottom\+Right}
+
+
+
+Bottom-\/right UV coordinate of the baked glyph in the atlas. 
+
+
+
+Definition at line \mbox{\hyperlink{_font_8h_source_l00099}{99}} of file \mbox{\hyperlink{_font_8h_source}{Font.\+h}}.
+
+\Hypertarget{struct_glyph_a34a9c2f5bb4db32834e6bfbd67914f99}\index{Glyph@{Glyph}!uvTopLeft@{uvTopLeft}}
+\index{uvTopLeft@{uvTopLeft}!Glyph@{Glyph}}
+\doxysubsubsection{\texorpdfstring{uvTopLeft}{uvTopLeft}}
+{\footnotesize\ttfamily \label{struct_glyph_a34a9c2f5bb4db32834e6bfbd67914f99} 
+glm\+::vec2 Glyph\+::uv\+Top\+Left}
+
+
+
+Top-\/left UV coordinate of the baked glyph in the atlas. 
+
+
+
+Definition at line \mbox{\hyperlink{_font_8h_source_l00094}{94}} of file \mbox{\hyperlink{_font_8h_source}{Font.\+h}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Project/\+Jin\+Engine/\+Public/\mbox{\hyperlink{_font_8h}{Font.\+h}}\end{DoxyCompactItemize}

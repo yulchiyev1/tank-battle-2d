@@ -1,0 +1,83 @@
+#version 460 core
+layout (local_size_x = 8, local_size_y = 8) in;
+
+layout(rgba16f) uniform readonly  image2D u_Src;
+layout(rgba8)  uniform writeonly image2D u_Dst;
+
+uniform vec2  u_Resolution;
+uniform float u_Time;
+uniform int   u_RippleCount;
+
+uniform float u_TimeDamping;
+uniform float u_RingSigmaScale;
+uniform float u_CutoffPx;
+
+uniform int   u_SubRingCount;
+uniform float u_SubRingSpacing;
+uniform float u_SubRingFalloff;
+
+const int MAX_RIPPLES = 16;
+
+struct Ripple {
+    vec2  center;
+    float startTime;
+    float amplitude;
+    float wavelength;
+    float speed;
+    float damping;
+};
+
+uniform Ripple u_Ripples[MAX_RIPPLES];
+
+void main()
+{
+    ivec2 p  = ivec2(gl_GlobalInvocationID.xy);
+    ivec2 sz = ivec2(u_Resolution + 0.5);
+    if (p.x >= sz.x || p.y >= sz.y) return;
+
+    vec2 uv = (vec2(p) + 0.5) / u_Resolution;
+    vec2 dispPx = vec2(0.0);
+
+    for (int i = 0; i < u_RippleCount && i < MAX_RIPPLES; ++i)
+    {
+        Ripple r = u_Ripples[i];
+        float t = u_Time - r.startTime;
+        if (t < 0.0) continue;
+
+        vec2  dp   = (vec2(p) + 0.5) - r.center;
+        float dist = length(dp);
+        if (dist == 0.0) continue;
+
+        float spatial  = exp(-r.damping * dist);
+        float temporal = exp(-u_TimeDamping * t);
+        vec2  dir = dp / dist;
+
+        float r0 = r.speed * t;
+        float baseSigma = max(r.wavelength * u_RingSigmaScale, 1.0);
+
+        int N = max(u_SubRingCount, 1);
+        for (int n = 0; n < N; ++n)
+        {
+            float rn = r0 - float(n) * u_SubRingSpacing;
+            if (rn <= 0.0) continue;
+
+            float sigma = baseSigma + 0.10 * rn;
+            float ring = exp(-0.5 * ((dist - rn) * (dist - rn)) / (sigma * sigma));
+
+            float phase = (dist - rn) * (6.28318530718 / max(r.wavelength, 1e-3));
+            float wave  = sin(phase);
+
+            float idxFall = pow(1.0 / max(u_SubRingFalloff, 1.0001), float(n));
+
+            dispPx += dir * (r.amplitude * wave * ring * spatial * temporal * idxFall);
+        }
+    }
+
+    float cut = max(u_CutoffPx, 0.0);
+    vec2 srcUV = (length(dispPx) <= cut) ? uv : (uv + dispPx / u_Resolution);
+
+    srcUV = clamp(srcUV, vec2(0.0), vec2(1.0));
+    ivec2 sampleCoord = ivec2(srcUV * u_Resolution);
+    vec4  color = imageLoad(u_Src, sampleCoord);
+    imageStore(u_Dst, p, color);
+}

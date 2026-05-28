@@ -1,0 +1,184 @@
+\doxysection{Collision\+Group\+Registry Class Reference}
+\hypertarget{class_collision_group_registry}{}\label{class_collision_group_registry}\index{CollisionGroupRegistry@{CollisionGroupRegistry}}
+
+
+Registry that assigns collision group tags to bit masks.  
+
+
+
+
+{\ttfamily \#include $<$Collider.\+h$>$}
+
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{class_collision_group_registry_ac68cd443ab9e050383111ffd46dad625}{Get\+Group\+Bit}} (const std\+::string \&tag)
+\begin{DoxyCompactList}\small\item\em Returns the bit value associated with a collision group tag. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{class_collision_group_registry_adeb0ee190820fb34f8acc1474921cab5}{Get\+Group\+Tag}} (uint32\+\_\+t bit) const
+\begin{DoxyCompactList}\small\item\em Resolves a bit value back to its registered group tag. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+friend \mbox{\hyperlink{class_collision_group_registry_aaf200e4026f673a79f1c2bf29459de07}{Collider}}
+\item 
+friend \mbox{\hyperlink{class_collision_group_registry_a2405835d5f56a936e902751d7ab3dbd8}{Object}}
+\item 
+std\+::unordered\+\_\+map$<$ std\+::string, uint32\+\_\+t $>$ \mbox{\hyperlink{class_collision_group_registry_ab95c6214265044dd64b94eede30bf228}{tag\+To\+Bit}}
+\item 
+std\+::unordered\+\_\+map$<$ uint32\+\_\+t, std\+::string $>$ \mbox{\hyperlink{class_collision_group_registry_a03eaa11789a579244d7352b9bbdf07f1}{bit\+To\+Tag}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{class_collision_group_registry_a56e97b092b3b9a4872dc4ad796d00443}{current\+Bit}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Registry that assigns collision group tags to bit masks. 
+
+Collision categories and masks are represented as 32-\/bit bitfields. When an object requests a collision group by tag, a new bit is assigned if the tag has not been seen before. The registry also supports reverse lookup from bit value to tag string.
+
+\begin{DoxyNote}{Note}
+The current implementation supports up to 32 unique groups. 
+\end{DoxyNote}
+
+
+Definition at line \mbox{\hyperlink{_collider_8h_source_l00581}{581}} of file \mbox{\hyperlink{_collider_8h_source}{Collider.\+h}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_collision_group_registry_ac68cd443ab9e050383111ffd46dad625}\index{CollisionGroupRegistry@{CollisionGroupRegistry}!GetGroupBit@{GetGroupBit}}
+\index{GetGroupBit@{GetGroupBit}!CollisionGroupRegistry@{CollisionGroupRegistry}}
+\doxysubsubsection{\texorpdfstring{GetGroupBit()}{GetGroupBit()}}
+{\footnotesize\ttfamily \label{class_collision_group_registry_ac68cd443ab9e050383111ffd46dad625} 
+uint32\+\_\+t Collision\+Group\+Registry\+::\+Get\+Group\+Bit (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{tag}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [private]}}
+
+
+
+Returns the bit value associated with a collision group tag. 
+
+If the tag is already registered, the existing bit is returned. Otherwise, a new bit is assigned. If more than 32 groups are requested, the implementation logs an error and returns UINT32\+\_\+\+MAX. \+:content\+Reference\mbox{[}oaicite\+:24\mbox{]}\{index=24\}
+
+
+\begin{DoxyParams}{Parameters}
+{\em tag} & Collision group name. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Bit mask value for the group. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_collider_8cpp_source_l00243}{243}} of file \mbox{\hyperlink{_collider_8cpp_source}{Collider.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00244\ \{}
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ \mbox{\hyperlink{class_collision_group_registry_ab95c6214265044dd64b94eede30bf228}{tagToBit}}.find(tag);}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ \mbox{\hyperlink{class_collision_group_registry_ab95c6214265044dd64b94eede30bf228}{tagToBit}}.end())}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{class_collision_group_registry_a56e97b092b3b9a4872dc4ad796d00443}{currentBit}}\ >=\ 32)}
+\DoxyCodeLine{00250\ \ \ \ \ \{}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ JIN\_ERR(\textcolor{stringliteral}{"{}Exceeded\ maximum\ number\ of\ collision\ groups"{}});}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ UINT32\_MAX;}
+\DoxyCodeLine{00253\ \ \ \ \ \}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \ \ \ \ uint32\_t\ bit\ =\ (1\ <<\ \mbox{\hyperlink{class_collision_group_registry_a56e97b092b3b9a4872dc4ad796d00443}{currentBit}});}
+\DoxyCodeLine{00256\ \ \ \ \ \mbox{\hyperlink{class_collision_group_registry_ab95c6214265044dd64b94eede30bf228}{tagToBit}}[tag]\ =\ bit;}
+\DoxyCodeLine{00257\ \ \ \ \ \mbox{\hyperlink{class_collision_group_registry_a03eaa11789a579244d7352b9bbdf07f1}{bitToTag}}[bit]\ =\ tag;}
+\DoxyCodeLine{00258\ \ \ \ \ ++\mbox{\hyperlink{class_collision_group_registry_a56e97b092b3b9a4872dc4ad796d00443}{currentBit}};}
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{keywordflow}{return}\ bit;}
+\DoxyCodeLine{00260\ \}}
+
+\end{DoxyCode}
+\Hypertarget{class_collision_group_registry_adeb0ee190820fb34f8acc1474921cab5}\index{CollisionGroupRegistry@{CollisionGroupRegistry}!GetGroupTag@{GetGroupTag}}
+\index{GetGroupTag@{GetGroupTag}!CollisionGroupRegistry@{CollisionGroupRegistry}}
+\doxysubsubsection{\texorpdfstring{GetGroupTag()}{GetGroupTag()}}
+{\footnotesize\ttfamily \label{class_collision_group_registry_adeb0ee190820fb34f8acc1474921cab5} 
+std\+::string Collision\+Group\+Registry\+::\+Get\+Group\+Tag (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{bit}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [private]}}
+
+
+
+Resolves a bit value back to its registered group tag. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bit} & Collision group bit value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Registered tag string, or "{}unknown"{} if not found. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_collider_8cpp_source_l00262}{262}} of file \mbox{\hyperlink{_collider_8cpp_source}{Collider.\+cpp}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00263\ \{}
+\DoxyCodeLine{00264\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ \mbox{\hyperlink{class_collision_group_registry_a03eaa11789a579244d7352b9bbdf07f1}{bitToTag}}.find(bit);}
+\DoxyCodeLine{00265\ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ \mbox{\hyperlink{class_collision_group_registry_a03eaa11789a579244d7352b9bbdf07f1}{bitToTag}}.end())}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}unknown"{}};}
+\DoxyCodeLine{00268\ \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_collision_group_registry_a03eaa11789a579244d7352b9bbdf07f1}\index{CollisionGroupRegistry@{CollisionGroupRegistry}!bitToTag@{bitToTag}}
+\index{bitToTag@{bitToTag}!CollisionGroupRegistry@{CollisionGroupRegistry}}
+\doxysubsubsection{\texorpdfstring{bitToTag}{bitToTag}}
+{\footnotesize\ttfamily \label{class_collision_group_registry_a03eaa11789a579244d7352b9bbdf07f1} 
+std\+::unordered\+\_\+map$<$uint32\+\_\+t, std\+::string$>$ Collision\+Group\+Registry\+::bit\+To\+Tag\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_collider_8h_source_l00608}{608}} of file \mbox{\hyperlink{_collider_8h_source}{Collider.\+h}}.
+
+\Hypertarget{class_collision_group_registry_aaf200e4026f673a79f1c2bf29459de07}\index{CollisionGroupRegistry@{CollisionGroupRegistry}!Collider@{Collider}}
+\index{Collider@{Collider}!CollisionGroupRegistry@{CollisionGroupRegistry}}
+\doxysubsubsection{\texorpdfstring{Collider}{Collider}}
+{\footnotesize\ttfamily \label{class_collision_group_registry_aaf200e4026f673a79f1c2bf29459de07} 
+friend Collision\+Group\+Registry\+::\+Collider\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_collider_8h_source_l00583}{583}} of file \mbox{\hyperlink{_collider_8h_source}{Collider.\+h}}.
+
+\Hypertarget{class_collision_group_registry_a56e97b092b3b9a4872dc4ad796d00443}\index{CollisionGroupRegistry@{CollisionGroupRegistry}!currentBit@{currentBit}}
+\index{currentBit@{currentBit}!CollisionGroupRegistry@{CollisionGroupRegistry}}
+\doxysubsubsection{\texorpdfstring{currentBit}{currentBit}}
+{\footnotesize\ttfamily \label{class_collision_group_registry_a56e97b092b3b9a4872dc4ad796d00443} 
+uint32\+\_\+t Collision\+Group\+Registry\+::current\+Bit = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_collider_8h_source_l00609}{609}} of file \mbox{\hyperlink{_collider_8h_source}{Collider.\+h}}.
+
+\Hypertarget{class_collision_group_registry_a2405835d5f56a936e902751d7ab3dbd8}\index{CollisionGroupRegistry@{CollisionGroupRegistry}!Object@{Object}}
+\index{Object@{Object}!CollisionGroupRegistry@{CollisionGroupRegistry}}
+\doxysubsubsection{\texorpdfstring{Object}{Object}}
+{\footnotesize\ttfamily \label{class_collision_group_registry_a2405835d5f56a936e902751d7ab3dbd8} 
+friend Collision\+Group\+Registry\+::\+Object\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_collider_8h_source_l00584}{584}} of file \mbox{\hyperlink{_collider_8h_source}{Collider.\+h}}.
+
+\Hypertarget{class_collision_group_registry_ab95c6214265044dd64b94eede30bf228}\index{CollisionGroupRegistry@{CollisionGroupRegistry}!tagToBit@{tagToBit}}
+\index{tagToBit@{tagToBit}!CollisionGroupRegistry@{CollisionGroupRegistry}}
+\doxysubsubsection{\texorpdfstring{tagToBit}{tagToBit}}
+{\footnotesize\ttfamily \label{class_collision_group_registry_ab95c6214265044dd64b94eede30bf228} 
+std\+::unordered\+\_\+map$<$std\+::string, uint32\+\_\+t$>$ Collision\+Group\+Registry\+::tag\+To\+Bit\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{_collider_8h_source_l00607}{607}} of file \mbox{\hyperlink{_collider_8h_source}{Collider.\+h}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Project/\+Jin\+Engine/\+Public/\mbox{\hyperlink{_collider_8h}{Collider.\+h}}\item 
+Project/\+Jin\+Engine/\+Private/\mbox{\hyperlink{_collider_8cpp}{Collider.\+cpp}}\end{DoxyCompactItemize}

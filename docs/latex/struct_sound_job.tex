@@ -1,0 +1,69 @@
+\doxysection{Sound\+Job Struct Reference}
+\hypertarget{struct_sound_job}{}\label{struct_sound_job}\index{SoundJob@{SoundJob}}
+
+
+Describes a sound loading request.  
+
+
+
+
+{\ttfamily \#include $<$Async\+Resource\+Loader.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{struct_sound_job_a7871a6b228a3a56fd7dd4fceacf76984}{tag}}
+\item 
+std\+::string \mbox{\hyperlink{struct_sound_job_ad9dfb85fc37057c18191ac3905fc87f1}{file\+Path}}
+\item 
+bool \mbox{\hyperlink{struct_sound_job_a6f887145dbe50b8bd8a28cff875f9987}{loop}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Describes a sound loading request. 
+
+\doxylink{struct_sound_job}{Sound\+Job} stores the information required to register a sound resource later, including its tag, source file path, and looping default.
+
+In the current implementation, the worker thread does not decode or initialize the sound resource itself. It simply packages this information into a \doxylink{struct_sound_result}{Sound\+Result} for later processing on the main thread. \+:content\+Reference\mbox{[}oaicite\+:4\mbox{]}\{index=4\} 
+
+Definition at line \mbox{\hyperlink{_async_resource_loader_8h_source_l00096}{96}} of file \mbox{\hyperlink{_async_resource_loader_8h_source}{Async\+Resource\+Loader.\+h}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_sound_job_ad9dfb85fc37057c18191ac3905fc87f1}\index{SoundJob@{SoundJob}!filePath@{filePath}}
+\index{filePath@{filePath}!SoundJob@{SoundJob}}
+\doxysubsubsection{\texorpdfstring{filePath}{filePath}}
+{\footnotesize\ttfamily \label{struct_sound_job_ad9dfb85fc37057c18191ac3905fc87f1} 
+std\+::string Sound\+Job\+::file\+Path}
+
+
+
+Definition at line \mbox{\hyperlink{_async_resource_loader_8h_source_l00099}{99}} of file \mbox{\hyperlink{_async_resource_loader_8h_source}{Async\+Resource\+Loader.\+h}}.
+
+\Hypertarget{struct_sound_job_a6f887145dbe50b8bd8a28cff875f9987}\index{SoundJob@{SoundJob}!loop@{loop}}
+\index{loop@{loop}!SoundJob@{SoundJob}}
+\doxysubsubsection{\texorpdfstring{loop}{loop}}
+{\footnotesize\ttfamily \label{struct_sound_job_a6f887145dbe50b8bd8a28cff875f9987} 
+bool Sound\+Job\+::loop = false}
+
+
+
+Definition at line \mbox{\hyperlink{_async_resource_loader_8h_source_l00100}{100}} of file \mbox{\hyperlink{_async_resource_loader_8h_source}{Async\+Resource\+Loader.\+h}}.
+
+\Hypertarget{struct_sound_job_a7871a6b228a3a56fd7dd4fceacf76984}\index{SoundJob@{SoundJob}!tag@{tag}}
+\index{tag@{tag}!SoundJob@{SoundJob}}
+\doxysubsubsection{\texorpdfstring{tag}{tag}}
+{\footnotesize\ttfamily \label{struct_sound_job_a7871a6b228a3a56fd7dd4fceacf76984} 
+std\+::string Sound\+Job\+::tag}
+
+
+
+Definition at line \mbox{\hyperlink{_async_resource_loader_8h_source_l00098}{98}} of file \mbox{\hyperlink{_async_resource_loader_8h_source}{Async\+Resource\+Loader.\+h}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Project/\+Jin\+Engine/\+Public/\mbox{\hyperlink{_async_resource_loader_8h}{Async\+Resource\+Loader.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="public">
+      <UniqueIdentifier>{e5acab1a-7977-4971-9153-823ca7808060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="private">
+      <UniqueIdentifier>{ef1eb12c-bd26-47a9-a45b-afcb8b0ee91c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Public\StateManager.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\GameState.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\JinEngine.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\EngineContext.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\Engine.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\InputManager.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\WindowManager.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\ObjectManager.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\RenderManager.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\GameObject.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\Texture.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\Shader.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\Debug.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\Material.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\Mesh.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\Transform.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\EngineTimer.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\CameraManager.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\Camera2D.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\RenderLayerManager.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\SoundManager.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\Font.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\Object.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\TextObject.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\InstanceBatchKey.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\Animation.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\Collider.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\AsyncResourceLoader.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="Public\LoadingState.h">
+      <Filter>public</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Private\StateManager.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\JinEngine.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\InputManager.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\WindowManager.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\ObjectManager.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\RenderManager.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\Texture.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\Shader.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\Material.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\Mesh.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\Transform.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\EngineTimer.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\CameraManager.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\Camera2D.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\Object.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\SoundManager.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\Font.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\TextObject.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\Animation.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\Collider.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\Debug.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\AsyncResourceLoader.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+    <ClCompile Include="Private\LoadingState.cpp">
+      <Filter>private</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
