@@ -40,7 +40,7 @@ void Player::LateInit(const EngineContext& engineContext)
 
 void Player::Update(float dt, const EngineContext& engineContext) 
 {
-    oldPos = transform2D.GetPosition(); ///////////////////////
+    oldPos = transform2D.GetPosition(); //old position to not cross the wall/another player
 
     float speed = 200.f;
     glm::vec2 pos = transform2D.GetPosition();
