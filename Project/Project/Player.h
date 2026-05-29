@@ -13,5 +13,7 @@ public:
 
 	int upKey, downKey, leftKey, rightKey;
 	void SetControls(int up, int down, int left, int right);
+
 private:
+
 };

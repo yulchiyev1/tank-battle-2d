@@ -26,10 +26,17 @@ public:
 
     void Unload(const EngineContext& engineContext) override;
 
+    float screenW;
+    float screenH;
+
 private:
     Player* player1;
     Player* player2;
     GameObject* background;
+    GameObject* wall;
+
+    void WallBlock(float x, float y, float size, const EngineContext& engineContext);
+    
 };
 
 
