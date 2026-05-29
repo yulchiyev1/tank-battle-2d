@@ -14,6 +14,8 @@ public:
 	int upKey, downKey, leftKey, rightKey;
 	void SetControls(int up, int down, int left, int right);
 
-private:
+	virtual void OnCollision(Object* other, const EngineContext& engineContext) override;
 
+private:
+	glm::vec2 oldPos;
 };

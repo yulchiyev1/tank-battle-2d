@@ -109,4 +109,8 @@ void Tutorial::WallBlock(float x, float y, float size, const EngineContext& engi
     block->GetTransform2D().SetScale({ size, size });
     block->SetRenderLayer("[Layer]Items");
     block->GetTransform2D().SetPosition(glm::vec2(x, y));
+
+    block->SetCollider(std::make_unique<AABBCollider>(block, glm::vec2{ size-5, size-5 }));
+    block->GetCollider()->SetUseTransformScale(false);
+    block->SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Wall", {"[Object]Player1", "[Object]Player2"});
 }
