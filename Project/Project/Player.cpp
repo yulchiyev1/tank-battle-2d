@@ -6,10 +6,22 @@ void Player::Init(const EngineContext& engineContext)
 {
     transform2D.SetScale(glm::vec2(70.f));
     SetMesh(engineContext, "[EngineMesh]default");
-    SetMaterial(engineContext, "[Material]Tank1");
+
+    //if (ObjectManager().FindByTag("[Object]Player1"))
+    if(this->GetTag() == "[Object]Player1")
+    {
+        SetMaterial(engineContext, "[Material]Tank1");
+        transform2D.SetPosition(glm::vec2(-600.f, 0.f));
+    }
+    else if (this->GetTag() == "[Object]Player2")
+    {
+        SetMaterial(engineContext, "[Material]Tank2");
+        transform2D.SetPosition(glm::vec2(600.f, 0.f));
+    }
+        
     SetRenderLayer("[Layer]UI");
-    SetTag("[Object]Player1");
-    transform2D.SetPosition(glm::vec2(100.f, 300.f)); 
+    
+    
 }
 
 void Player::LateInit(const EngineContext& engineContext)
