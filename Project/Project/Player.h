@@ -18,4 +18,6 @@ public:
 
 private:
 	glm::vec2 oldPos;
+	std::shared_ptr<SpriteSheet> moveSpritesheetB;
+	std::shared_ptr<SpriteSheet> moveSpritesheetR;
 };

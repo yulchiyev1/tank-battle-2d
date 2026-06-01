@@ -12,12 +12,18 @@ void Tutorial::Load(const EngineContext& engineContext)
 
     //texture & material load
 
+    rm->RegisterTexture("[Texture]BlueTank", "Textures/Tanks/blue/body_halftrack.png");
+    rm->RegisterSpriteSheet("[SpriteSheet]BlueTank", "[Texture]BlueTank", 128, 128);
+
+    rm->RegisterTexture("[Texture]RedTank", "Textures/Tanks/red/body_halftrack_r.png");
+    rm->RegisterSpriteSheet("[SpriteSheet]RedTank", "[Texture]RedTank", 128, 128);
+
     rm->RegisterTexture("[Texture]Background", "Textures/Background/a_rgb.jpg");
     rm->RegisterMaterial("[Material]Background", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Background"} });
 
-    rm->RegisterTexture("[Texture]Tank1", "Textures/Tanks/Tank1.png");
+    rm->RegisterTexture("[Texture]Tank1", "Textures/Tanks/blue/body_tracks.png");
     rm->RegisterMaterial("[Material]Tank1", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Tank1"} });
-    rm->RegisterTexture("[Texture]Tank2", "Textures/Tanks/Tank2.png");
+    rm->RegisterTexture("[Texture]Tank2", "Textures/Tanks/red/body_tracks_r.png");
     rm->RegisterMaterial("[Material]Tank2", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Tank2"} });
 
     rm->RegisterTexture("[Texture]StoneWall", "Textures/Wall/stone_wall.jpg");

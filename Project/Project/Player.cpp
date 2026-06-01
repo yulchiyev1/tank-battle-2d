@@ -4,29 +4,35 @@
 
 void Player::Init(const EngineContext& engineContext)
 {
-    transform2D.SetScale(glm::vec2(70.f));
+    transform2D.SetScale(glm::vec2(90.f));
     SetMesh(engineContext, "[EngineMesh]default");
+    SetCollider(std::make_unique<AABBCollider>(this, glm::vec2{ 55.f, 55.f }));
+    SetMaterial(engineContext, "[Material]Animation");
 
-   
     if(this->GetTag() == "[Object]Player1")
     {
-        SetMaterial(engineContext, "[Material]Tank1");
         transform2D.SetPosition(glm::vec2(-550.f, 0.f));
 
-        SetCollider(std::make_unique<AABBCollider>(this, glm::vec2{ 65.f, 65.f }));
         GetCollider()->SetUseTransformScale(false);
         SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player1", { "[Object]Wall", "[Object]Player2" });
+
+        moveSpritesheetB = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]BlueTank");
+        moveSpritesheetB->AddClip("[Clip]TankB", { 0,1 }, 0.1f);
+
+        AttachAnimator(std::make_unique<SpriteAnimator>(moveSpritesheetB, 0.1f, true));
     }
 
     else if (this->GetTag() == "[Object]Player2")
     {
-        SetMaterial(engineContext, "[Material]Tank2");
         transform2D.SetPosition(glm::vec2(550.f, 0.f));
 
-        SetCollider(std::make_unique<AABBCollider>(this, glm::vec2{ 65.f, 65.f }));
         GetCollider()->SetUseTransformScale(false);
         SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player2", { "[Object]Wall", "[Object]Player1" });
 
+        moveSpritesheetR = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]RedTank");
+        moveSpritesheetR->AddClip("[Clip]TankR", { 0,1 }, 0.1f);
+
+        AttachAnimator(std::make_unique<SpriteAnimator>(moveSpritesheetR, 0.1f, true));
     }
         
     SetRenderLayer("[Layer]UI");
@@ -40,9 +46,34 @@ void Player::LateInit(const EngineContext& engineContext)
 
 void Player::Update(float dt, const EngineContext& engineContext) 
 {
+    //spritesheet
+
+    if (this->GetTag() == "[Object]Player1")
+    {
+        if (engineContext.inputManager->IsKeyPressed(KEY_W) || engineContext.inputManager->IsKeyPressed(KEY_S))
+        {
+            GetSpriteAnimator()->SetPlaybackSpeed(1.0f);
+            GetSpriteAnimator()->SetSpriteSheet(moveSpritesheetB);
+            GetSpriteAnimator()->PlayClip("[Clip]TankB");
+        }
+
+    }
+
+    else if (this->GetTag() == "[Object]Player2")
+    {
+        if (engineContext.inputManager->IsKeyPressed(KEY_DOWN) || engineContext.inputManager->IsKeyPressed(KEY_UP))
+        {
+            GetSpriteAnimator()->SetPlaybackSpeed(1.0f);
+            GetSpriteAnimator()->SetSpriteSheet(moveSpritesheetR);
+            GetSpriteAnimator()->PlayClip("[Clip]TankR");
+        }
+    }
+
+
+
     oldPos = transform2D.GetPosition(); //old position to not cross the wall/another player
 
-    float speed = 200.f;
+    float speed = 100.f;
     glm::vec2 pos = transform2D.GetPosition();
 
     if (engineContext.inputManager->IsKeyDown(upKey)) { pos.y += speed * dt; }
