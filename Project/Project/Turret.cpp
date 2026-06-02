@@ -35,6 +35,19 @@ void Turret::Update(float dt, const EngineContext& engineContext)
         transform2D.SetPosition(parentPlayer->GetTransform2D().GetPosition());
 
         // Rotation
+        float rotationSpeed = 1.5f;
+        float angle = transform2D.GetRotation();
+
+        if (engineContext.inputManager->IsKeyDown(leftKey))
+        {
+            angle += rotationSpeed * dt;
+        }
+        if (engineContext.inputManager->IsKeyDown(rightKey))
+        {
+            angle -= rotationSpeed * dt;
+        }
+
+        transform2D.SetRotation(angle);
     }
 }
 
@@ -49,6 +62,12 @@ void Turret::Free(const EngineContext& engineContext)
 
 void Turret::LateFree(const EngineContext& engineContext)
 {
-    JIN_LOG("Turret LateFree Called");
+
+}
+
+void Turret::SetControls(int left, int right)
+{
+    leftKey = left;
+    rightKey = right;
 }
 

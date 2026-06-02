@@ -18,6 +18,10 @@ public:
     Turret(Player* player);
     virtual ~Turret() = default;
 
+    //turret rotation keys:
+    int leftKey, rightKey;
+    void SetControls(int left, int right);
+
 private:
     Player* parentPlayer;
 };

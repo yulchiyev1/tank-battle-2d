@@ -29,6 +29,8 @@ void Player::Init(const EngineContext& engineContext)
         moveSpritesheetB->AddClip("[Clip]TankB", { 0,1 }, 0.1f);
 
         AttachAnimator(std::make_unique<SpriteAnimator>(moveSpritesheetB, 0.1f, true));
+
+        myTurret->SetControls(KEY_B, KEY_N);
     }
 
     else if (this->GetTag() == "[Object]Player2")
@@ -42,6 +44,8 @@ void Player::Init(const EngineContext& engineContext)
         moveSpritesheetR->AddClip("[Clip]TankR", { 0,1 }, 0.1f);
 
         AttachAnimator(std::make_unique<SpriteAnimator>(moveSpritesheetR, 0.1f, true));
+
+        myTurret->SetControls(KEY_NUMPAD_2, KEY_NUMPAD_3);
     }
         
     SetRenderLayer("[Layer]UI");
