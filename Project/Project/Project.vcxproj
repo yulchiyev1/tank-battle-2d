@@ -235,6 +235,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="Turret.cpp" />
     <ClCompile Include="Tutorial.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +246,7 @@
   <ItemGroup>
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />
+    <ClInclude Include="Turret.h" />
     <ClInclude Include="Tutorial.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

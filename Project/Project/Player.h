@@ -1,6 +1,8 @@
 #pragma once
 #include "Engine.h"
 
+class Turret;
+
 class Player : public GameObject
 {
 public:
@@ -18,6 +20,11 @@ public:
 
 private:
 	glm::vec2 oldPos;
+	
 	std::shared_ptr<SpriteSheet> moveSpritesheetB;
 	std::shared_ptr<SpriteSheet> moveSpritesheetR;
+
+	TextObject* hpText; 
+	Turret* myTurret = nullptr;
+	int hp = 100;
 };

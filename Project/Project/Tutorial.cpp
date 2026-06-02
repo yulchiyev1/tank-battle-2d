@@ -12,6 +12,19 @@ void Tutorial::Load(const EngineContext& engineContext)
 
     //texture & material load
 
+    rm->RegisterTexture("[Texture]TurretBlue", "Textures/Tanks/blue/turret_blue.png");
+    rm->RegisterSpriteSheet("[SpriteSheet]TurretBlue", "[Texture]BlueTank", 128, 128);
+
+    rm->RegisterTexture("[Texture]TurretRed", "Textures/Tanks/red/turret_red.png");
+    rm->RegisterSpriteSheet("[SpriteSheet]TurretRed", "[Texture]TurretRed", 128, 128);
+
+    rm->RegisterTexture("[Texture]TurretR", "Textures/Tanks/red/turretR.png");
+    rm->RegisterMaterial("[Material]TurretR", "[EngineShader]default_texture", { {"u_Texture", "[Texture]TurretR"} });
+
+    rm->RegisterTexture("[Texture]TurretB", "Textures/Tanks/blue/turretB.png");
+    rm->RegisterMaterial("[Material]TurretB", "[EngineShader]default_texture", { {"u_Texture", "[Texture]TurretB"} });
+
+
     rm->RegisterTexture("[Texture]BlueTank", "Textures/Tanks/blue/body_halftrack.png");
     rm->RegisterSpriteSheet("[SpriteSheet]BlueTank", "[Texture]BlueTank", 128, 128);
 

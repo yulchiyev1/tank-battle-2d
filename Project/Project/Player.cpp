@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Turret.h"
 #include "Engine.h"
 
 
@@ -8,6 +9,14 @@ void Player::Init(const EngineContext& engineContext)
     SetMesh(engineContext, "[EngineMesh]default");
     SetCollider(std::make_unique<AABBCollider>(this, glm::vec2{ 55.f, 55.f }));
     SetMaterial(engineContext, "[Material]Animation");
+    
+    //TextObjectForHealthPoints
+    ObjectManager& objManager = engineContext.stateManager->GetCurrentState()->GetObjectManager();
+    hpText = static_cast<TextObject*>(objManager.AddObject(std::make_unique<TextObject>(engineContext.renderManager->GetFontByTag("[Font]defaultkr"), std::to_string(hp))));
+    hpText->SetRenderLayer("[Layer]UI");
+
+    //turret
+    myTurret = static_cast<Turret*>(objManager.AddObject(std::make_unique<Turret>(this)));
 
     if(this->GetTag() == "[Object]Player1")
     {
@@ -45,18 +54,24 @@ void Player::LateInit(const EngineContext& engineContext)
 }
 
 void Player::Update(float dt, const EngineContext& engineContext) 
-{
-    //spritesheet
+{   
 
+    //hptext
+    if (hpText != nullptr)
+    {
+        hpText->GetTransform2D().SetPosition(GetTransform2D().GetPosition() + glm::vec2{ -25.f, 80.f });
+    }
+
+    //spritesheet
     if (this->GetTag() == "[Object]Player1")
     {
+
         if (engineContext.inputManager->IsKeyPressed(KEY_W) || engineContext.inputManager->IsKeyPressed(KEY_S))
         {
             GetSpriteAnimator()->SetPlaybackSpeed(1.0f);
             GetSpriteAnimator()->SetSpriteSheet(moveSpritesheetB);
             GetSpriteAnimator()->PlayClip("[Clip]TankB");
         }
-
     }
 
     else if (this->GetTag() == "[Object]Player2")
