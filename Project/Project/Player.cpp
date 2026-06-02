@@ -45,7 +45,7 @@ void Player::Init(const EngineContext& engineContext)
 
         AttachAnimator(std::make_unique<SpriteAnimator>(moveSpritesheetR, 0.1f, true));
 
-        myTurret->SetControls(KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_ENTER);
+        myTurret->SetControls(KEY_NUMPAD_1, KEY_NUMPAD_2, KEY_NUMPAD_3);
     }
         
     SetRenderLayer("[Layer]UI");

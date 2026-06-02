@@ -61,6 +61,7 @@ void Turret::Update(float dt, const EngineContext& engineContext)
 
         if (engineContext.inputManager->IsKeyPressed(shootKey))
         {
+            JIN_LOG("shootkey: " << shootKey);
             if (ammo > 0 && fireTimer <= 0.0f)
             {
                 Projectile* bullet = new Projectile();
