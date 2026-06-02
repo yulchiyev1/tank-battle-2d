@@ -1,6 +1,7 @@
 #include "Turret.h"
 #include "Engine.h"
 #include "Player.h"
+#include "Projectile.h"
 
 Turret::Turret(Player* player) : parentPlayer(player)
 {
@@ -21,6 +22,8 @@ void Turret::Init(const EngineContext& engineContext)
         SetMaterial(engineContext, "[Material]TurretR");
     }
     SetRenderLayer("[Layer]UI");
+
+    ammo = 30; //////BULLET의 갯수
 }
 
 void Turret::LateInit(const EngineContext& engineContext)
@@ -32,6 +35,7 @@ void Turret::Update(float dt, const EngineContext& engineContext)
 {
     if (parentPlayer != nullptr)
     {
+        //Turret은 tank body에 따라가기
         transform2D.SetPosition(parentPlayer->GetTransform2D().GetPosition());
 
         // Rotation
@@ -48,6 +52,31 @@ void Turret::Update(float dt, const EngineContext& engineContext)
         }
 
         transform2D.SetRotation(angle);
+
+        //Aiming
+        if (fireTimer > 0.0f)
+        {
+            fireTimer -= dt;
+        }
+
+        if (engineContext.inputManager->IsKeyPressed(shootKey))
+        {
+            if (ammo > 0 && fireTimer <= 0.0f)
+            {
+                Projectile* bullet = new Projectile();
+                bullet->Init(engineContext);
+
+                bullet->GetTransform2D().SetPosition(transform2D.GetPosition());
+                bullet->SetDirection(transform2D.GetRotation());
+
+                engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(std::unique_ptr<Object>(bullet));
+
+                ammo--;
+                fireTimer = 0.3f; 
+
+                JIN_LOG("남은 총알 : " + std::to_string(ammo));
+            }
+        }
     }
 }
 
@@ -65,9 +94,10 @@ void Turret::LateFree(const EngineContext& engineContext)
 
 }
 
-void Turret::SetControls(int left, int right)
+void Turret::SetControls(int left, int right, int shoot)
 {
     leftKey = left;
     rightKey = right;
+    shootKey = shoot;
 }
 

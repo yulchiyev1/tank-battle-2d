@@ -19,9 +19,12 @@ public:
     virtual ~Turret() = default;
 
     //turret rotation keys:
-    int leftKey, rightKey;
-    void SetControls(int left, int right);
+    int leftKey, rightKey, shootKey;
+    int ammo;
+    void SetControls(int left, int right, int shoot);
 
 private:
     Player* parentPlayer;
+
+    float fireTimer = 0.0f; //Qayta o'qlash taymeri
 };

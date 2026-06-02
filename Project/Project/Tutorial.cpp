@@ -42,7 +42,7 @@ void Tutorial::Load(const EngineContext& engineContext)
     rm->RegisterTexture("[Texture]StoneWall", "Textures/Wall/stone_wall.jpg");
     rm->RegisterMaterial("[Material]StoneWall", "[EngineShader]default_texture", { {"u_Texture", "[Texture]StoneWall"} });
    
-    rm->RegisterTexture("[Texture]Bullet", "Textures/Projectile/bullet.png");
+    rm->RegisterTexture("[Texture]Bullet", "Textures/Projectile/bullet2.png");
     rm->RegisterMaterial("[Material]Bullet", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Bullet"} });
 }
 

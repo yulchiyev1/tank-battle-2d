@@ -12,5 +12,12 @@ public:
     void Free([[maybe_unused]] const EngineContext& engineContext) override;
     void LateFree([[maybe_unused]] const EngineContext& engineContext) override;
     virtual void OnCollision(Object* other, const EngineContext& engineContext) override;
+
+    //총알의 direction
+    void SetDirection(float startAngle);
 private:
+    float speed;
+    float lifeTimer;
+    float velocityX;
+    float velocityY;
 };

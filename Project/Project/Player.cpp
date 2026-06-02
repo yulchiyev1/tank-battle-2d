@@ -30,7 +30,7 @@ void Player::Init(const EngineContext& engineContext)
 
         AttachAnimator(std::make_unique<SpriteAnimator>(moveSpritesheetB, 0.1f, true));
 
-        myTurret->SetControls(KEY_B, KEY_N);
+        myTurret->SetControls(KEY_B, KEY_N, KEY_SPACE);
     }
 
     else if (this->GetTag() == "[Object]Player2")
@@ -45,7 +45,7 @@ void Player::Init(const EngineContext& engineContext)
 
         AttachAnimator(std::make_unique<SpriteAnimator>(moveSpritesheetR, 0.1f, true));
 
-        myTurret->SetControls(KEY_NUMPAD_2, KEY_NUMPAD_3);
+        myTurret->SetControls(KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_ENTER);
     }
         
     SetRenderLayer("[Layer]UI");
@@ -134,6 +134,7 @@ void Player::OnCollision(Object* other, const EngineContext& engineContext)
     if (other->GetTag() == "[Object]Wall")
     {
         transform2D.SetPosition(oldPos);
+        myTurret->GetTransform2D().SetPosition(oldPos); 
     }
     
     else if (other->GetTag() == "[Object]Player1" || other->GetTag() == "[Object]Player2")

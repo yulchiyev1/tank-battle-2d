@@ -2,14 +2,19 @@
 #include "EngineContext.h"
 #include "GameState.h"
 
+
 void Projectile::Init(const EngineContext& engineContext)
 {
-	transform2D.SetScale(glm::vec2(20.f));
-	SetMesh(engineContext, "[Engine]default");
-	SetMaterial(engineContext, "[Material]Projectile");
-	SetTag("[Object]Projectile");
-	SetRenderLayer("[Layer]GameObject");
+	SetMesh(engineContext, "[EngineMesh]default");
+	SetMaterial(engineContext, "[Material]Bullet");
 
+	transform2D.SetScale(glm::vec2(15.f));
+
+	SetCollider(std::make_unique<AABBCollider>(this, glm::vec2{ 1.f, 1.f }));
+	SetRenderLayer("[Layer]UI");
+
+	speed = 200.0f;
+	lifeTimer = 4.0f;
 }
 
 void Projectile::LateInit(const EngineContext& engineContext)
@@ -19,6 +24,18 @@ void Projectile::LateInit(const EngineContext& engineContext)
 
 void Projectile::Update(float dt, const EngineContext& engineContext)
 {
+	//timer for bullet
+	lifeTimer -= dt;
+	if (lifeTimer <= 0.0f)
+	{
+		Kill();
+	}
+
+	//bullet moving
+	glm::vec2 currentPos = transform2D.GetPosition();
+	currentPos.x += velocityX * dt; 
+	currentPos.y += velocityY * dt;
+	transform2D.SetPosition(currentPos);
   
 }
 
@@ -37,7 +54,16 @@ void Projectile::LateFree(const EngineContext& engineContext)
 
 }
 
-void OnCollision(Object* other, const EngineContext& engineContext)
+void Projectile::OnCollision(Object* other, const EngineContext& engineContext)
 {
 
+}
+
+void Projectile::SetDirection(float startAngle)
+{
+    transform2D.SetRotation(startAngle);
+	float mathAngle = startAngle + glm::radians(90.0f);
+
+	velocityX = glm::cos(mathAngle) * speed;
+	velocityY = glm::sin(mathAngle) * speed;
 }
