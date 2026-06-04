@@ -1,13 +1,15 @@
 #pragma once
-
 #include "Engine.h"
+#include "TextObject.h"
 
 class Player;
 
-class Turret : public GameObject 
+class Turret : public GameObject
 {
-
 public:
+    Turret(Player* player);
+    virtual ~Turret() = default;
+
     virtual void Init(const EngineContext& engineContext) override;
     virtual void LateInit(const EngineContext& engineContext) override;
     virtual void Update(float dt, const EngineContext& engineContext) override;
@@ -15,16 +17,23 @@ public:
     virtual void Free(const EngineContext& engineContext) override;
     virtual void LateFree(const EngineContext& engineContext) override;
 
-    Turret(Player* player);
-    virtual ~Turret() = default;
-
-    //turret rotation keys:
-    int leftKey, rightKey, shootKey;
-    int ammo;
     void SetControls(int left, int right, int shoot);
 
 private:
     Player* parentPlayer;
 
-    float fireTimer = 0.0f; //Qayta o'qlash taymeri
+    // Controls
+    int leftKey, rightKey, shootKey;
+
+    // Shooting 
+    int ammo;
+    float fireTimer = 0.0f;
+    bool isShooting = false;
+
+    // Animation
+    std::shared_ptr<SpriteSheet> shootSpritesheet;
+    float animTimer = 0.0f;
+
+    // UI
+    TextObject* ammoText = nullptr;
 };

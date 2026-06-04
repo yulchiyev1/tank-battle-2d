@@ -13,7 +13,7 @@ void Tutorial::Load(const EngineContext& engineContext)
     //texture & material load
 
     rm->RegisterTexture("[Texture]TurretBlue", "Textures/Tanks/blue/turret_blue.png");
-    rm->RegisterSpriteSheet("[SpriteSheet]TurretBlue", "[Texture]BlueTank", 128, 128);
+    rm->RegisterSpriteSheet("[SpriteSheet]TurretBlue", "[Texture]TurretBlue", 128, 128);
 
     rm->RegisterTexture("[Texture]TurretRed", "Textures/Tanks/red/turret_red.png");
     rm->RegisterSpriteSheet("[SpriteSheet]TurretRed", "[Texture]TurretRed", 128, 128);
@@ -121,7 +121,7 @@ void Tutorial::Unload(const EngineContext& engineContext)
     JIN_LOG("[Tutorial] unload called");
 }
 
-// Wall Block function
+// Wall Block 
 void Tutorial::WallBlock(float x, float y, float size, const EngineContext& engineContext)
 {
     GameObject* block = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Wall"));

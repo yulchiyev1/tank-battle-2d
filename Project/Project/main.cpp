@@ -44,8 +44,12 @@ int main(int argc, char* argv[])
     jinEngine.GetEngineContext().renderManager->RegisterMaterial("[Material]Animation", "[Shader]Animation", { });
 
 
+   
     jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Background", 0);
     jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Items", 1);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]TankBody", 2);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Turret", 3);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Projectile", 4);
     jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]UI", 11);
     
     jinEngine.GetEngineContext().renderManager->RegisterFont("[Font]default", "Fonts/NotoSans-VariableFont_wdth,wght.ttf", 50);

@@ -17,9 +17,9 @@ void Projectile::Init(const EngineContext& engineContext)
 	SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Bullet", { "[Object]Wall", "[Object]Player1", "[Object]Player2" });
 
 	
-	SetRenderLayer("[Layer]UI");
+	SetRenderLayer("[Layer]Projectile");
 
-	speed = 300.0f;
+	speed = 350.0f;
 	lifeTimer = 4.0f;
 }
 
@@ -73,6 +73,10 @@ void Projectile::OnCollision(Object* other, const EngineContext& engineContext)
 			hitPlayer->TakeDamage(8);
 		}
 		Kill();
+	}
+	else if (other->GetTag() == "[Object]Wall")
+	{
+		Kill(); 
 	}
 }
 
