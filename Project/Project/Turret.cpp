@@ -67,16 +67,32 @@ void Turret::Update(float dt, const EngineContext& engineContext)
                 Projectile* bullet = new Projectile();
                 bullet->Init(engineContext);
 
-                bullet->GetTransform2D().SetPosition(transform2D.GetPosition());
-                bullet->SetDirection(transform2D.GetRotation());
+                float offsetDistance = 50.0f; 
+                float angle = transform2D.GetRotation();
+
+                
+                // ASOSIY YECHIM: Paydo bo'lish joyini ham 90 gradusga buramiz!
+                float mathAngle = angle + glm::radians(90.0f);
+              
+
+                glm::vec2 turretPos = transform2D.GetPosition();
+
+                glm::vec2 spawnPos;
+        
+                spawnPos.x = turretPos.x + (std::cos(mathAngle) * offsetDistance);
+                spawnPos.y = turretPos.y + (std::sin(mathAngle) * offsetDistance);
+
+                bullet->GetTransform2D().SetPosition(spawnPos);
+                bullet->SetDirection(angle);
 
                 engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(std::unique_ptr<Object>(bullet));
 
                 ammo--;
-                fireTimer = 0.3f; 
+                fireTimer = 0.15f;
 
                 JIN_LOG("남은 총알 : " + std::to_string(ammo));
             }
+        
         }
     }
 }

@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Turret.h"
 #include "Engine.h"
+#include "Projectile.h"
 
 
 void Player::Init(const EngineContext& engineContext)
@@ -23,7 +24,7 @@ void Player::Init(const EngineContext& engineContext)
         transform2D.SetPosition(glm::vec2(-550.f, 0.f));
 
         GetCollider()->SetUseTransformScale(false);
-        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player1", { "[Object]Wall", "[Object]Player2" });
+        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player1", { "[Object]Wall", "[Object]Player2", "[Object]Bullet" });
 
         moveSpritesheetB = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]BlueTank");
         moveSpritesheetB->AddClip("[Clip]TankB", { 0,1 }, 0.1f);
@@ -38,7 +39,7 @@ void Player::Init(const EngineContext& engineContext)
         transform2D.SetPosition(glm::vec2(550.f, 0.f));
 
         GetCollider()->SetUseTransformScale(false);
-        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player2", { "[Object]Wall", "[Object]Player1" });
+        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player2", { "[Object]Wall", "[Object]Player1", "[Object]Bullet" });
 
         moveSpritesheetR = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]RedTank");
         moveSpritesheetR->AddClip("[Clip]TankR", { 0,1 }, 0.1f);
@@ -140,5 +141,19 @@ void Player::OnCollision(Object* other, const EngineContext& engineContext)
     else if (other->GetTag() == "[Object]Player1" || other->GetTag() == "[Object]Player2")
     {
         transform2D.SetPosition(oldPos);
+    }
+}
+
+void Player::TakeDamage(int damageAmount)
+{
+    hp -= damageAmount;
+    if (hp < 0)
+    {
+        hp = 0;
+    }
+    JIN_LOG("남은 hp는 >>: " + std::to_string(hp));
+    if (hpText != nullptr)
+    {
+        hpText->SetText(std::to_string(hp));
     }
 }

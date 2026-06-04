@@ -133,5 +133,5 @@ void Tutorial::WallBlock(float x, float y, float size, const EngineContext& engi
 
     block->SetCollider(std::make_unique<AABBCollider>(block, glm::vec2{ size-5, size-5 }));
     block->GetCollider()->SetUseTransformScale(false);
-    block->SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Wall", {"[Object]Player1", "[Object]Player2"});
+    block->SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Wall", {"[Object]Player1", "[Object]Player2", "[Object]Bullet"});
 }

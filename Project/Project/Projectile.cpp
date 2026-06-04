@@ -1,6 +1,7 @@
 #include "Projectile.h"
 #include "EngineContext.h"
 #include "GameState.h"
+#include "Player.h"
 
 
 void Projectile::Init(const EngineContext& engineContext)
@@ -10,10 +11,15 @@ void Projectile::Init(const EngineContext& engineContext)
 
 	transform2D.SetScale(glm::vec2(15.f));
 
-	SetCollider(std::make_unique<AABBCollider>(this, glm::vec2{ 1.f, 1.f }));
+	//bullet collision 
+	SetCollider(std::make_unique<AABBCollider>(this, glm::vec2{ 15.f, 15.f }));
+	GetCollider()->SetUseTransformScale(false);
+	SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Bullet", { "[Object]Wall", "[Object]Player1", "[Object]Player2" });
+
+	
 	SetRenderLayer("[Layer]UI");
 
-	speed = 200.0f;
+	speed = 300.0f;
 	lifeTimer = 4.0f;
 }
 
@@ -36,7 +42,7 @@ void Projectile::Update(float dt, const EngineContext& engineContext)
 	currentPos.x += velocityX * dt; 
 	currentPos.y += velocityY * dt;
 	transform2D.SetPosition(currentPos);
-  
+   
 }
 
 void Projectile::Draw(const EngineContext& engineContext)
@@ -56,7 +62,18 @@ void Projectile::LateFree(const EngineContext& engineContext)
 
 void Projectile::OnCollision(Object* other, const EngineContext& engineContext)
 {
+	JIN_LOG("Collision : " + other->GetTag());
 
+	if (other->GetTag() == "[Object]Player1" || other->GetTag() == "[Object]Player2")
+	{
+		Player* hitPlayer = dynamic_cast<Player*>(other);
+
+		if (hitPlayer != nullptr)
+		{
+			hitPlayer->TakeDamage(8);
+		}
+		Kill();
+	}
 }
 
 void Projectile::SetDirection(float startAngle)

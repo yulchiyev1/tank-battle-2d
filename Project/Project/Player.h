@@ -18,6 +18,8 @@ public:
 
 	virtual void OnCollision(Object* other, const EngineContext& engineContext) override;
 
+	//bullet player collision 
+	void TakeDamage(int damageAmount);
 private:
 	glm::vec2 oldPos;
 	
