@@ -18,7 +18,8 @@ public:
     virtual void LateFree(const EngineContext& engineContext) override;
 
     void SetControls(int left, int right, int shoot);
-
+    void AddAmmo(int amount);
+    void EnableBigBullet();
 private:
     Player* parentPlayer;
 
@@ -36,4 +37,5 @@ private:
 
     // UI
     TextObject* ammoText = nullptr;
+    bool isBigBullet = false;
 };

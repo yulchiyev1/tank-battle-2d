@@ -20,6 +20,10 @@ public:
 
 	//bullet player collision 
 	void TakeDamage(int damageAmount);
+	//item function
+	void AddHealth(int amount);
+	void AddAmmo(int amount);
+	void IncreaseBulletSize();
 private:
 	glm::vec2 oldPos;
 	

@@ -14,9 +14,7 @@ void Projectile::Init(const EngineContext& engineContext)
 	//bullet collision 
 	SetCollider(std::make_unique<AABBCollider>(this, glm::vec2{ 15.f, 15.f }));
 	GetCollider()->SetUseTransformScale(false);
-	SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Bullet", { "[Object]Wall", "[Object]Player1", "[Object]Player2" });
-
-	
+	SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Bullet", { "[Object]Wall", "[Object]Player1", "[Object]Player2", "[Object]Item" });
 	SetRenderLayer("[Layer]Projectile");
 
 	speed = 350.0f;
@@ -76,7 +74,7 @@ void Projectile::OnCollision(Object* other, const EngineContext& engineContext)
 	}
 	else if (other->GetTag() == "[Object]Wall")
 	{
-		Kill(); 
+		Kill();
 	}
 }
 

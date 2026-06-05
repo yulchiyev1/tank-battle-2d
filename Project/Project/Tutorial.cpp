@@ -1,8 +1,7 @@
 ﻿#include "Tutorial.h"
-
 #include <random>
-
 #include "LoadingState.h"
+#include "Item.h"
 
 void Tutorial::Load(const EngineContext& engineContext)
 {
@@ -11,6 +10,17 @@ void Tutorial::Load(const EngineContext& engineContext)
     RenderManager* rm = engineContext.renderManager;
 
     //texture & material load
+    rm->RegisterTexture("[Texture]ItemBox", "Textures/Items/item.png");
+    rm->RegisterMaterial("[Material]ItemBox", "[EngineShader]default_texture", { {"u_Texture", "[Texture]ItemBox"} });
+
+    rm->RegisterTexture("[Texture]ItemHealth", "Textures/Items/hp_item1.png");
+    rm->RegisterMaterial("[Material]ItemHealth", "[EngineShader]default_texture", { {"u_Texture", "[Texture]ItemHealth"} });
+
+    rm->RegisterTexture("[Texture]ItemAmmo", "Textures/Items/bullets_item.png");
+    rm->RegisterMaterial("[Material]ItemAmmo", "[EngineShader]default_texture", { {"u_Texture", "[Texture]ItemAmmo"} });
+
+    rm->RegisterTexture("[Texture]ItemSize", "Textures/Items/bullet_item1.png");
+    rm->RegisterMaterial("[Material]ItemSize", "[EngineShader]default_texture", { {"u_Texture", "[Texture]ItemSize"} });
 
     rm->RegisterTexture("[Texture]TurretBlue", "Textures/Tanks/blue/turret_blue.png");
     rm->RegisterSpriteSheet("[SpriteSheet]TurretBlue", "[Texture]TurretBlue", 128, 128);
@@ -31,7 +41,7 @@ void Tutorial::Load(const EngineContext& engineContext)
     rm->RegisterTexture("[Texture]RedTank", "Textures/Tanks/red/body_halftrack_r.png");
     rm->RegisterSpriteSheet("[SpriteSheet]RedTank", "[Texture]RedTank", 128, 128);
 
-    rm->RegisterTexture("[Texture]Background", "Textures/Background/a_rgb.jpg");
+    rm->RegisterTexture("[Texture]Background", "Textures/Background/_09_background.png");
     rm->RegisterMaterial("[Material]Background", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Background"} });
 
     rm->RegisterTexture("[Texture]Tank1", "Textures/Tanks/blue/body_tracks.png");
@@ -85,6 +95,23 @@ void Tutorial::Init(const EngineContext& engineContext)
         WallBlock(right_x, y, wall_len, engineContext);  
     }
 
+    // 경기장 안에 wallBlock 설치 8개 randomly
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> randX(-500.0f, 500.0f);
+    std::uniform_real_distribution<float> randY(-350.0f, 350.0f); // Y o'qi chegarasi (Tepa-past)
+    for (int i = 0; i < 8; ++i)
+    {
+        float spawnX = randX(gen);
+        float spawnY = randY(gen);
+        WallBlock(spawnX, spawnY, wall_len, engineContext);
+    }
+
+    // TEST UCHUN 1 TA QUTI (X: 0, Y: 0) MARKAZGA TUSHIRAMIZ
+    Item* testItem = new Item();
+    testItem->Init(engineContext);
+    testItem->GetTransform2D().SetPosition(glm::vec2(0.0f, 0.0f));
+    objectManager.AddObject(std::unique_ptr<Object>(testItem), "[Object]Item");
 }
 
 void Tutorial::LateInit(const EngineContext& engineContext)
@@ -109,7 +136,6 @@ void Tutorial::PostProcessing(const EngineContext& engineContext)
 {
 
 }
-
 
 void Tutorial::Free(const EngineContext& engineContext)
 {

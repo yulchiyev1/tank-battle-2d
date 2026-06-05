@@ -107,6 +107,10 @@ void Turret::Update(float dt, const EngineContext& engineContext)
                 // bullet 생선
                 Projectile* bullet = new Projectile();
                 bullet->Init(engineContext);
+                if (isBigBullet) {
+                    bullet->GetTransform2D().SetScale(glm::vec2(2.5f)); // Oddiy o'qdan 2.5 barobar katta
+                    isBigBullet = false;
+                }
 
                 // Calculate bullet spawn position & angle
                 float offsetDistance = 50.0f;
@@ -120,8 +124,8 @@ void Turret::Update(float dt, const EngineContext& engineContext)
                 bullet->GetTransform2D().SetPosition(spawnPos);
                 bullet->SetDirection(currentAngle);
 
-                // Register bullet
-                engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(std::unique_ptr<Object>(bullet));
+                // Register bullet 
+                engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(std::unique_ptr<Object>(bullet), "[Object]Bullet");
 
                 // Update ammo
                 ammo--;
@@ -164,4 +168,17 @@ void Turret::SetControls(int left, int right, int shoot)
     leftKey = left;
     rightKey = right;
     shootKey = shoot;
+}
+
+void Turret::AddAmmo(int amount)
+{
+    ammo += amount;
+    if (ammoText != nullptr) {
+        ammoText->SetText("Ammo: " + std::to_string(ammo));
+    }
+}
+
+void Turret::EnableBigBullet()
+{
+    isBigBullet = true; 
 }

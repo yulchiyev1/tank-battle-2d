@@ -2,6 +2,7 @@
 #include "Turret.h"
 #include "Engine.h"
 #include "Projectile.h"
+#include "Item.h"
 
 void Player::Init(const EngineContext& engineContext)
 {
@@ -30,7 +31,7 @@ void Player::Init(const EngineContext& engineContext)
         transform2D.SetPosition(glm::vec2(-550.f, 0.f));
 
         GetCollider()->SetUseTransformScale(false);
-        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player1", { "[Object]Wall", "[Object]Player2", "[Object]Bullet" });
+        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player1", { "[Object]Wall", "[Object]Player2", "[Object]Bullet", "[Object]Item" });
 
         moveSpritesheetB = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]BlueTank");
         moveSpritesheetB->AddClip("[Clip]TankB", { 0, 1 }, 0.1f);
@@ -45,7 +46,7 @@ void Player::Init(const EngineContext& engineContext)
         transform2D.SetPosition(glm::vec2(550.f, 0.f));
 
         GetCollider()->SetUseTransformScale(false);
-        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player2", { "[Object]Wall", "[Object]Player1", "[Object]Bullet" });
+        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player2", { "[Object]Wall", "[Object]Player1", "[Object]Bullet", "[Object]Item" });
 
         moveSpritesheetR = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]RedTank");
         moveSpritesheetR->AddClip("[Clip]TankR", { 0, 1 }, 0.1f);
@@ -125,7 +126,6 @@ void Player::SetControls(int up, int down, int left, int right)
 
 void Player::OnCollision(Object* other, const EngineContext& engineContext)
 {
-    // collision with wall & another player
     if (other->GetTag() == "[Object]Wall")
     {
         transform2D.SetPosition(oldPos);
@@ -134,6 +134,17 @@ void Player::OnCollision(Object* other, const EngineContext& engineContext)
     else if (other->GetTag() == "[Object]Player1" || other->GetTag() == "[Object]Player2")
     {
         transform2D.SetPosition(oldPos);
+        myTurret->GetTransform2D().SetPosition(oldPos); 
+    }
+    else if (other->GetTag() == "[Object]Item")
+    {
+        Item* hitItem = dynamic_cast<Item*>(other);
+
+        if (hitItem != nullptr && !hitItem->IsUnlocked())
+        {
+            transform2D.SetPosition(oldPos);
+            myTurret->GetTransform2D().SetPosition(oldPos);
+        }
     }
 }
 
@@ -149,5 +160,29 @@ void Player::TakeDamage(int damageAmount)
     if (hpText != nullptr)
     {
         hpText->SetText(std::to_string(hp));
+    }
+}
+
+void Player::AddHealth(int amount)
+{
+    hp += amount;
+    if (hp > 100) hp = 100;
+
+    if (hpText != nullptr) {
+        hpText->SetText(std::to_string(hp));
+    }
+}
+
+void Player::AddAmmo(int amount)
+{
+    if (myTurret != nullptr) {
+        myTurret->AddAmmo(amount);
+    }
+}
+
+void Player::IncreaseBulletSize()
+{
+    if (myTurret != nullptr) {
+        myTurret->EnableBigBullet();
     }
 }
