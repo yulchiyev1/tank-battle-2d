@@ -35,7 +35,7 @@ private:
     GameObject* background;
     GameObject* wall;
 
-    void WallBlock(float x, float y, float size, const EngineContext& engineContext);
+    void WallBlock(float x, float y, float size, const EngineContext& engineContext, bool isBorder = false);
     
 };
 

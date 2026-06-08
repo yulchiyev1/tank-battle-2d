@@ -15,9 +15,17 @@ public:
 
     //총알의 direction
     void SetDirection(float startAngle);
+
+    //preventing bullet error (devorga taqalgandagi)
+    void SetSpawnPosition(glm::vec2 pos);
 private:
     float speed;
-    float lifeTimer;
+    float lifeTimer; //몇초후 bullet 죽이기를 위하여
     float velocityX;
     float velocityY;
+
+    //bullet reflection
+    glm::vec2 oldPos;
+    float lifeTime = 0.0f; 
+    float wallCooldown = 0.0f;
 };

@@ -19,7 +19,7 @@ public:
 	void LateFree(const EngineContext& engineContext) override;
 	void OnCollision(Object* other, const EngineContext& engineContext) override;
 
-	// Quti ochiq yoki yopiqligini Playerga bildirish uchun funksiya
+
 	bool IsUnlocked() const { return isUnlocked; }
 
 private:

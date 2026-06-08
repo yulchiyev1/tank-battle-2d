@@ -13,7 +13,7 @@ void Turret::Init(const EngineContext& engineContext)
     SetMesh(engineContext, "[EngineMesh]default");
     SetMaterial(engineContext, "[Material]Animation");
 
-    ammo = 30;
+    ammo = 130;
 
     // Ammo text
     ammoText = new TextObject(
@@ -121,7 +121,7 @@ void Turret::Update(float dt, const EngineContext& engineContext)
                 spawnPos.x = turretPos.x + (std::cos(mathAngle) * offsetDistance);
                 spawnPos.y = turretPos.y + (std::sin(mathAngle) * offsetDistance);
 
-                bullet->GetTransform2D().SetPosition(spawnPos);
+                bullet->SetSpawnPosition(spawnPos);
                 bullet->SetDirection(currentAngle);
 
                 // Register bullet 

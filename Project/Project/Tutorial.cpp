@@ -78,33 +78,49 @@ void Tutorial::Init(const EngineContext& engineContext)
     player2 = static_cast<Player*>(objectManager.AddObject(std::make_unique<Player>(), "[Object]Player2"));
     player2->SetControls(KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT);
 
-    // Wall 설치
-    float wall_len = screenW * 0.02f; //천재 화면 2% means block 50개
+    // border wallblocks without collider
+    float wall_len = screenW * 0.02f;
     float right_x = screenW / 2.f - wall_len / 2.f;
     float left_x = -right_x;
     float top_y = screenH / 2.f - wall_len / 2.f;
     float bottom_y = -top_y;
-    for (float x = left_x; x <= right_x; x += wall_len) //t&b
+
+    for (float x = left_x; x <= right_x; x += wall_len) // T&B
     {
-        WallBlock(x, top_y, wall_len, engineContext);    
-        WallBlock(x, bottom_y, wall_len, engineContext); 
+        WallBlock(x, top_y, wall_len, engineContext, true);    // 'true' = no collider
+        WallBlock(x, bottom_y, wall_len, engineContext, true);
     }
-    for (float y = bottom_y; y <= top_y; y += wall_len) //l&r
+    for (float y = bottom_y; y <= top_y; y += wall_len) // L&R
     {
-        WallBlock(left_x, y, wall_len, engineContext);   
-        WallBlock(right_x, y, wall_len, engineContext);  
+        WallBlock(left_x, y, wall_len, engineContext, true);
+        WallBlock(right_x, y, wall_len, engineContext, true);
     }
 
-    // 경기장 안에 wallBlock 설치 8개 randomly
+    // 4 border colliders  
+    auto addInvisibleCollider = [&](float x, float y, float width, float height, std::string tag) {
+        GameObject* invisibleWall = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), tag));
+        invisibleWall->GetTransform2D().SetPosition(glm::vec2(x, y));
+        invisibleWall->SetCollider(std::make_unique<AABBCollider>(invisibleWall, glm::vec2{ width, height }));
+        invisibleWall->GetCollider()->SetUseTransformScale(false);
+        invisibleWall->SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), tag, { "[Object]Player1", "[Object]Player2", "[Object]Bullet" });
+        };
+    // T&B
+    addInvisibleCollider(0.0f, top_y, screenW, wall_len, "[Object]Border_H");
+    addInvisibleCollider(0.0f, bottom_y, screenW, wall_len, "[Object]Border_H");
+    // L&R
+    addInvisibleCollider(left_x, 0.0f, wall_len, screenH, "[Object]Border_V");
+    addInvisibleCollider(right_x, 0.0f, wall_len, screenH, "[Object]Border_V");
+
+    // 경기장 안 random wall blocks
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<float> randX(-500.0f, 500.0f);
-    std::uniform_real_distribution<float> randY(-350.0f, 350.0f); // Y o'qi chegarasi (Tepa-past)
+    std::uniform_real_distribution<float> randY(-350.0f, 350.0f);
     for (int i = 0; i < 8; ++i)
     {
         float spawnX = randX(gen);
         float spawnY = randY(gen);
-        WallBlock(spawnX, spawnY, wall_len, engineContext);
+        WallBlock(spawnX, spawnY, wall_len, engineContext, false); // 'false' = Oddiy devor, kollayderi bor
     }
 
     // TEST UCHUN 1 TA QUTI (X: 0, Y: 0) MARKAZGA TUSHIRAMIZ
@@ -148,16 +164,19 @@ void Tutorial::Unload(const EngineContext& engineContext)
 }
 
 // Wall Block 
-void Tutorial::WallBlock(float x, float y, float size, const EngineContext& engineContext)
+void Tutorial::WallBlock(float x, float y, float size, const EngineContext& engineContext, bool isBorder)
 {
-    GameObject* block = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Wall"));
+    GameObject* block = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), isBorder ? "[Object]BorderVisual" : "[Object]Wall"));
     block->SetMesh(engineContext, "[EngineMesh]default");
     block->SetMaterial(engineContext, "[Material]StoneWall");
     block->GetTransform2D().SetScale({ size, size });
     block->SetRenderLayer("[Layer]Items");
     block->GetTransform2D().SetPosition(glm::vec2(x, y));
 
-    block->SetCollider(std::make_unique<AABBCollider>(block, glm::vec2{ size-5, size-5 }));
-    block->GetCollider()->SetUseTransformScale(false);
-    block->SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Wall", {"[Object]Player1", "[Object]Player2", "[Object]Bullet"});
+    if (!isBorder)
+    {
+        block->SetCollider(std::make_unique<AABBCollider>(block, glm::vec2{ size, size }));
+        block->GetCollider()->SetUseTransformScale(false);
+        block->SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Wall", { "[Object]Player1", "[Object]Player2", "[Object]Bullet" });
+    }
 }
