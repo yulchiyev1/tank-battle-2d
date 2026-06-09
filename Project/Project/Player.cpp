@@ -31,7 +31,7 @@ void Player::Init(const EngineContext& engineContext)
         transform2D.SetPosition(glm::vec2(-550.f, 0.f));
 
         GetCollider()->SetUseTransformScale(false);
-        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player1", { "[Object]Wall", "[Object]Player2", "[Object]Bullet", "[Object]Item" });
+        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player1", { "[Object]Wall", "[Object]Player2", "[Object]Bullet", "[Object]Item", "[Object]Border_H", "[Object]Border_V" });
 
         moveSpritesheetB = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]BlueTank");
         moveSpritesheetB->AddClip("[Clip]TankB", { 0, 1 }, 0.1f);
@@ -46,7 +46,7 @@ void Player::Init(const EngineContext& engineContext)
         transform2D.SetPosition(glm::vec2(550.f, 0.f));
 
         GetCollider()->SetUseTransformScale(false);
-        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player2", { "[Object]Wall", "[Object]Player1", "[Object]Bullet", "[Object]Item" });
+        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player2", { "[Object]Wall", "[Object]Player1", "[Object]Bullet", "[Object]Item", "[Object]Border_H", "[Object]Border_V" });
 
         moveSpritesheetR = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]RedTank");
         moveSpritesheetR->AddClip("[Clip]TankR", { 0, 1 }, 0.1f);
@@ -63,6 +63,17 @@ void Player::LateInit(const EngineContext& engineContext)
 
 void Player::Update(float dt, const EngineContext& engineContext)
 {
+    // Update funksiyasi boshiga:
+    if (flashTimer > 0.0f)
+    {
+        flashTimer -= dt;
+        if (flashTimer <= 0.0f)
+        {
+            speedMultiplier = 1.0f; // Vaqt tugadi, tezlik yana 1x ga qaytdi
+            JIN_LOG("(FLASH EFFECT FINISHED)");
+        }
+    }
+
     // Update HP text position (follow tank)
     if (hpText != nullptr)
     {
@@ -93,7 +104,7 @@ void Player::Update(float dt, const EngineContext& engineContext)
     oldPos = transform2D.GetPosition();
 
     // Calculate movement
-    float speed = 140.f;
+    float speed = 140.f * speedMultiplier; //  TANK 2X 
     glm::vec2 pos = transform2D.GetPosition();
 
     if (engineContext.inputManager->IsKeyDown(upKey)) { pos.y += speed * dt; }
@@ -126,7 +137,7 @@ void Player::SetControls(int up, int down, int left, int right)
 
 void Player::OnCollision(Object* other, const EngineContext& engineContext)
 {
-    if (other->GetTag() == "[Object]Wall")
+    if (other->GetTag() == "[Object]Wall" || other->GetTag() == "[Object]Border_H" || other->GetTag() == "[Object]Border_V")
     {
         transform2D.SetPosition(oldPos);
         myTurret->GetTransform2D().SetPosition(oldPos);
@@ -185,4 +196,10 @@ void Player::IncreaseBulletSize()
     if (myTurret != nullptr) {
         myTurret->EnableBigBullet();
     }
+}
+
+void Player::IncreaseSpeed()
+{
+    speedMultiplier = 1.8f; // Tezlikni 2 barobar qilib belgilaymiz
+    flashTimer = 8.0f;     // 12 soniya vaqt beramiz
 }

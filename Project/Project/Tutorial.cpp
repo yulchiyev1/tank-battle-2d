@@ -13,6 +13,9 @@ void Tutorial::Load(const EngineContext& engineContext)
     rm->RegisterTexture("[Texture]ItemBox", "Textures/Items/item.png");
     rm->RegisterMaterial("[Material]ItemBox", "[EngineShader]default_texture", { {"u_Texture", "[Texture]ItemBox"} });
 
+    rm->RegisterTexture("[Texture]Item2X", "Textures/Items/2x.png");
+    rm->RegisterMaterial("[Material]Item2X", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Item2X"} });
+
     rm->RegisterTexture("[Texture]ItemHealth", "Textures/Items/hp_item1.png");
     rm->RegisterMaterial("[Material]ItemHealth", "[EngineShader]default_texture", { {"u_Texture", "[Texture]ItemHealth"} });
 

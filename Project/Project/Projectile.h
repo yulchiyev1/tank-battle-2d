@@ -18,6 +18,10 @@ public:
 
     //preventing bullet error (devorga taqalgandagi)
     void SetSpawnPosition(glm::vec2 pos);
+
+    void SetSpeedMultiplier(float mult);
+
+    void MakeBig();
 private:
     float speed;
     float lifeTimer; //몇초후 bullet 죽이기를 위하여
@@ -28,4 +32,7 @@ private:
     glm::vec2 oldPos;
     float lifeTime = 0.0f; 
     float wallCooldown = 0.0f;
+
+    float speedMultiplier = 1.0f;
+    bool isSuperBig = false;
 };

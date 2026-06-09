@@ -18,7 +18,7 @@ void Item::Init(const EngineContext& engineContext)
     // random selection
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(0, 2);
+    std::uniform_int_distribution<int> dist(0, 3);
 
     currentType = static_cast<ItemType>(dist(gen));
 
@@ -60,6 +60,8 @@ void Item::OnCollision(Object* other, const EngineContext& engineContext)
                 SetMaterial(engineContext, "[Material]ItemAmmo");
             else if (currentType == ItemType::SIZE)
                 SetMaterial(engineContext, "[Material]ItemSize");
+            else if (currentType == ItemType::FLASH)
+                SetMaterial(engineContext, "[Material]Item2X");
         }
     }
     else if (other->GetTag() == "[Object]Player1" || other->GetTag() == "[Object]Player2")
@@ -78,12 +80,17 @@ void Item::OnCollision(Object* other, const EngineContext& engineContext)
                 else if (currentType == ItemType::AMMO)
                 {
                     JIN_LOG("(5 AMMO ++++)");
-                    hitPlayer->AddAmmo(5);    
+                    hitPlayer->AddAmmo(6);  
                 }
                 else if (currentType == ItemType::SIZE)
                 {
                     JIN_LOG("(2.5x BULLET SIZE)");
                     hitPlayer->IncreaseBulletSize();
+                }
+                else if (currentType == ItemType::FLASH)
+                {
+                    JIN_LOG("(FLASH 2X FASTER)");
+                    hitPlayer->IncreaseSpeed();
                 }
             }
 

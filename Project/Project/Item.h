@@ -5,7 +5,8 @@ enum class ItemType
 {
 	HEALTH,
 	AMMO,
-	SIZE
+	SIZE,
+	FLASH
 };
 
 class Item : public GameObject

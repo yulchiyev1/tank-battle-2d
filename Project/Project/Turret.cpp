@@ -107,9 +107,23 @@ void Turret::Update(float dt, const EngineContext& engineContext)
                 // bullet 생선
                 Projectile* bullet = new Projectile();
                 bullet->Init(engineContext);
+                bullet->SetSpeedMultiplier(parentPlayer->GetSpeedMultiplier());
                 if (isBigBullet) {
-                    bullet->GetTransform2D().SetScale(glm::vec2(2.5f)); // Oddiy o'qdan 2.5 barobar katta
+                    bullet->MakeBig(); // material, collider change in once
                     isBigBullet = false;
+                }
+                bullet->Init(engineContext);
+                bullet->SetSpeedMultiplier(parentPlayer->GetSpeedMultiplier());
+                ObjectManager& objManager = engineContext.stateManager->GetCurrentState()->GetObjectManager();
+
+                // bullet collision 설치
+                if (parentPlayer->GetTag() == "[Object]Player1")
+                {
+                    bullet->SetCollision(objManager, "[Object]Bullet", { "[Object]Wall", "[Object]Border_H", "[Object]Border_V", "[Object]Player2", "[Object]Item" });
+                }
+                else if (parentPlayer->GetTag() == "[Object]Player2")
+                {
+                    bullet->SetCollision(objManager, "[Object]Bullet", { "[Object]Wall", "[Object]Border_H", "[Object]Border_V", "[Object]Player1", "[Object]Item" });
                 }
 
                 // Calculate bullet spawn position & angle

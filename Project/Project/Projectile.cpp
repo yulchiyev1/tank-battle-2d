@@ -9,18 +9,28 @@ void Projectile::Init(const EngineContext& engineContext)
     SetMesh(engineContext, "[EngineMesh]default");
     SetMaterial(engineContext, "[Material]Bullet");
 
-    transform2D.SetScale(glm::vec2(15.f));
-
     // bullet collision 
-    SetCollider(std::make_unique<AABBCollider>(this, glm::vec2{ 15.f, 15.f }));
+    if (isSuperBig)
+    {
+        // if big bullet item on -> bigger bullet
+        transform2D.SetScale(glm::vec2(40.f));
+        SetCollider(std::make_unique<CircleCollider>(this, 40.f ));
+        lifeTimer = 8.0f;
+    }
+    else
+    {
+        transform2D.SetScale(glm::vec2(15.f));
+        SetCollider(std::make_unique<CircleCollider>(this, 15.f));
+        lifeTimer = 3.0f;
+    }
+
     GetCollider()->SetUseTransformScale(false);
 
-    // DIQQAT: "[Object]Border_H" va "[Object]Border_V" ni ro'yxatga qo'shdik!
-    SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Bullet", { "[Object]Wall", "[Object]Border_H", "[Object]Border_V", "[Object]Player1", "[Object]Player2", "[Object]Item" });
+    //SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Bullet", { "[Object]Wall", "[Object]Border_H", "[Object]Border_V", "[Object]Player1", "[Object]Player2", "[Object]Item" });
     SetRenderLayer("[Layer]Projectile");
 
-    speed = 1750.0f;
-    lifeTimer = 10.0f;
+    speed = 400.0f;
+    
 }
 
 void Projectile::LateInit(const EngineContext& engineContext)
@@ -30,6 +40,12 @@ void Projectile::LateInit(const EngineContext& engineContext)
 
 void Projectile::Update(float dt, const EngineContext& engineContext)
 {
+    // 2x bullet size
+    if (isSuperBig)
+    {
+        transform2D.SetScale(glm::vec2(40.0f)); // O'qni doimiy katta ushlab turamiz
+    }
+
     lifeTime += dt;
 
     // Tanaffus vaqtini kamaytirib boramiz
@@ -162,12 +178,25 @@ void Projectile::SetDirection(float startAngle)
     transform2D.SetRotation(startAngle);
     float mathAngle = startAngle + glm::radians(90.0f);
 
-    velocityX = glm::cos(mathAngle) * speed;
-    velocityY = glm::sin(mathAngle) * speed;
+    float actualSpeed = speed * speedMultiplier;
+
+    velocityX = glm::cos(mathAngle) * actualSpeed;
+    velocityY = glm::sin(mathAngle) * actualSpeed;
 }
+
 
 void Projectile::SetSpawnPosition(glm::vec2 pos)
 {
     transform2D.SetPosition(pos);
     oldPos = pos;
+}
+
+void Projectile::SetSpeedMultiplier(float mult)
+{
+    speedMultiplier = mult;
+}
+
+void Projectile::MakeBig()
+{
+    isSuperBig = true; 
 }
