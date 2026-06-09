@@ -38,7 +38,7 @@ void Player::Init(const EngineContext& engineContext)
 
         AttachAnimator(std::make_unique<SpriteAnimator>(moveSpritesheetB, 0.1f, true));
 
-        myTurret->SetControls(KEY_B, KEY_N, KEY_SPACE);
+        myTurret->SetControls(KEY_B, KEY_N, KEY_M);
     }
     else if (this->GetTag() == "[Object]Player2")
     {

@@ -13,7 +13,7 @@ void Turret::Init(const EngineContext& engineContext)
     SetMesh(engineContext, "[EngineMesh]default");
     SetMaterial(engineContext, "[Material]Animation");
 
-    ammo = 130;
+    ammo = 40;
 
     // Ammo text
     ammoText = new TextObject(

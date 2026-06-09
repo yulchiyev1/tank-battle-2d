@@ -2,11 +2,12 @@
 #include <random>
 #include "LoadingState.h"
 #include "Item.h"
+#include "Player.h"
+#include "GameOver.h" 
 
 void Tutorial::Load(const EngineContext& engineContext)
 {
     JIN_LOG("[Tutorial] load called");
-
     RenderManager* rm = engineContext.renderManager;
 
     //texture & material load
@@ -54,7 +55,7 @@ void Tutorial::Load(const EngineContext& engineContext)
 
     rm->RegisterTexture("[Texture]StoneWall", "Textures/Wall/stone_wall.jpg");
     rm->RegisterMaterial("[Material]StoneWall", "[EngineShader]default_texture", { {"u_Texture", "[Texture]StoneWall"} });
-   
+
     rm->RegisterTexture("[Texture]Bullet", "Textures/Projectile/bullet2.png");
     rm->RegisterMaterial("[Material]Bullet", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Bullet"} });
 }
@@ -118,7 +119,7 @@ void Tutorial::Init(const EngineContext& engineContext)
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<float> randX(-500.0f, 500.0f);
-    std::uniform_real_distribution<float> randY(-350.0f, 350.0f);
+    std::uniform_real_distribution<float> randY(-300.0f, 300.0f);
     for (int i = 0; i < 8; ++i)
     {
         float spawnX = randX(gen);
@@ -140,7 +141,64 @@ void Tutorial::LateInit(const EngineContext& engineContext)
 void Tutorial::Update(float dt, const EngineContext& engineContext)
 {
     objectManager.UpdateAll(dt, engineContext);
+
+    //randomly adding items 
+    itemSpawnTimer -= dt;
+    if (itemSpawnTimer <= 0.0f)
+    {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+
+        std::uniform_real_distribution<float> xDist(-550.0f, 550.0f);
+        std::uniform_real_distribution<float> yDist(-350.0f, 350.0f);
+
+        float randX = xDist(gen);
+        float randY = yDist(gen);
+
+        Item* newItem = new Item();
+        newItem->GetTransform2D().SetPosition(glm::vec2(randX, randY));
+        newItem->Init(engineContext);
+        engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(std::unique_ptr<Object>(newItem), "[Object]Item");
+
+        itemSpawnTimer = 12.0f; // 10seconds for next item
+    }
+
+    // Timer for ending game
+    roundTimer -= dt;
+
+    std::string winnerMessage = "";
+    bool gameEnded = false;
+
+    if (player1->hp <= 0)
+    {
+        gameEnded = true;
+        winnerMessage = "PLAYER 2 WON";
+    }
+    else if (player2->hp <= 0)
+    {
+        gameEnded = true;
+        winnerMessage = "PLAYER 1 WON";
+    }
+    else if (roundTimer <= 0.0f)
+    {
+        roundTimer = 0.0f; // Vaqtni 0 da qotiramiz
+        gameEnded = true;
+
+        if (player1->hp > player2->hp)
+            winnerMessage = "TIME UP! PLAYER 1 WON";
+        else if (player2->hp > player1->hp)
+            winnerMessage = "TIME UP! PLAYER 2 WON";
+        else
+            winnerMessage = "TIME UP! IT'S A DRAW!";
+    }
+
+    // GameOver state로 바꾸기
+    if (gameEnded)
+    {
+        engineContext.stateManager->ChangeState(std::make_unique<GameOver>(winnerMessage));
+    }
 }
+
 
 void Tutorial::LateUpdate(float dt, const EngineContext& engineContext)
 {
@@ -149,11 +207,6 @@ void Tutorial::LateUpdate(float dt, const EngineContext& engineContext)
 void Tutorial::Draw(const EngineContext& engineContext)
 {
     objectManager.DrawAll(engineContext);
-}
-
-void Tutorial::PostProcessing(const EngineContext& engineContext)
-{
-
 }
 
 void Tutorial::Free(const EngineContext& engineContext)

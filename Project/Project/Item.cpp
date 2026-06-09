@@ -80,7 +80,7 @@ void Item::OnCollision(Object* other, const EngineContext& engineContext)
                 else if (currentType == ItemType::AMMO)
                 {
                     JIN_LOG("(5 AMMO ++++)");
-                    hitPlayer->AddAmmo(6);  
+                    hitPlayer->AddAmmo(5);  
                 }
                 else if (currentType == ItemType::SIZE)
                 {

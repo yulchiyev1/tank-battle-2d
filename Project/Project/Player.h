@@ -26,6 +26,7 @@ public:
 	void IncreaseBulletSize();
 	void IncreaseSpeed();
 	float GetSpeedMultiplier() const { return speedMultiplier; }
+	int hp = 100;
 private:
 	glm::vec2 oldPos;
 	
@@ -34,7 +35,7 @@ private:
 
 	TextObject* hpText; 
 	Turret* myTurret = nullptr;
-	int hp = 100;
+	
 
 	//flash item timer
 	float flashTimer = 0.0f;
