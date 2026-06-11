@@ -16,7 +16,7 @@ void GameOver::Update(float dt, const EngineContext& engineContext)
 {
     objectManager.UpdateAll(dt, engineContext);
 
-    if (engineContext.inputManager->IsKeyDown(KEY_SPACE))
+    if (engineContext.inputManager->IsKeyPressed(KEY_SPACE))
     {
         // Menyuga qaytish
         engineContext.stateManager->ChangeState(std::make_unique<MainMenu>());

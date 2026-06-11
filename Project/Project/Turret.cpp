@@ -63,6 +63,23 @@ void Turret::LateInit(const EngineContext& engineContext)
 
 void Turret::Update(float dt, const EngineContext& engineContext)
 {
+    // extra bullet in 8 sec when bullet < 5
+    ammoRegenTimer -= dt;
+
+    if (ammoRegenTimer <= 0.0f)
+    {
+        if (ammo < maxAmmo)
+        {
+            ammo++;
+            if (ammoText != nullptr)
+            {
+                ammoText->SetText("Ammo: " + std::to_string(ammo));
+            }
+        }
+
+        ammoRegenTimer = 8.0f;
+    }
+
     // Animation state update
     if (isShooting)
     {

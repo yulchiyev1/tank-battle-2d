@@ -169,7 +169,7 @@ void Projectile::OnCollision(Object* other, const EngineContext& engineContext)
             velocityX = -velocityX;
             velocityY = -velocityY;
         }
-        wallCooldown = 0.001f;
+        wallCooldown = 0.05f;
     }
 }
 

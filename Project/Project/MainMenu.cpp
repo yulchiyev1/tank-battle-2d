@@ -37,7 +37,7 @@ void MainMenu::Update(float dt, const EngineContext& engineContext)
     objectManager.UpdateAll(dt, engineContext);
 
     // space > 경기장
-    if (engineContext.inputManager->IsKeyDown(KEY_SPACE)) // yoki InputManager::Key::Space
+    if (engineContext.inputManager->IsKeyPressed(KEY_SPACE)) // yoki InputManager::Key::Space
     {
         engineContext.stateManager->ChangeState(std::make_unique<Tutorial>());
     }

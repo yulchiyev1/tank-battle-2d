@@ -118,20 +118,42 @@ void Tutorial::Init(const EngineContext& engineContext)
     // 경기장 안 random wall blocks
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> randX(-500.0f, 500.0f);
-    std::uniform_real_distribution<float> randY(-300.0f, 300.0f);
-    for (int i = 0; i < 8; ++i)
+
+    // Chegaralarga (Border) tegib qolmasligi uchun maydonni biroz qisqartirdik
+    std::uniform_real_distribution<float> randX(-450.0f, 450.0f);
+    std::uniform_real_distribution<float> randY(-250.0f, 250.0f);
+
+    int wallsSpawned = 0;
+    wallPositions.clear();
+
+    while (wallsSpawned < 8)
     {
-        float spawnX = randX(gen);
-        float spawnY = randY(gen);
-        WallBlock(spawnX, spawnY, wall_len, engineContext, false); // 'false' = Oddiy devor, kollayderi bor
+        glm::vec2 testPos(randX(gen), randY(gen));
+
+        // at least 100p distance
+        if (IsSafePosition(testPos, 100.0f))
+        {
+            WallBlock(testPos.x, testPos.y, wall_len, engineContext, false);
+            wallPositions.push_back(testPos); 
+            wallsSpawned++;
+        }
     }
 
-    // TEST UCHUN 1 TA QUTI (X: 0, Y: 0) MARKAZGA TUSHIRAMIZ
+    // one box to center for testing (X: 0, Y: 0) 
     Item* testItem = new Item();
     testItem->Init(engineContext);
     testItem->GetTransform2D().SetPosition(glm::vec2(0.0f, 0.0f));
     objectManager.AddObject(std::unique_ptr<Object>(testItem), "[Object]Item");
+
+    // timer of the game
+    if (timerTextObj == nullptr) {
+        timerTextObj = static_cast<TextObject*>(engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(
+            std::make_unique<TextObject>(engineContext.renderManager->GetFontByTag("[Font]defaultkr"), "02:00"),
+            "[Object]TimerText"
+        ));
+    }
+    timerTextObj->SetRenderLayer("[Layer]UI"); // Har doim ustda turishi uchun
+    timerTextObj->GetTransform2D().SetScale(glm::vec2(0.6f, 0.6f));
 }
 
 void Tutorial::LateInit(const EngineContext& engineContext)
@@ -141,30 +163,87 @@ void Tutorial::LateInit(const EngineContext& engineContext)
 void Tutorial::Update(float dt, const EngineContext& engineContext)
 {
     objectManager.UpdateAll(dt, engineContext);
+   
+    //camera
+    Camera2D* mainCam = cameraManager.GetActiveCamera();
+    if (mainCam != nullptr && player1 != nullptr && player2 != nullptr)
+    {
+        glm::vec2 p1Pos = player1->GetTransform2D().GetPosition();
+        glm::vec2 p2Pos = player2->GetTransform2D().GetPosition();
 
-    //randomly adding items 
+        glm::vec2 targetPos = (p1Pos + p2Pos) * 0.5f;
+        float distance = glm::distance(p1Pos, p2Pos);
+
+        float minDist = 450.0f;
+        float maxDist = 2050.0f;
+        float clampedDist = std::clamp(distance, minDist, maxDist);
+        float t = (clampedDist - minDist) / (maxDist - minDist);
+        float targetZoom = glm::mix(1.2f, 0.65f, t);
+
+        float panSpeed = 6.0f;  //kamera siljish tezligi
+        float zoomSpeed = 1.0f; //ekran kattlashish/kichiklashish tezligi
+
+        float panFactor = 1.0f - std::exp(-panSpeed * dt);
+        float zoomFactor = 1.0f - std::exp(-zoomSpeed * dt);
+
+        glm::vec2 currentPos = mainCam->GetPosition();
+        float currentZoom = mainCam->GetZoom();
+
+        glm::vec2 smoothPos = glm::mix(currentPos, targetPos, panFactor);
+        float smoothZoom = glm::mix(currentZoom, targetZoom, zoomFactor);
+
+      
+        if (glm::distance(smoothPos, targetPos) < 0.5f) {
+            smoothPos = targetPos;
+        }
+        if (std::abs(smoothZoom - targetZoom) < 0.001f) {
+            smoothZoom = targetZoom;
+        }
+
+        mainCam->SetPosition(smoothPos);
+        mainCam->SetZoom(smoothZoom);
+    }
+
+
+
+    // randomly adding items 
     itemSpawnTimer -= dt;
     if (itemSpawnTimer <= 0.0f)
     {
         std::random_device rd;
         std::mt19937 gen(rd());
+        std::uniform_real_distribution<float> xDist(-500.0f, 500.0f);
+        std::uniform_real_distribution<float> yDist(-280.0f, 280.0f);
 
-        std::uniform_real_distribution<float> xDist(-550.0f, 550.0f);
-        std::uniform_real_distribution<float> yDist(-350.0f, 350.0f);
+        glm::vec2 spawnPos;
+        bool foundSafePos = false;
+        
+        for (int i = 0; i < 10; ++i) //trying 10 times for safe place 
+        {
+            spawnPos = glm::vec2(xDist(gen), yDist(gen));
 
-        float randX = xDist(gen);
-        float randY = yDist(gen);
+            if (IsSafePosition(spawnPos, 90.0f))
+            {
+                foundSafePos = true;
+                break; // spot if found
+            }
+        }
 
-        Item* newItem = new Item();
-        newItem->GetTransform2D().SetPosition(glm::vec2(randX, randY));
-        newItem->Init(engineContext);
-        engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(std::unique_ptr<Object>(newItem), "[Object]Item");
+        if (foundSafePos)
+        {
+            Item* newItem = new Item();
+            newItem->GetTransform2D().SetPosition(spawnPos);
+            newItem->Init(engineContext);
+            engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(std::unique_ptr<Object>(newItem), "[Object]Item");
+        }
 
-        itemSpawnTimer = 12.0f; // 10seconds for next item
+        itemSpawnTimer = 10.0f; 
     }
 
-    // Timer for ending game
+
+    // GAME TIMER (Ending game and texobject)
     roundTimer -= dt;
+    if (roundTimer < 0.0f) roundTimer = 0.0f;
 
     std::string winnerMessage = "";
     bool gameEnded = false;
@@ -181,7 +260,6 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
     }
     else if (roundTimer <= 0.0f)
     {
-        roundTimer = 0.0f; // Vaqtni 0 da qotiramiz
         gameEnded = true;
 
         if (player1->hp > player2->hp)
@@ -190,6 +268,25 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
             winnerMessage = "TIME UP! PLAYER 2 WON";
         else
             winnerMessage = "TIME UP! IT'S A DRAW!";
+    }
+
+    // 스크린에서 보여주기
+    if (timerTextObj != nullptr && mainCam != nullptr)
+    {
+        int minutes = static_cast<int>(roundTimer) / 60;
+        int seconds = static_cast<int>(roundTimer) % 60;
+
+        char timeStr[16];
+        snprintf(timeStr, sizeof(timeStr), "%02d:%02d", minutes, seconds);
+        timerTextObj->SetText(timeStr);
+
+        // Kameraga bog'lash
+        glm::vec2 camPos = mainCam->GetPosition();
+
+        // Taymerni kameraning markazidan ozgina chaproq va tepadagi burchakka suramiz
+        glm::vec2 timerPos = camPos + glm::vec2(-30.0f, 300.0f);
+
+        timerTextObj->GetTransform2D().SetPosition(timerPos);
     }
 
     // GameOver state로 바꾸기
@@ -235,4 +332,17 @@ void Tutorial::WallBlock(float x, float y, float size, const EngineContext& engi
         block->GetCollider()->SetUseTransformScale(false);
         block->SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Wall", { "[Object]Player1", "[Object]Player2", "[Object]Bullet" });
     }
+}
+
+bool Tutorial::IsSafePosition(glm::vec2 pos, float radius)
+{
+    for (const auto& wPos : wallPositions)
+    {
+        if (glm::distance(pos, wPos) < radius) return false; // not free spot
+    }
+
+    if (player1 && glm::distance(pos, player1->GetTransform2D().GetPosition()) < radius) return false;
+    if (player2 && glm::distance(pos, player2->GetTransform2D().GetPosition()) < radius) return false;
+
+    return true; // Ok place 
 }

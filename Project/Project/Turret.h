@@ -38,4 +38,7 @@ private:
     // UI
     TextObject* ammoText = nullptr;
     bool isBigBullet = false;
+
+    float ammoRegenTimer = 8.0f; // +1 bullet in every each 8 second
+    int maxAmmo = 5;             // Tankda bir vaqtning o'zida ko'pi bilan nechta o'q bo'lishi mumkin (xohlagan raqamingizni qo'ying)
 };
