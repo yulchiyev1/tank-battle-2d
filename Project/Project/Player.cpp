@@ -9,7 +9,8 @@ void Player::Init(const EngineContext& engineContext)
     // Basic setup
     transform2D.SetScale(glm::vec2(90.f));
     SetMesh(engineContext, "[EngineMesh]default");
-    SetCollider(std::make_unique<AABBCollider>(this, glm::vec2{ 55.f, 55.f }));
+    //SetCollider(std::make_unique<AABBCollider>(this, glm::vec2{ 50.f, 50.f }));
+    SetCollider(std::make_unique<CircleCollider>(this, 50.f));
     SetMaterial(engineContext, "[Material]Animation");
     SetRenderLayer("[Layer]TankBody");
 
@@ -31,7 +32,7 @@ void Player::Init(const EngineContext& engineContext)
         transform2D.SetPosition(glm::vec2(-550.f, 0.f));
 
         GetCollider()->SetUseTransformScale(false);
-        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player1", { "[Object]Wall", "[Object]Player2", "[Object]Bullet", "[Object]Item", "[Object]Border_H", "[Object]Border_V" });
+        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player1", { "[Object]Portal", "[Object]Wall", "[Object]Player2", "[Object]Bullet", "[Object]Item", "[Object]Border_H", "[Object]Border_V"});
 
         moveSpritesheetB = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]BlueTank");
         moveSpritesheetB->AddClip("[Clip]TankB", { 0, 1 }, 0.1f);
@@ -46,7 +47,7 @@ void Player::Init(const EngineContext& engineContext)
         transform2D.SetPosition(glm::vec2(550.f, 0.f));
 
         GetCollider()->SetUseTransformScale(false);
-        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player2", { "[Object]Wall", "[Object]Player1", "[Object]Bullet", "[Object]Item", "[Object]Border_H", "[Object]Border_V" });
+        SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player2", { "[Object]Portal", "[Object]Wall", "[Object]Player1", "[Object]Bullet", "[Object]Item", "[Object]Border_H", "[Object]Border_V" });
 
         moveSpritesheetR = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]RedTank");
         moveSpritesheetR->AddClip("[Clip]TankR", { 0, 1 }, 0.1f);
@@ -63,7 +64,6 @@ void Player::LateInit(const EngineContext& engineContext)
 
 void Player::Update(float dt, const EngineContext& engineContext)
 {
-    // Update funksiyasi boshiga:
     if (flashTimer > 0.0f)
     {
         flashTimer -= dt;
@@ -103,16 +103,93 @@ void Player::Update(float dt, const EngineContext& engineContext)
     // Save previous position to prevent wall clipping
     oldPos = transform2D.GetPosition();
 
-    // Calculate movement
-    float speed = 140.f * speedMultiplier; //  TANK 2X 
-    glm::vec2 pos = transform2D.GetPosition();
+    // Calculate movement and Rotation of tank body
+    float speed = 130.f * speedMultiplier;
+    float diagSpeed = speed * 0.707f; // 대각선 이동 속도
 
-    if (engineContext.inputManager->IsKeyDown(upKey)) { pos.y += speed * dt; }
-    if (engineContext.inputManager->IsKeyDown(downKey)) { pos.y -= speed * dt; }
-    if (engineContext.inputManager->IsKeyDown(leftKey)) { pos.x -= speed * dt; }
-    if (engineContext.inputManager->IsKeyDown(rightKey)) { pos.x += speed * dt; }
+    glm::vec2 pos = transform2D.GetPosition();
+    float currentAngle = transform2D.GetRotation();
+    float targetAngle = currentAngle;
+    bool isMoving = false;
+
+    // diagonal rotating
+    if (engineContext.inputManager->IsKeyDown(upKey) && engineContext.inputManager->IsKeyDown(leftKey))
+    {
+        pos.y += diagSpeed * dt;
+        pos.x -= diagSpeed * dt;
+        targetAngle = glm::radians(45.0f);
+        isMoving = true;
+    }
+    else if (engineContext.inputManager->IsKeyDown(upKey) && engineContext.inputManager->IsKeyDown(rightKey))
+    {
+        pos.y += diagSpeed * dt;
+        pos.x += diagSpeed * dt;
+        targetAngle = glm::radians(-45.0f);
+        isMoving = true;
+    }
+    else if (engineContext.inputManager->IsKeyDown(downKey) && engineContext.inputManager->IsKeyDown(leftKey))
+    {
+        pos.y -= diagSpeed * dt;
+        pos.x -= diagSpeed * dt;
+        targetAngle = glm::radians(135.0f);
+        isMoving = true;
+    }
+    else if (engineContext.inputManager->IsKeyDown(downKey) && engineContext.inputManager->IsKeyDown(rightKey))
+    {
+        pos.y -= diagSpeed * dt;
+        pos.x += diagSpeed * dt;
+        targetAngle = glm::radians(-135.0f);
+        isMoving = true;
+    }
+
+    // rotating
+    else if (engineContext.inputManager->IsKeyDown(upKey))
+    {
+        pos.y += speed * dt;
+        targetAngle = glm::radians(0.0f);
+        isMoving = true;
+    }
+    else if (engineContext.inputManager->IsKeyDown(downKey))
+    {
+        pos.y -= speed * dt;
+        targetAngle = glm::radians(-180.0f);
+        isMoving = true;
+    }
+    else if (engineContext.inputManager->IsKeyDown(leftKey))
+    {
+        pos.x -= speed * dt;
+        targetAngle = glm::radians(90.0f);
+        isMoving = true;
+    }
+    else if (engineContext.inputManager->IsKeyDown(rightKey))
+    {
+        pos.x += speed * dt;
+        targetAngle = glm::radians(-90.0f);
+        isMoving = true;
+    }
+
+    // 3. SILLIQ BURILISH
+    if (isMoving)
+    {
+        float diff = targetAngle - currentAngle;
+        diff = atan2(sin(diff), cos(diff));
+        currentAngle += diff * 2.0f * dt; 
+        transform2D.SetRotation(currentAngle);
+    }
 
     transform2D.SetPosition(pos);
+
+    //ghost timer for portal error
+    if (ghostTimer > 0.0f)
+    {
+        ghostTimer -= dt;
+
+        // Taymer tugaganda aniq 0 qilib qo'yamiz
+        if (ghostTimer <= 0.0f)
+        {
+            ghostTimer = 0.0f;
+        }
+    }
 }
 
 void Player::Draw(const EngineContext& engineContext)
@@ -144,8 +221,14 @@ void Player::OnCollision(Object* other, const EngineContext& engineContext)
     }
     else if (other->GetTag() == "[Object]Player1" || other->GetTag() == "[Object]Player2")
     {
+        Player* otherPlayer = static_cast<Player*>(other);
+
+        if (this->IsGhost() || otherPlayer->IsGhost())
+        {
+            return; 
+        }
         transform2D.SetPosition(oldPos);
-        myTurret->GetTransform2D().SetPosition(oldPos); 
+        myTurret->GetTransform2D().SetPosition(oldPos);
     }
     else if (other->GetTag() == "[Object]Item")
     {

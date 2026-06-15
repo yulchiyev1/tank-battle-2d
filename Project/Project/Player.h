@@ -27,6 +27,10 @@ public:
 	void IncreaseSpeed();
 	float GetSpeedMultiplier() const { return speedMultiplier; }
 	int hp = 100;
+
+	//ghost timer for preventing portal error
+	float ghostTimer = 0.0f;
+	bool IsGhost() const { return ghostTimer > 0.0f; }
 private:
 	glm::vec2 oldPos;
 	

@@ -237,6 +237,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Turret.cpp" />
     <ClCompile Include="Tutorial.cpp" />
@@ -251,6 +252,7 @@
     <ClInclude Include="Item.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Portal.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Turret.h" />
     <ClInclude Include="Tutorial.h" />

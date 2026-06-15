@@ -15,13 +15,13 @@ void Projectile::Init(const EngineContext& engineContext)
         // if big bullet item on -> bigger bullet
         transform2D.SetScale(glm::vec2(40.f));
         SetCollider(std::make_unique<CircleCollider>(this, 40.f ));
-        lifeTimer = 8.0f;
+        lifeTimer = 6.0f;
     }
     else
     {
         transform2D.SetScale(glm::vec2(15.f));
         SetCollider(std::make_unique<CircleCollider>(this, 15.f));
-        lifeTimer = 3.0f;
+        lifeTimer = 2.0f;
     }
 
     GetCollider()->SetUseTransformScale(false);
@@ -29,7 +29,7 @@ void Projectile::Init(const EngineContext& engineContext)
     //SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Bullet", { "[Object]Wall", "[Object]Border_H", "[Object]Border_V", "[Object]Player1", "[Object]Player2", "[Object]Item" });
     SetRenderLayer("[Layer]Projectile");
 
-    speed = 400.0f;
+    speed = 600.0f;
     
 }
 

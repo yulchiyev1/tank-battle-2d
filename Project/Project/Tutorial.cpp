@@ -4,6 +4,7 @@
 #include "Item.h"
 #include "Player.h"
 #include "GameOver.h" 
+#include "Portal.h"
 
 void Tutorial::Load(const EngineContext& engineContext)
 {
@@ -11,6 +12,9 @@ void Tutorial::Load(const EngineContext& engineContext)
     RenderManager* rm = engineContext.renderManager;
 
     //texture & material load
+    rm->RegisterTexture("[Texture]Portal", "Textures/portal.png");
+    rm->RegisterSpriteSheet("[SpriteSheet]Portal", "[Texture]Portal", 32, 32);
+
     rm->RegisterTexture("[Texture]ItemBox", "Textures/Items/item.png");
     rm->RegisterMaterial("[Material]ItemBox", "[EngineShader]default_texture", { {"u_Texture", "[Texture]ItemBox"} });
 
@@ -126,15 +130,19 @@ void Tutorial::Init(const EngineContext& engineContext)
     int wallsSpawned = 0;
     wallPositions.clear();
 
-    while (wallsSpawned < 8)
+    int maxAttempts = 1000; // Qotib qolishdan (Infinite loop) himoya
+    int attempts = 0;
+
+    while (wallsSpawned < 8 && attempts < maxAttempts)
     {
+        attempts++;
         glm::vec2 testPos(randX(gen), randY(gen));
 
-        // at least 100p distance
-        if (IsSafePosition(testPos, 100.0f))
+        // at least 60p distance
+        if (IsSafePosition(testPos, 60.0f))
         {
             WallBlock(testPos.x, testPos.y, wall_len, engineContext, false);
-            wallPositions.push_back(testPos); 
+            wallPositions.push_back(testPos);
             wallsSpawned++;
         }
     }
@@ -154,6 +162,56 @@ void Tutorial::Init(const EngineContext& engineContext)
     }
     timerTextObj->SetRenderLayer("[Layer]UI"); // Har doim ustda turishi uchun
     timerTextObj->GetTransform2D().SetScale(glm::vec2(0.6f, 0.6f));
+
+
+    // PORTAL 만들기 and 서로 연결하기
+    glm::vec2 posA, posB;
+    bool foundA = false;
+    bool foundB = false;
+
+    // finding safe spot for portal A
+    for (int i = 0; i < 50; ++i)
+    {
+        glm::vec2 testPos(randX(gen), randY(gen)); // randX va randY o'zini ishlataveramiz
+        if (IsSafePosition(testPos, 60.0f))
+        {
+            posA = testPos;
+            foundA = true;
+            break;
+        }
+    }
+
+    // finding safe spot for portal B
+    if (foundA)
+    {
+        for (int i = 0; i < 50; ++i)
+        {
+            glm::vec2 testPos(randX(gen), randY(gen));
+            if (IsSafePosition(testPos, 60.0f) && glm::distance(posA, testPos) > 500.0f)
+            {
+                posB = testPos;
+                foundB = true;
+                break;
+            }
+        }
+    }
+
+    // after found safe spots, addObject
+    if (foundA && foundB)
+    {
+        auto portalA = std::make_unique<Portal>();
+        auto portalB = std::make_unique<Portal>();
+
+        portalA->GetTransform2D().SetPosition(posA);
+        portalB->GetTransform2D().SetPosition(posB);
+
+        // objectManager orqali to'g'ridan-to'g'ri qo'shish
+        Portal* ptrA = static_cast<Portal*>(objectManager.AddObject(std::move(portalA), "[Object]Portal"));
+        Portal* ptrB = static_cast<Portal*>(objectManager.AddObject(std::move(portalB), "[Object]Portal"));
+
+        ptrA->linkedPortal = ptrB;
+        ptrB->linkedPortal = ptrA;
+    }
 }
 
 void Tutorial::LateInit(const EngineContext& engineContext)
@@ -163,7 +221,7 @@ void Tutorial::LateInit(const EngineContext& engineContext)
 void Tutorial::Update(float dt, const EngineContext& engineContext)
 {
     objectManager.UpdateAll(dt, engineContext);
-   
+
     //camera
     Camera2D* mainCam = cameraManager.GetActiveCamera();
     if (mainCam != nullptr && player1 != nullptr && player2 != nullptr)
@@ -192,7 +250,7 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
         glm::vec2 smoothPos = glm::mix(currentPos, targetPos, panFactor);
         float smoothZoom = glm::mix(currentZoom, targetZoom, zoomFactor);
 
-      
+
         if (glm::distance(smoothPos, targetPos) < 0.5f) {
             smoothPos = targetPos;
         }
@@ -210,14 +268,15 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
     itemSpawnTimer -= dt;
     if (itemSpawnTimer <= 0.0f)
     {
-        std::random_device rd;
-        std::mt19937 gen(rd());
+        // Xotira band qilmasligi uchun "static" ishlatildi
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
         std::uniform_real_distribution<float> xDist(-500.0f, 500.0f);
         std::uniform_real_distribution<float> yDist(-280.0f, 280.0f);
 
         glm::vec2 spawnPos;
         bool foundSafePos = false;
-        
+
         for (int i = 0; i < 10; ++i) //trying 10 times for safe place 
         {
             spawnPos = glm::vec2(xDist(gen), yDist(gen));
@@ -233,11 +292,12 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
         {
             Item* newItem = new Item();
             newItem->GetTransform2D().SetPosition(spawnPos);
-            newItem->Init(engineContext);
+            // new object init happens automatically in some engines, but if you need it, uncomment below:
+            // newItem->Init(engineContext); 
             engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(std::unique_ptr<Object>(newItem), "[Object]Item");
         }
 
-        itemSpawnTimer = 10.0f; 
+        itemSpawnTimer = 10.0f;
     }
 
 
