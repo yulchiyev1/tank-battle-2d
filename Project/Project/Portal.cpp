@@ -14,7 +14,7 @@ void Portal::Init(const EngineContext& engineContext)
     AttachAnimator(std::make_unique<SpriteAnimator>(portalSpritesheet, 1.0f, true));
     GetSpriteAnimator()->PlayClip("[Clip]Portal");
 
-    SetCollider(std::make_unique<AABBCollider>(this, glm::vec2{ 5.f, 40.f }));
+    SetCollider(std::make_unique<AABBCollider>(this, glm::vec2{ 5.f, 30.f }));
     GetCollider()->SetUseTransformScale(false);
     SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Portal", { "[Object]Player1", "[Object]Player2" });
 }
@@ -47,15 +47,26 @@ void Portal::LateFree(const EngineContext& engineContext)
 void Portal::OnCollision(Object* other, const EngineContext& engineContext)
 {
     if (cooldownTimer > 0.0f || linkedPortal == nullptr) return;
+
     if (other->GetTag() == "[Object]Player1" || other->GetTag() == "[Object]Player2")
     {
-        // connected to Player, need to modify its ghostTime
-        Player* p = static_cast<Player*>(other);
-        p->GetTransform2D().SetPosition(linkedPortal->GetTransform2D().GetPosition());
-        p->ghostTimer = 2.f;
+        Player* teleportingPlayer = static_cast<Player*>(other);
+        std::string otherTag = (teleportingPlayer->GetTag() == "[Object]Player1") ? "[Object]Player2" : "[Object]Player1";
+
+        ObjectManager& objManager = engineContext.stateManager->GetCurrentState()->GetObjectManager();
+        Object* otherObj = objManager.FindByTag(otherTag);
+
+        if (otherObj != nullptr)
+        {
+            Player* otherPlayer = static_cast<Player*>(otherObj);
+            glm::vec2 linkedPortalPos = linkedPortal->GetTransform2D().GetPosition();
+            otherPlayer->PushAwayFrom(linkedPortalPos, 100.0f);
+        }
+
+        // area is safe, safe teleportation
+        teleportingPlayer->GetTransform2D().SetPosition(linkedPortal->GetTransform2D().GetPosition());
 
         this->cooldownTimer = 3.0f;
         linkedPortal->cooldownTimer = 3.0f;
     }
 }
-

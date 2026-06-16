@@ -2,7 +2,8 @@
 #include "EngineContext.h"
 #include "GameState.h"
 #include "Player.h"
-#include "Item.h"   
+#include "Item.h"
+#include <cstdlib> // rand() ishlashi uchun qo'shildi
 
 void Projectile::Init(const EngineContext& engineContext)
 {
@@ -14,7 +15,7 @@ void Projectile::Init(const EngineContext& engineContext)
     {
         // if big bullet item on -> bigger bullet
         transform2D.SetScale(glm::vec2(40.f));
-        SetCollider(std::make_unique<CircleCollider>(this, 40.f ));
+        SetCollider(std::make_unique<CircleCollider>(this, 40.f));
         lifeTimer = 6.0f;
     }
     else
@@ -30,7 +31,9 @@ void Projectile::Init(const EngineContext& engineContext)
     SetRenderLayer("[Layer]Projectile");
 
     speed = 600.0f;
-    
+
+    auto hitSS = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]HitAnim");
+    hitSS->AddClip("[Clip]Hit", { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, 0.11f);
 }
 
 void Projectile::LateInit(const EngineContext& engineContext)
@@ -40,6 +43,16 @@ void Projectile::LateInit(const EngineContext& engineContext)
 
 void Projectile::Update(float dt, const EngineContext& engineContext)
 {
+    if (isExploding)
+    {
+        explodeTimer -= dt;
+        if (explodeTimer <= 0.0f)
+        {
+            Kill(); 
+        }
+        return; 
+    }
+
     // 2x bullet size
     if (isSuperBig)
     {
@@ -92,14 +105,30 @@ void Projectile::OnCollision(Object* other, const EngineContext& engineContext)
     // tank collision
     if (other->GetTag() == "[Object]Player1" || other->GetTag() == "[Object]Player2")
     {
-        Player* hitPlayer = dynamic_cast<Player*>(other);
+        if (isExploding) return; 
 
+        Player* hitPlayer = dynamic_cast<Player*>(other);
         if (hitPlayer != nullptr)
         {
             hitPlayer->TakeDamage(8);
         }
-        Kill();
+        isExploding = true;
+
+        explodeTimer = 1.1f; 
+
+        glm::vec2 tankPos = other->GetTransform2D().GetPosition();
+        float randX = (rand() % 61)-30.f;
+        float randY = (rand() % 61)-30.f;
+        transform2D.SetPosition(tankPos + glm::vec2(randX, randY));
+
+        SetMaterial(engineContext, "[Material]Animation");
+
+        auto hitSS = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]HitAnim");
+        AttachAnimator(std::make_unique<SpriteAnimator>(hitSS, 1.0f, false)); 
+ 
+        GetSpriteAnimator()->PlayClip("[Clip]Hit");
     }
+
     // item collision
     else if (other->GetTag() == "[Object]Item")
     {
@@ -184,7 +213,6 @@ void Projectile::SetDirection(float startAngle)
     velocityY = glm::sin(mathAngle) * actualSpeed;
 }
 
-
 void Projectile::SetSpawnPosition(glm::vec2 pos)
 {
     transform2D.SetPosition(pos);
@@ -198,5 +226,5 @@ void Projectile::SetSpeedMultiplier(float mult)
 
 void Projectile::MakeBig()
 {
-    isSuperBig = true; 
+    isSuperBig = true;
 }

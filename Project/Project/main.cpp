@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
         JIN_ERR("Engine initialization failed.");
         return -1;
     }
-    jinEngine.RenderDebugDraws(true);
+    jinEngine.RenderDebugDraws(false);
     //jinEngine.GetEngineContext().windowManager->RestrictResizing(true);
 
     jinEngine.GetEngineContext().renderManager->RegisterShader("[Shader]Animation", { {ShaderStage::Vertex,"Shaders/Animation.vert"},{ShaderStage::Fragment,"Shaders/Animation.frag"} });

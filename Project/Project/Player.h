@@ -27,10 +27,8 @@ public:
 	void IncreaseSpeed();
 	float GetSpeedMultiplier() const { return speedMultiplier; }
 	int hp = 100;
-
-	//ghost timer for preventing portal error
-	float ghostTimer = 0.0f;
-	bool IsGhost() const { return ghostTimer > 0.0f; }
+	// Portal atrofidan itarib yuborilish uchun maxsus funksiya
+	void PushAwayFrom(glm::vec2 epicenter, float safeDistance);
 private:
 	glm::vec2 oldPos;
 	

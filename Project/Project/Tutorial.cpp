@@ -12,6 +12,9 @@ void Tutorial::Load(const EngineContext& engineContext)
     RenderManager* rm = engineContext.renderManager;
 
     //texture & material load
+    rm->RegisterTexture("[Texture]HitAnim", "Textures/Projectile/hit_anim.png");
+    rm->RegisterSpriteSheet("[SpriteSheet]HitAnim", "[Texture]HitAnim", 64, 64);
+
     rm->RegisterTexture("[Texture]Portal", "Textures/portal.png");
     rm->RegisterSpriteSheet("[SpriteSheet]Portal", "[Texture]Portal", 32, 32);
 

@@ -14,6 +14,7 @@ public:
 
 	Portal* linkedPortal = nullptr; // Ikkinchi portalni eslab qolish uchun
 	float cooldownTimer = 0.0f;     // Pauza vaqti
+
 private:
 	std::shared_ptr<SpriteSheet> portalSpritesheet;
 };

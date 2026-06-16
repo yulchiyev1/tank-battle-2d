@@ -168,7 +168,7 @@ void Player::Update(float dt, const EngineContext& engineContext)
         isMoving = true;
     }
 
-    // 3. SILLIQ BURILISH
+    // smooth rotating
     if (isMoving)
     {
         float diff = targetAngle - currentAngle;
@@ -178,18 +178,6 @@ void Player::Update(float dt, const EngineContext& engineContext)
     }
 
     transform2D.SetPosition(pos);
-
-    //ghost timer for portal error
-    if (ghostTimer > 0.0f)
-    {
-        ghostTimer -= dt;
-
-        // Taymer tugaganda aniq 0 qilib qo'yamiz
-        if (ghostTimer <= 0.0f)
-        {
-            ghostTimer = 0.0f;
-        }
-    }
 }
 
 void Player::Draw(const EngineContext& engineContext)
@@ -216,25 +204,50 @@ void Player::OnCollision(Object* other, const EngineContext& engineContext)
 {
     if (other->GetTag() == "[Object]Wall" || other->GetTag() == "[Object]Border_H" || other->GetTag() == "[Object]Border_V")
     {
+        JIN_LOG("WALL");
         transform2D.SetPosition(oldPos);
         myTurret->GetTransform2D().SetPosition(oldPos);
     }
-    else if (other->GetTag() == "[Object]Player1" || other->GetTag() == "[Object]Player2")
-    {
-        Player* otherPlayer = static_cast<Player*>(other);
 
-        if (this->IsGhost() || otherPlayer->IsGhost())
-        {
-            return; 
-        }
-        transform2D.SetPosition(oldPos);
-        myTurret->GetTransform2D().SetPosition(oldPos);
-    }
-    else if (other->GetTag() == "[Object]Item")
+    if (other->GetTag() == "[Object]Item")
     {
+        JIN_LOG("item");
         Item* hitItem = dynamic_cast<Item*>(other);
 
         if (hitItem != nullptr && !hitItem->IsUnlocked())
+        {
+            transform2D.SetPosition(oldPos);
+            myTurret->GetTransform2D().SetPosition(oldPos);
+            return; 
+        }
+    }
+
+    if (other->GetTag() == "[Object]Player1" || other->GetTag() == "[Object]Player2")
+    {
+        JIN_LOG("pl");
+        glm::vec2 myPos = transform2D.GetPosition();
+        glm::vec2 otherPos = other->GetTransform2D().GetPosition();
+
+        glm::vec2 pushDir = myPos - otherPos;
+        float distance = glm::length(pushDir);
+
+        // MASOFA FILTRI: Radius 50.f bo'lgani uchun, 80.f dan kam masofa 
+        // faqatgina portal yoki xatolik orqali chuqur ustma-ust tushgandagina sodir bo'ladi.
+        if (distance < 5.0f)
+        {
+            if (distance == 0.0f)
+            {
+                pushDir = glm::vec2(1.0f, 1.0f);
+            }
+
+
+            pushDir = glm::normalize(pushDir);
+            myPos += pushDir * 2.5f;
+
+            transform2D.SetPosition(myPos);
+            myTurret->GetTransform2D().SetPosition(myPos);
+        }
+        else
         {
             transform2D.SetPosition(oldPos);
             myTurret->GetTransform2D().SetPosition(oldPos);
@@ -285,4 +298,22 @@ void Player::IncreaseSpeed()
 {
     speedMultiplier = 1.8f; // Tezlikni 2 barobar qilib belgilaymiz
     flashTimer = 8.0f;     // 12 soniya vaqt beramiz
+}
+
+void Player::PushAwayFrom(glm::vec2 epicenter, float safeDistance)
+{
+    glm::vec2 myPos = transform2D.GetPosition();
+    glm::vec2 dir = myPos - epicenter;
+    float dist = glm::length(dir);
+
+    if (dist < safeDistance)
+    {
+        if (dist == 0.0f) { dir = glm::vec2(1.0f, 1.0f); dist = 0.1f; }
+        dir = glm::normalize(dir);
+        myPos += dir * (safeDistance - dist);
+        transform2D.SetPosition(myPos);
+        if (myTurret != nullptr) {
+            myTurret->GetTransform2D().SetPosition(myPos);
+        }
+    }
 }

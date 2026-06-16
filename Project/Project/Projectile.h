@@ -22,6 +22,9 @@ public:
     void SetSpeedMultiplier(float mult);
 
     void MakeBig();
+
+    bool isExploding = false;
+    float explodeTimer = 0.5f; // Animatsiya 0.5 soniya davom etadi
 private:
     float speed;
     float lifeTimer; //몇초후 bullet 죽이기를 위하여
