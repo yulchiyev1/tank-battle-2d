@@ -43,10 +43,10 @@ public:
     //Teleportation System
     TeleportState tpState = TeleportState::NONE;
     float tpTimer = 0.0f;
-    float tpDuration = 0.35f;   // Duration of enter/exit 
-    glm::vec2 tpStartPos;       // Starting point of absorption
-    glm::vec2 tpCenter;         // Center of entry portal
-    glm::vec2 tpDest;           // Center of exit portal
+    float tpDuration = 0.35f;   
+    glm::vec2 tpStartPos;       
+    glm::vec2 tpCenter;        
+    glm::vec2 tpDest;        
 
     Portal* inPortal = nullptr; // Reference to entry portal
     Portal* outPortal = nullptr;// Reference to exit portal
@@ -55,8 +55,8 @@ public:
 
 private:
     //Internal State
-    glm::vec2 oldPos;           // Previous position for collision resolution
-    float flashTimer = 0.0f;    // Speed boost duration timer
+    glm::vec2 oldPos;           
+    float flashTimer = 0.0f;    
     float speedMultiplier = 1.0f;
 
     //Graphics & UI

@@ -22,6 +22,7 @@ void Turret::Init(const EngineContext& engineContext)
     );
     ammoText->SetRenderLayer("[Layer]UI");
     ammoText->GetTransform2D().SetScale(glm::vec2(0.5f, 0.5f));
+    ammoText->SetIgnoreCamera(true);
 
     // Animation & Position setup based on Player type
     if (parentPlayer->GetTag() == "[Object]Player1")

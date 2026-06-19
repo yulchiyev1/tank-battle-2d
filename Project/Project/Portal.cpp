@@ -64,10 +64,9 @@ void Portal::OnCollision(Object* other, const EngineContext& engineContext)
         teleportingPlayer->tpCenter = this->GetTransform2D().GetPosition();
         teleportingPlayer->tpDest = linkedPortal->GetTransform2D().GetPosition();
 
-        // SHU 2 QATORNI QO'SHING: Tank portallarni eslab qoladi
+        // Tank portallarni eslab qoladi
         teleportingPlayer->inPortal = this;
         teleportingPlayer->outPortal = linkedPortal;
-        //
         teleportingPlayer->tpState = TeleportState::ENTERING;
         teleportingPlayer->tpTimer = teleportingPlayer->tpDuration;
 

@@ -67,7 +67,7 @@ void Player::Update(float dt, const EngineContext& engineContext)
     if (tpState != TeleportState::NONE)
     {
         tpTimer -= dt;
-        float t = tpTimer / tpDuration; // Decreases from 1.0 to 0.0
+        float t = tpTimer / tpDuration; 
         if (t < 0.0f) t = 0.0f;
 
         if (tpState == TeleportState::ENTERING)
@@ -96,7 +96,7 @@ void Player::Update(float dt, const EngineContext& engineContext)
             {
                 tpState = TeleportState::EXITING;
                 tpTimer = tpDuration;
-                transform2D.SetPosition(tpDest); // Move to linked portal
+                transform2D.SetPosition(tpDest); 
             }
         }
         else if (tpState == TeleportState::EXITING)
@@ -111,8 +111,9 @@ void Player::Update(float dt, const EngineContext& engineContext)
             }
 
             // Expand the exit portal (100 down to 70)
-            if (outPortal != nullptr) {
-                outPortal->GetTransform2D().SetScale(glm::vec2(70.0f + (30.0f * t))); // Fixed 130.0f typo to 30.0f
+            if (outPortal != nullptr) 
+            {
+                outPortal->GetTransform2D().SetScale(glm::vec2(100.0f + (30.0f * t)));
             }
 
             // Smoothly push other players away while exiting
@@ -138,8 +139,6 @@ void Player::Update(float dt, const EngineContext& engineContext)
                 outPortal = nullptr;
             }
         }
-
-        // IMPORTANT: Skip movement and shooting logic while teleporting
         return;
     }
 
