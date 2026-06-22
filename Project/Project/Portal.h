@@ -12,8 +12,8 @@ public:
 	void LateFree(const EngineContext& engineContext) override;
 	void OnCollision(Object* other, const EngineContext& engineContext) override;
 
-	Portal* linkedPortal = nullptr; // Ikkinchi portalni eslab qolish uchun
-	float cooldownTimer = 0.0f;     // Pauza vaqti
+	Portal* linkedPortal = nullptr; 
+	float cooldownTimer = 0.0f;  
 
 private:
 	std::shared_ptr<SpriteSheet> portalSpritesheet;

@@ -63,7 +63,5 @@ private:
     std::shared_ptr<SpriteSheet> moveSpritesheetB;
     std::shared_ptr<SpriteSheet> moveSpritesheetR;
     TextObject* hpText;
-
-    //Components
     Turret* myTurret = nullptr;
 };

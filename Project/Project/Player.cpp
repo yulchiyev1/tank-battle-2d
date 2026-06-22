@@ -7,14 +7,12 @@
 
 void Player::Init(const EngineContext& engineContext)
 {
-    // --- Basic Physics & Render Setup ---
     transform2D.SetScale(glm::vec2(90.f));
     SetMesh(engineContext, "[EngineMesh]default");
     SetCollider(std::make_unique<CircleCollider>(this, 50.f));
     SetMaterial(engineContext, "[Material]Animation");
     SetRenderLayer("[Layer]TankBody");
 
-    // --- UI Setup: Health Points ---
     ObjectManager& objManager = engineContext.stateManager->GetCurrentState()->GetObjectManager();
     hpText = static_cast<TextObject*>(objManager.AddObject(std::make_unique<TextObject>(
         engineContext.renderManager->GetFontByTag("[Font]defaultkr"),
@@ -22,13 +20,12 @@ void Player::Init(const EngineContext& engineContext)
     )));
     hpText->SetRenderLayer("[Layer]UI");
 
-    // --- Turret Setup ---
+    // Turret Seup
     myTurret = static_cast<Turret*>(objManager.AddObject(std::make_unique<Turret>(this)));
 
-    // --- Player Specific Configurations ---
     if (this->GetTag() == "[Object]Player1")
     {
-        // Player 1 (Blue Tank) Setup
+        // Player 1 
         transform2D.SetPosition(glm::vec2(-550.f, 0.f));
         GetCollider()->SetUseTransformScale(false);
         SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player1",
@@ -42,7 +39,7 @@ void Player::Init(const EngineContext& engineContext)
     }
     else if (this->GetTag() == "[Object]Player2")
     {
-        // Player 2 (Red Tank) Setup
+        // Player 2
         transform2D.SetPosition(glm::vec2(550.f, 0.f));
         GetCollider()->SetUseTransformScale(false);
         SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player2",
@@ -63,7 +60,7 @@ void Player::LateFree(const EngineContext& engineContext) {}
 
 void Player::Update(float dt, const EngineContext& engineContext)
 {
-    // TELEPORTATION STATE 
+    // TELEPORTATION 
     if (tpState != TeleportState::NONE)
     {
         tpTimer -= dt;
@@ -72,26 +69,21 @@ void Player::Update(float dt, const EngineContext& engineContext)
 
         if (tpState == TeleportState::ENTERING)
         {
-            // Shrink animation (90 to 0)
             float currentScale = 90.0f * t;
             transform2D.SetScale(glm::vec2(currentScale));
 
-            // Smoothly pull tank to portal center (Lerp)
             glm::vec2 newPos = tpCenter + (tpStartPos - tpCenter) * t;
             transform2D.SetPosition(newPos);
 
-            // Scale and move turret along with the tank
             if (myTurret != nullptr) {
                 myTurret->GetTransform2D().SetScale(glm::vec2(currentScale));
                 myTurret->GetTransform2D().SetPosition(newPos);
             }
 
-            // Shrink the entry portal (70 down to 40)
             if (inPortal != nullptr) {
                 inPortal->GetTransform2D().SetScale(glm::vec2(40.0f + (30.0f * t)));
             }
 
-            // Entering finished, start exiting from the other portal
             if (tpTimer <= 0.0f)
             {
                 tpState = TeleportState::EXITING;
@@ -148,7 +140,7 @@ void Player::Update(float dt, const EngineContext& engineContext)
         flashTimer -= dt;
         if (flashTimer <= 0.0f)
         {
-            speedMultiplier = 1.0f; // Reset speed
+            speedMultiplier = 1.0f; 
             JIN_LOG("(FLASH EFFECT FINISHED)");
         }
     }
@@ -190,7 +182,7 @@ void Player::Update(float dt, const EngineContext& engineContext)
     float targetAngle = currentAngle;
     bool isMoving = false;
 
-    // --- Diagonal Movement ---
+    // Diagonal 
     if (engineContext.inputManager->IsKeyDown(upKey) && engineContext.inputManager->IsKeyDown(leftKey))
     {
         pos.y += diagSpeed * dt;
@@ -219,7 +211,7 @@ void Player::Update(float dt, const EngineContext& engineContext)
         targetAngle = glm::radians(-135.0f);
         isMoving = true;
     }
-    // --- Straight Movement ---
+    // Straight
     else if (engineContext.inputManager->IsKeyDown(upKey))
     {
         pos.y += speed * dt;
@@ -245,7 +237,7 @@ void Player::Update(float dt, const EngineContext& engineContext)
         isMoving = true;
     }
 
-    // --- Smooth Rotation ---
+    // Smooth Rotation
     if (isMoving)
     {
         float diff = targetAngle - currentAngle;
@@ -272,7 +264,7 @@ void Player::OnCollision(Object* other, const EngineContext& engineContext)
     // Ignore physical collisions if currently teleporting
     if (tpState != TeleportState::NONE) return;
 
-    // --- Wall & Border Collisions ---
+    // Wall & Border Collisions
     if (other->GetTag() == "[Object]Wall" || other->GetTag() == "[Object]Border_H" || other->GetTag() == "[Object]Border_V")
     {
         JIN_LOG("WALL COLLISION");
@@ -280,7 +272,7 @@ void Player::OnCollision(Object* other, const EngineContext& engineContext)
         myTurret->GetTransform2D().SetPosition(oldPos);
     }
 
-    // --- Item Collisions ---
+    // Item Collisions
     if (other->GetTag() == "[Object]Item")
     {
         JIN_LOG("ITEM COLLISION");
@@ -295,7 +287,7 @@ void Player::OnCollision(Object* other, const EngineContext& engineContext)
         }
     }
 
-    // --- Player Collisions (Push Effect) ---
+    // Player Collisions (Push Effect)
     if (other->GetTag() == "[Object]Player1" || other->GetTag() == "[Object]Player2")
     {
         JIN_LOG("PLAYER COLLISION");

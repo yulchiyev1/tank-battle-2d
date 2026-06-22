@@ -5,7 +5,6 @@
 #include "Tutorial.h"
 #include "MainMenu.h"
 #ifdef _DEBUG
-//#include<vld.h>//TODO: remove this and directories before release (VC++ Directories -> Include Directories & Library Directories)
 #endif
 int main(int argc, char* argv[])
 {
@@ -38,7 +37,7 @@ int main(int argc, char* argv[])
         JIN_ERR("Engine initialization failed.");
         return -1;
     }
-    jinEngine.RenderDebugDraws(false);
+    jinEngine.RenderDebugDraws(true);
     //jinEngine.GetEngineContext().windowManager->RestrictResizing(true);
 
     jinEngine.GetEngineContext().renderManager->RegisterShader("[Shader]Animation", { {ShaderStage::Vertex,"Shaders/Animation.vert"},{ShaderStage::Fragment,"Shaders/Animation.frag"} });

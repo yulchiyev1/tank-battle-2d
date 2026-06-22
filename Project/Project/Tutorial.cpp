@@ -1,10 +1,12 @@
 ﻿#include "Tutorial.h"
 #include <random>
+#include <cstdlib> // rand() uchun
 #include "LoadingState.h"
 #include "Item.h"
 #include "Player.h"
 #include "GameOver.h" 
 #include "Portal.h"
+#include "MapLoader.h"
 
 void Tutorial::Load(const EngineContext& engineContext)
 {
@@ -52,7 +54,7 @@ void Tutorial::Load(const EngineContext& engineContext)
     rm->RegisterTexture("[Texture]RedTank", "Textures/Tanks/red/body_halftrack_r.png");
     rm->RegisterSpriteSheet("[SpriteSheet]RedTank", "[Texture]RedTank", 128, 128);
 
-    rm->RegisterTexture("[Texture]Background", "Textures/Background/_09_background.png");
+    rm->RegisterTexture("[Texture]Background", "Textures/Background/final_bg.png");
     rm->RegisterMaterial("[Material]Background", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Background"} });
 
     rm->RegisterTexture("[Texture]Tank1", "Textures/Tanks/blue/body_tracks.png");
@@ -70,16 +72,35 @@ void Tutorial::Load(const EngineContext& engineContext)
 void Tutorial::Init(const EngineContext& engineContext)
 {
     JIN_LOG("[Tutorial] init called");
+
+    // 1. ENG AVVAL EKRAN O'LCHAMLARINI OLAMIZ
     screenW = engineContext.windowManager->GetWidth();
     screenH = engineContext.windowManager->GetHeight();
 
-    // Background
+    // 2. ORQA FONNI YARATAMIZ (Faqat bir marta!)
     background = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Background"));
     background->SetMesh(engineContext, "[EngineMesh]default");
     background->SetMaterial(engineContext, "[Material]Background");
-    int background_width = screenW;
-    background->GetTransform2D().SetScale({ background_width, background_width });
+
+    // Rasmning asl o'lchamlari (Sizdagi final_bg.png rasmning aniq o'lchamlarini shu yerga yozasiz)
+    float bgImgW = 1920.0f; // Rasmning eni
+    float bgImgH = 1080.0f; // Rasmning bo'yi
+
+    // X va Y uchun proporsiyani hisoblaymiz
+    float scaleX = screenW / bgImgW;
+    float scaleY = screenH / bgImgH;
+
+    // Ekranni to'liq yopish uchun kattasini tanlaymiz
+    float finalScale = std::max(scaleX, scaleY);
+
+    // Asl nisbatni buzmasdan ekranga tortamiz
+    background->GetTransform2D().SetScale({ bgImgW * finalScale, bgImgH * finalScale });
+    background->GetTransform2D().SetPosition({ 0.0f, 0.0f });
     background->SetRenderLayer("[Layer]Background");
+
+    // ==========================================
+    // BUYOG'I ESKI HOLATIDA DAVOM ETADI
+    // ==========================================
 
     // Controls of Tanks
     // Tank1 (WASD)
@@ -122,79 +143,103 @@ void Tutorial::Init(const EngineContext& engineContext)
     addInvisibleCollider(left_x, 0.0f, wall_len, screenH, "[Object]Border_V");
     addInvisibleCollider(right_x, 0.0f, wall_len, screenH, "[Object]Border_V");
 
-    // 경기장 안 random wall blocks
+    // ENG MUHIM QADAM: Xaritani oldin yuklab olamiz
+    bool isMapLoaded = MapLoader::Load("map.txt", engineContext);
+
     std::random_device rd;
     std::mt19937 gen(rd());
-
-    // Chegaralarga (Border) tegib qolmasligi uchun maydonni biroz qisqartirdik
     std::uniform_real_distribution<float> randX(-450.0f, 450.0f);
     std::uniform_real_distribution<float> randY(-250.0f, 250.0f);
 
-    int wallsSpawned = 0;
-    wallPositions.clear();
-
-    int maxAttempts = 1000; // Qotib qolishdan (Infinite loop) himoya
-    int attempts = 0;
-
-    while (wallsSpawned < 8 && attempts < maxAttempts)
+    // Agar xarita yuklanmagan bo'lsa, eski random devorlarni chiqaramiz
+    if (!isMapLoaded)
     {
-        attempts++;
-        glm::vec2 testPos(randX(gen), randY(gen));
+        int wallsSpawned = 0;
+        wallPositions.clear();
 
-        // at least 60p distance
-        if (IsSafePosition(testPos, 60.0f))
+        int maxAttempts = 1000;
+        int attempts = 0;
+
+        while (wallsSpawned < 8 && attempts < maxAttempts)
         {
-            WallBlock(testPos.x, testPos.y, wall_len, engineContext, false);
-            wallPositions.push_back(testPos);
-            wallsSpawned++;
+            attempts++;
+            glm::vec2 testPos(randX(gen), randY(gen));
+
+            if (IsSafePosition(testPos, 60.0f))
+            {
+                WallBlock(testPos.x, testPos.y, wall_len, engineContext, false);
+                wallPositions.push_back(testPos);
+                wallsSpawned++;
+            }
         }
     }
-
-    // one box to center for testing (X: 0, Y: 0) 
-    Item* testItem = new Item();
-    testItem->Init(engineContext);
-    testItem->GetTransform2D().SetPosition(glm::vec2(0.0f, 0.0f));
-    objectManager.AddObject(std::unique_ptr<Object>(testItem), "[Object]Item");
-
-    // timer of the game
-    if (timerTextObj == nullptr) {
-        timerTextObj = static_cast<TextObject*>(engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(
-            std::make_unique<TextObject>(engineContext.renderManager->GetFontByTag("[Font]defaultkr"), "02:00"),
-            "[Object]TimerText"
-        ));
-    }
-    timerTextObj->SetRenderLayer("[Layer]UI"); // Har doim ustda turishi uchun
-    timerTextObj->GetTransform2D().SetScale(glm::vec2(0.6f, 0.6f));
-
 
     // PORTAL 만들기 and 서로 연결하기
     glm::vec2 posA, posB;
     bool foundA = false;
     bool foundB = false;
 
-    // finding safe spot for portal A
-    for (int i = 0; i < 50; ++i)
+    // 1-REJIM: Agar .txt xarita yuklangan va ochiq joylar bo'lsa
+    if (isMapLoaded && !MapLoader::freeSpaces.empty())
     {
-        glm::vec2 testPos(randX(gen), randY(gen)); // randX va randY o'zini ishlataveramiz
-        if (IsSafePosition(testPos, 60.0f))
+        std::uniform_int_distribution<int> dist(0, MapLoader::freeSpaces.size() - 1);
+
+        // Portal A uchun
+        int idxA = dist(gen);
+        posA = MapLoader::freeSpaces[idxA];
+        MapLoader::freeSpaces.erase(MapLoader::freeSpaces.begin() + idxA);
+        foundA = true;
+
+        // Portal B uchun
+        for (int i = 0; i < 50; ++i)
         {
-            posA = testPos;
-            foundA = true;
-            break;
+            if (MapLoader::freeSpaces.empty()) break;
+
+            std::uniform_int_distribution<int> distB(0, MapLoader::freeSpaces.size() - 1);
+            int idxB = distB(gen);
+            glm::vec2 testPos = MapLoader::freeSpaces[idxB];
+
+            if (glm::distance(posA, testPos) > 500.0f)
+            {
+                posB = testPos;
+                MapLoader::freeSpaces.erase(MapLoader::freeSpaces.begin() + idxB);
+                foundB = true;
+                break;
+            }
+        }
+
+        if (!foundB && !MapLoader::freeSpaces.empty())
+        {
+            posB = MapLoader::freeSpaces[0];
+            MapLoader::freeSpaces.erase(MapLoader::freeSpaces.begin());
+            foundB = true;
         }
     }
-
-    // finding safe spot for portal B
-    if (foundA)
+    // 2-REJIM: Xarita yo'q bo'lsa, eski usulda topamiz
+    else
     {
         for (int i = 0; i < 50; ++i)
         {
             glm::vec2 testPos(randX(gen), randY(gen));
-            if (IsSafePosition(testPos, 60.0f) && glm::distance(posA, testPos) > 500.0f)
+            if (IsSafePosition(testPos, 100.0f))
             {
-                posB = testPos;
-                foundB = true;
+                posA = testPos;
+                foundA = true;
                 break;
+            }
+        }
+
+        if (foundA)
+        {
+            for (int i = 0; i < 50; ++i)
+            {
+                glm::vec2 testPos(randX(gen), randY(gen));
+                if (IsSafePosition(testPos, 100.0f) && glm::distance(posA, testPos) > 500.0f)
+                {
+                    posB = testPos;
+                    foundB = true;
+                    break;
+                }
             }
         }
     }
@@ -208,13 +253,28 @@ void Tutorial::Init(const EngineContext& engineContext)
         portalA->GetTransform2D().SetPosition(posA);
         portalB->GetTransform2D().SetPosition(posB);
 
-        // objectManager orqali to'g'ridan-to'g'ri qo'shish
         Portal* ptrA = static_cast<Portal*>(objectManager.AddObject(std::move(portalA), "[Object]Portal"));
         Portal* ptrB = static_cast<Portal*>(objectManager.AddObject(std::move(portalB), "[Object]Portal"));
 
         ptrA->linkedPortal = ptrB;
         ptrB->linkedPortal = ptrA;
     }
+
+    // Test Item (Birinchi item doim markazda (0,0) paydo bo'ladi!)
+    Item* testItem = new Item();
+    testItem->Init(engineContext);
+    testItem->GetTransform2D().SetPosition(glm::vec2(0.0f, 0.0f));
+    objectManager.AddObject(std::unique_ptr<Object>(testItem), "[Object]Item");
+
+    // timer of the game
+    if (timerTextObj == nullptr) {
+        timerTextObj = static_cast<TextObject*>(engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(
+            std::make_unique<TextObject>(engineContext.renderManager->GetFontByTag("[Font]defaultkr"), "02:00"),
+            "[Object]TimerText"
+        ));
+    }
+    timerTextObj->SetRenderLayer("[Layer]UI");
+    timerTextObj->GetTransform2D().SetScale(glm::vec2(0.6f, 0.6f));
 }
 
 void Tutorial::LateInit(const EngineContext& engineContext)
@@ -241,8 +301,8 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
         float t = (clampedDist - minDist) / (maxDist - minDist);
         float targetZoom = glm::mix(1.2f, 0.65f, t);
 
-        float panSpeed = 6.0f;  //kamera siljish tezligi
-        float zoomSpeed = 1.0f; //ekran kattlashish/kichiklashish tezligi
+        float panSpeed = 6.0f;
+        float zoomSpeed = 1.0f;
 
         float panFactor = 1.0f - std::exp(-panSpeed * dt);
         float zoomFactor = 1.0f - std::exp(-zoomSpeed * dt);
@@ -250,44 +310,81 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
         glm::vec2 currentPos = mainCam->GetPosition();
         float currentZoom = mainCam->GetZoom();
 
-        glm::vec2 smoothPos = glm::mix(currentPos, targetPos, panFactor);
         float smoothZoom = glm::mix(currentZoom, targetZoom, zoomFactor);
-
-
-        if (glm::distance(smoothPos, targetPos) < 0.5f) {
-            smoothPos = targetPos;
-        }
         if (std::abs(smoothZoom - targetZoom) < 0.001f) {
             smoothZoom = targetZoom;
+        }
+
+        float scrW = engineContext.windowManager->GetWidth();
+        float scrH = engineContext.windowManager->GetHeight();
+
+        float padding = 30.0f;
+
+        float mapBoundX = (scrW / 2.0f) + padding;
+        float mapBoundY = (scrH / 2.0f) + padding;
+
+        float camViewHalfW = (scrW / 2.0f) / smoothZoom;
+        float camViewHalfH = (scrH / 2.0f) / smoothZoom;
+
+        float minCamX = -mapBoundX + camViewHalfW;
+        float maxCamX = mapBoundX - camViewHalfW;
+        float minCamY = -mapBoundY + camViewHalfH;
+        float maxCamY = mapBoundY - camViewHalfH;
+
+        if (minCamX > maxCamX) minCamX = maxCamX = 0.0f;
+        if (minCamY > maxCamY) minCamY = maxCamY = 0.0f;
+
+        targetPos.x = std::clamp(targetPos.x, minCamX, maxCamX);
+        targetPos.y = std::clamp(targetPos.y, minCamY, maxCamY);
+
+        glm::vec2 smoothPos = glm::mix(currentPos, targetPos, panFactor);
+        if (glm::distance(smoothPos, targetPos) < 0.5f) {
+            smoothPos = targetPos;
         }
 
         mainCam->SetPosition(smoothPos);
         mainCam->SetZoom(smoothZoom);
     }
 
-
-
     // randomly adding items 
     itemSpawnTimer -= dt;
     if (itemSpawnTimer <= 0.0f)
     {
-        // Xotira band qilmasligi uchun "static" ishlatildi
-        static std::random_device rd;
-        static std::mt19937 gen(rd());
-        std::uniform_real_distribution<float> xDist(-500.0f, 500.0f);
-        std::uniform_real_distribution<float> yDist(-280.0f, 280.0f);
-
         glm::vec2 spawnPos;
         bool foundSafePos = false;
 
-        for (int i = 0; i < 10; ++i) //trying 10 times for safe place 
+        // IKKI REJIMLI TEKSHIRUV
+        if (!MapLoader::freeSpaces.empty())
         {
-            spawnPos = glm::vec2(xDist(gen), yDist(gen));
+            // Xarita o'qilgan bo'lsa, zamonaviy generator orqali haqiqiy random qilamiz
+            static std::random_device rd;
+            static std::mt19937 gen(rd());
+            std::uniform_int_distribution<int> dist(0, MapLoader::freeSpaces.size() - 1);
 
-            if (IsSafePosition(spawnPos, 90.0f))
+            int idx = dist(gen);
+            spawnPos = MapLoader::freeSpaces[idx];
+
+            // Item ustma-ust tushmasligi uchun ro'yxatdan o'chiramiz
+            MapLoader::freeSpaces.erase(MapLoader::freeSpaces.begin() + idx);
+            foundSafePos = true;
+        }
+        else
+        {
+            // Eski random rejim (agar xarita bo'lmasa)
+            static std::random_device rd;
+            static std::mt19937 gen(rd());
+            std::uniform_real_distribution<float> xDist(-500.0f, 500.0f);
+            std::uniform_real_distribution<float> yDist(-280.0f, 280.0f);
+
+            for (int i = 0; i < 10; ++i)
             {
-                foundSafePos = true;
-                break; // spot if found
+                spawnPos = glm::vec2(xDist(gen), yDist(gen));
+
+                if (IsSafePosition(spawnPos, 90.0f))
+                {
+                    foundSafePos = true;
+                    break;
+                }
             }
         }
 
@@ -295,8 +392,6 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
         {
             Item* newItem = new Item();
             newItem->GetTransform2D().SetPosition(spawnPos);
-            // new object init happens automatically in some engines, but if you need it, uncomment below:
-            // newItem->Init(engineContext); 
             engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(std::unique_ptr<Object>(newItem), "[Object]Item");
         }
 
@@ -345,8 +440,6 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
 
         // Kameraga bog'lash
         glm::vec2 camPos = mainCam->GetPosition();
-
-        // Taymerni kameraning markazidan ozgina chaproq va tepadagi burchakka suramiz
         glm::vec2 timerPos = camPos + glm::vec2(-30.0f, 300.0f);
 
         timerTextObj->GetTransform2D().SetPosition(timerPos);

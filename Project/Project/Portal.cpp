@@ -52,11 +52,9 @@ void Portal::OnCollision(Object* other, const EngineContext& engineContext)
     if (other->GetTag() == "[Object]Player1" || other->GetTag() == "[Object]Player2")
     {
         Player* teleportingPlayer = static_cast<Player*>(other);
-
-        // Xatolik oldini olish: Agar u allaqachon teleport bo'layotgan bo'lsa, xalaqit bermaymiz
         if (teleportingPlayer->tpState != TeleportState::NONE) return;
 
-        // --- ANIMATSIYANI ISHGA TUSHIRISH ---
+        // animation
         teleportingPlayer->tpState = TeleportState::ENTERING;
         teleportingPlayer->tpTimer = teleportingPlayer->tpDuration;
 
@@ -64,18 +62,15 @@ void Portal::OnCollision(Object* other, const EngineContext& engineContext)
         teleportingPlayer->tpCenter = this->GetTransform2D().GetPosition();
         teleportingPlayer->tpDest = linkedPortal->GetTransform2D().GetPosition();
 
-        // Tank portallarni eslab qoladi
         teleportingPlayer->inPortal = this;
         teleportingPlayer->outPortal = linkedPortal;
         teleportingPlayer->tpState = TeleportState::ENTERING;
         teleportingPlayer->tpTimer = teleportingPlayer->tpDuration;
 
-        // Qayerdan qayerga yutilishini belgilaymiz
         teleportingPlayer->tpStartPos = teleportingPlayer->GetTransform2D().GetPosition();
         teleportingPlayer->tpCenter = this->GetTransform2D().GetPosition();
         teleportingPlayer->tpDest = linkedPortal->GetTransform2D().GetPosition();
 
-        // Ikkala portalni 1.5 soniyaga qulflaymiz (animatsiya vaqtida boshqa tank kirolmaydi)
         this->cooldownTimer = 1.5f;
         linkedPortal->cooldownTimer = 1.5f;
     }
