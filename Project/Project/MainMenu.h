@@ -2,7 +2,7 @@
 #include "GameState.h"
 #include "TextObject.h"
 
-class MainMenu : public GameState 
+class MainMenu : public GameState
 {
 public:
     virtual void Load(const EngineContext& engineContext) override;
@@ -15,9 +15,12 @@ public:
     virtual void Free(const EngineContext& engineContext) override;
     virtual void Unload(const EngineContext& engineContext) override;
 private:
+    //cursor
+    GameObject* cursor = nullptr;
+
     //swords anim
     GameObject* swords = nullptr;
-    float hoverTime = 0.0f;       
+    float hoverTime = 0.0f;
     float swordsBaseY = 0.0f;
 
     // start button
@@ -28,11 +31,21 @@ private:
     GameObject* btnInfo = nullptr;
     glm::vec2 btnInfoBaseScale;
 
-    //info maps
+    // maps btn
     GameObject* btnMaps = nullptr;
     glm::vec2 btnMapsBaseScale;
 
-    //info exit
+    // exit btn
     GameObject* btnExit = nullptr;
     glm::vec2 btnExitBaseScale;
+
+    // sound btn
+    GameObject* btnSound = nullptr;
+    glm::vec2 btnSoundBaseScale;
+
+    // main menu tanks
+    GameObject* menuTankBlue = nullptr;
+    GameObject* menuTankRed = nullptr;
+    float tankTargetX_Blue = 0.0f;
+    float tankTargetX_Red = 0.0f;
 };

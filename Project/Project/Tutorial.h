@@ -27,6 +27,7 @@ private:
     Player* player1;
     Player* player2;
     GameObject* background;
+    GameObject* cursor;
     
     // UI Obyektlari
     TextObject* timerTextObj = nullptr;

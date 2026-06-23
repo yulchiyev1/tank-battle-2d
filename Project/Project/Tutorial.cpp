@@ -72,6 +72,13 @@ void Tutorial::Load(const EngineContext& engineContext)
 void Tutorial::Init(const EngineContext& engineContext)
 {
     JIN_LOG("[Tutorial] init called");
+    // 0. MOUSE cursor
+    cursor = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Cursor"));
+    cursor->SetMaterial(engineContext, "[Material]Cursor");
+    cursor->SetMesh(engineContext, "[EngineMesh]default");
+    cursor->GetTransform2D().SetScale({ 30,30 });
+    cursor->SetIgnoreCamera(true, cameraManager.GetActiveCamera());
+    cursor->SetRenderLayer("[Layer]Cursor");
 
     // 1. ENG AVVAL EKRAN O'LCHAMLARINI OLAMIZ
     screenW = engineContext.windowManager->GetWidth();
@@ -97,10 +104,6 @@ void Tutorial::Init(const EngineContext& engineContext)
     background->GetTransform2D().SetScale({ bgImgW * finalScale, bgImgH * finalScale });
     background->GetTransform2D().SetPosition({ 0.0f, 0.0f });
     background->SetRenderLayer("[Layer]Background");
-
-    // ==========================================
-    // BUYOG'I ESKI HOLATIDA DAVOM ETADI
-    // ==========================================
 
     // Controls of Tanks
     // Tank1 (WASD)
@@ -284,6 +287,18 @@ void Tutorial::LateInit(const EngineContext& engineContext)
 void Tutorial::Update(float dt, const EngineContext& engineContext)
 {
     objectManager.UpdateAll(dt, engineContext);
+
+    //cursor
+    cursor->GetTransform2D().SetPosition(glm::vec2(engineContext.inputManager->GetMousePos().x - engineContext.windowManager->GetWidth() / 2.f, engineContext.windowManager->GetHeight() / 2.f - engineContext.inputManager->GetMousePos().y) + glm::vec2(11, -11));
+    if (engineContext.inputManager->IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || engineContext.inputManager->IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE) || engineContext.inputManager->IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
+    {
+        cursor->SetColor({ 0.7f, 0.7f, 0.7f, 1.0f });
+
+    }
+    if (engineContext.inputManager->IsMouseButtonReleased(MOUSE_BUTTON_LEFT) || engineContext.inputManager->IsMouseButtonReleased(MOUSE_BUTTON_MIDDLE) || engineContext.inputManager->IsMouseButtonReleased(MOUSE_BUTTON_RIGHT))
+    {
+        cursor->SetColor({ 1.0f, 1.0f,1.0f,1.0f });
+    }
 
     //camera
     Camera2D* mainCam = cameraManager.GetActiveCamera();

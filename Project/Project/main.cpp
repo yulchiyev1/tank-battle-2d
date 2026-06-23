@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
         return -1;
     }
     jinEngine.RenderDebugDraws(true);
-    //jinEngine.GetEngineContext().windowManager->RestrictResizing(true);
+    jinEngine.GetEngineContext().windowManager->RestrictResizing(true);
 
     jinEngine.GetEngineContext().renderManager->RegisterShader("[Shader]Animation", { {ShaderStage::Vertex,"Shaders/Animation.vert"},{ShaderStage::Fragment,"Shaders/Animation.frag"} });
     jinEngine.GetEngineContext().renderManager->RegisterMaterial("[Material]Animation", "[Shader]Animation", { });
@@ -51,12 +51,15 @@ int main(int argc, char* argv[])
     jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Turret", 3);
     jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Projectile", 4);
     jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]UI", 11);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Cursor", 12);
     
     jinEngine.GetEngineContext().renderManager->RegisterFont("[Font]default", "Fonts/NotoSans-VariableFont_wdth,wght.ttf", 50);
     jinEngine.GetEngineContext().renderManager->RegisterFont("[Font]defaultkr", "Fonts/NanumPenScript-Regular.ttf", 50);
 
+    jinEngine.GetEngineContext().renderManager->RegisterTexture("[Texture]Cursor", "Textures/cursor.png");
+    jinEngine.GetEngineContext().renderManager->RegisterMaterial("[Material]Cursor", "[EngineShader]default_texture", { {"u_Texture","[Texture]Cursor"} });
 
-    jinEngine.GetEngineContext().windowManager->SetCursorVisible(true);
+    jinEngine.GetEngineContext().windowManager->SetCursorVisible(false);
     jinEngine.GetEngineContext().windowManager->SetBackgroundColor({ 0.2,0.2,0.4,1 });
     
 
