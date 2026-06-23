@@ -15,6 +15,10 @@ void Tutorial::Load(const EngineContext& engineContext)
 
     //texture & material load
     // HEALTH BAR RASMLARI
+    // AMMO ORQA FON RASMI
+    rm->RegisterTexture("[Texture]AmmoBg", "Textures/Background/ammo_bg.png");
+    rm->RegisterMaterial("[Material]AmmoBg", "[EngineShader]default_texture", { {"u_Texture", "[Texture]AmmoBg"} });
+
     rm->RegisterTexture("[Texture]HpBg", "Textures/HP_Bar/bg.png"); 
     rm->RegisterMaterial("[Material]HpBg", "[EngineShader]default_texture", { {"u_Texture", "[Texture]HpBg"} });
 

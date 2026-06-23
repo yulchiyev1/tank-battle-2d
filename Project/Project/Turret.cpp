@@ -13,21 +13,24 @@ void Turret::Init(const EngineContext& engineContext)
     SetMesh(engineContext, "[EngineMesh]default");
     SetMaterial(engineContext, "[Material]Animation");
 
-    ammo = 40;
+    ammo = 50;
 
-    // Ammo text
+    // Ammo text&background
     ammoText = new TextObject(
-        engineContext.renderManager->GetFontByTag("[Font]defaultkr"),
-        " Ammo: " + std::to_string(ammo)
-    );
-    ammoText->SetRenderLayer("[Layer]UI");
-    ammoText->GetTransform2D().SetScale(glm::vec2(0.5f, 0.5f));
+        engineContext.renderManager->GetFontByTag("[Font]defaultkr"), std::to_string(ammo));
+    ammoText->SetRenderLayer("[Layer]HPUI");
+    ammoText->GetTransform2D().SetScale(glm::vec2(0.8f, 0.8f));
     ammoText->SetIgnoreCamera(true);
-
+    ammoBg = new GameObject();
+    ammoBg->SetMesh(engineContext, "[EngineMesh]default");
+    ammoBg->SetMaterial(engineContext, "[Material]AmmoBg"); 
+    ammoBg->GetTransform2D().SetScale(glm::vec2(153.f, 102.f)); 
+    ammoBg->SetRenderLayer("[Layer]UI");
+    ammoBg->SetIgnoreCamera(true);
+  
     // Animation & Position setup based on Player type
     if (parentPlayer->GetTag() == "[Object]Player1")
     {
-        // Spritesheet pl1
         shootSpritesheet = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]TurretBlue");
         shootSpritesheet->AddClip("[Clip]TurretIdleB", { 0 }, 1.0f);
         shootSpritesheet->AddClip("[Clip]ShootB", { 0, 1, 2, 3, 4, 5, 6, 7 }, 0.05f);
@@ -35,12 +38,13 @@ void Turret::Init(const EngineContext& engineContext)
         AttachAnimator(std::make_unique<SpriteAnimator>(shootSpritesheet, 1.0f, true));
         GetSpriteAnimator()->PlayClip("[Clip]TurretIdleB");
 
-        // Text position for Player1 (Top-Left)
-        ammoText->GetTransform2D().SetPosition(glm::vec2(-600.f, 320.f));
+        // Joylashuv (Chap tomonda)
+        ammoBg->GetTransform2D().SetPosition(glm::vec2(-590.f, -330.f));
+        // Yozuv rasmning qoq markazida turishi uchun biroz offset (siljish) beramiz
+        ammoText->GetTransform2D().SetPosition(glm::vec2(-595.f, -300.f));
     }
     else if (parentPlayer->GetTag() == "[Object]Player2")
     {
-        // Spritesheet pl2
         shootSpritesheet = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]TurretRed");
         shootSpritesheet->AddClip("[Clip]TurretIdleR", { 0 }, 1.0f);
         shootSpritesheet->AddClip("[Clip]ShootR", { 0, 1, 2, 3, 4, 5, 6, 7 }, 0.05f);
@@ -48,15 +52,18 @@ void Turret::Init(const EngineContext& engineContext)
         AttachAnimator(std::make_unique<SpriteAnimator>(shootSpritesheet, 1.0f, true));
         GetSpriteAnimator()->PlayClip("[Clip]TurretIdleR");
 
-        // Text position for Player2 (Top-Right)
-        ammoText->GetTransform2D().SetPosition(glm::vec2(500.f, 320.f));
+        // Joylashuv (O'ng tomonda)
+        ammoBg->GetTransform2D().SetPosition(glm::vec2(590.f, -330.f));
+        ammoText->GetTransform2D().SetPosition(glm::vec2(586.f, -300.f));
     }
 
     SetRenderLayer("[Layer]Turret");
 
-    // Register UI object to engine
+    // Ikkalasini ham o'yinga qo'shamiz
+    engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(std::unique_ptr<Object>(ammoBg));
     engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(std::unique_ptr<Object>(ammoText));
 }
+
 
 void Turret::LateInit(const EngineContext& engineContext)
 {
@@ -74,7 +81,7 @@ void Turret::Update(float dt, const EngineContext& engineContext)
             ammo++;
             if (ammoText != nullptr)
             {
-                ammoText->SetText("Ammo: " + std::to_string(ammo));
+                ammoText->SetText(std::to_string(ammo));
             }
         }
 
@@ -165,7 +172,7 @@ void Turret::Update(float dt, const EngineContext& engineContext)
 
                 if (ammoText != nullptr)
                 {
-                    ammoText->SetText("Ammo: " + std::to_string(ammo));
+                    ammoText->SetText(std::to_string(ammo));
                 }
 
                 // Trigger shooting animation
