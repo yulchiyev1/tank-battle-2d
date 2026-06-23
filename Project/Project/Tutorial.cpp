@@ -14,6 +14,19 @@ void Tutorial::Load(const EngineContext& engineContext)
     RenderManager* rm = engineContext.renderManager;
 
     //texture & material load
+    // HEALTH BAR RASMLARI
+    rm->RegisterTexture("[Texture]HpBg", "Textures/HP_Bar/bg.png"); 
+    rm->RegisterMaterial("[Material]HpBg", "[EngineShader]default_texture", { {"u_Texture", "[Texture]HpBg"} });
+
+    rm->RegisterTexture("[Texture]HpBlue", "Textures/HP_Bar/blue.png");
+    rm->RegisterMaterial("[Material]HpBlue", "[EngineShader]default_texture", { {"u_Texture", "[Texture]HpBlue"} });
+
+    rm->RegisterTexture("[Texture]HpRed", "Textures/HP_Bar/red.png");
+    rm->RegisterMaterial("[Material]HpRed", "[EngineShader]default_texture", { {"u_Texture", "[Texture]HpRed"} });
+
+    rm->RegisterTexture("[Texture]HpGreen", "Textures/HP_Bar/green.png");
+    rm->RegisterMaterial("[Material]HpGreen", "[EngineShader]default_texture", { {"u_Texture", "[Texture]HpGreen"} });
+
     rm->RegisterTexture("[Texture]HitAnim", "Textures/Projectile/hit_anim.png");
     rm->RegisterSpriteSheet("[SpriteSheet]HitAnim", "[Texture]HitAnim", 64, 64);
 

@@ -62,6 +62,11 @@ private:
     //Graphics & UI
     std::shared_ptr<SpriteSheet> moveSpritesheetB;
     std::shared_ptr<SpriteSheet> moveSpritesheetR;
-    TextObject* hpText;
     Turret* myTurret = nullptr;
+
+    // HEALTH BAR
+    GameObject* hpBg = nullptr;
+    GameObject* hpFill = nullptr;
+    float hpBaseWidth = 50.0f;
+    float hpBaseHeight = 12.0f;
 };

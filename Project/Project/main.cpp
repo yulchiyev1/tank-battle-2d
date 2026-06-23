@@ -51,7 +51,8 @@ int main(int argc, char* argv[])
     jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Turret", 3);
     jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Projectile", 4);
     jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]UI", 11);
-    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Cursor", 12);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]HPUI", 12);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Cursor", 13);
     
     jinEngine.GetEngineContext().renderManager->RegisterFont("[Font]default", "Fonts/NotoSans-VariableFont_wdth,wght.ttf", 50);
     jinEngine.GetEngineContext().renderManager->RegisterFont("[Font]defaultkr", "Fonts/NanumPenScript-Regular.ttf", 50);

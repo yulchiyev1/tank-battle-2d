@@ -14,11 +14,6 @@ void Player::Init(const EngineContext& engineContext)
     SetRenderLayer("[Layer]TankBody");
 
     ObjectManager& objManager = engineContext.stateManager->GetCurrentState()->GetObjectManager();
-    hpText = static_cast<TextObject*>(objManager.AddObject(std::make_unique<TextObject>(
-        engineContext.renderManager->GetFontByTag("[Font]defaultkr"),
-        std::to_string(hp)
-    )));
-    hpText->SetRenderLayer("[Layer]UI");
 
     // Turret Seup
     myTurret = static_cast<Turret*>(objManager.AddObject(std::make_unique<Turret>(this)));
@@ -51,6 +46,28 @@ void Player::Init(const EngineContext& engineContext)
 
         myTurret->SetControls(KEY_NUMPAD_1, KEY_NUMPAD_2, KEY_NUMPAD_3);
     }
+    //hp bar
+
+    hpBg = static_cast<GameObject*>(objManager.AddObject(std::make_unique<GameObject>(), "[Object]HpBg_" + this->GetTag()));
+    hpBg->SetMesh(engineContext, "[EngineMesh]default");
+    hpBg->SetMaterial(engineContext, "[Material]HpBg");
+    hpBg->GetTransform2D().SetScale({ hpBaseWidth, hpBaseHeight });
+    hpBg->SetRenderLayer("[Layer]UI");
+
+    // To'ladigan qism
+    hpFill = static_cast<GameObject*>(objManager.AddObject(std::make_unique<GameObject>(), "[Object]HpFill_" + this->GetTag()));
+    hpFill->SetMesh(engineContext, "[EngineMesh]default");
+
+    // Player tagiga qarab Rang tanlaymiz
+    if (this->GetTag() == "[Object]Player1") {
+        hpFill->SetMaterial(engineContext, "[Material]HpBlue");
+    }
+    else {
+        hpFill->SetMaterial(engineContext, "[Material]HpRed");
+    }
+
+    hpFill->GetTransform2D().SetScale({ hpBaseWidth, hpBaseHeight });
+    hpFill->SetRenderLayer("[Layer]HPUI"); // Bg dan tepada turadi
 }
 
 void Player::LateInit(const EngineContext& engineContext) {}
@@ -60,6 +77,49 @@ void Player::LateFree(const EngineContext& engineContext) {}
 
 void Player::Update(float dt, const EngineContext& engineContext)
 {
+    //hp bar
+    // =========================================
+    if (hpBg != nullptr && hpFill != nullptr)
+    {
+        glm::vec2 myPos = GetTransform2D().GetPosition();
+        float barY = myPos.y + 45.0f; // Tankdan qancha tepada turishi
+
+        // Orqa fon doim markazda tankka ergashadi
+        hpBg->GetTransform2D().SetPosition({ myPos.x, barY });
+
+        // Jonning foizini hisoblaymiz (hp o'zgaruvchisi sizda bor)
+        float hpPercent = std::max(0.0f, (float)hp / 100.0f);
+        float currentWidth = hpBaseWidth * hpPercent;
+
+        // Rasmning enini qisqartiramiz
+        hpFill->GetTransform2D().SetScale({ currentWidth, hpBaseHeight });
+
+        // Markazdan emas, o'ngdan-chapga qisqarishi uchun Offset 
+        float offsetX = (hpBaseWidth - currentWidth) / 2.0f;
+        hpFill->GetTransform2D().SetPosition({ myPos.x - offsetX, barY });
+
+        // Critical holat: HP 30% dan tushsa Yashil/Sariqqa o'zgaradi
+        if (hpPercent >= 0.75f)
+        {
+            // 1. Jon 75% va undan yuqori: YASHIL
+            hpFill->SetMaterial(engineContext, "[Material]HpGreen");
+        }
+        else if (hpPercent <= 0.20f)
+        {
+            // 2. Jon 20% va undan past: QIZIL (Xavf)
+            hpFill->SetMaterial(engineContext, "[Material]HpRed");
+        }
+        else
+        {
+            // 3. O'rtacha (21% dan 74% gacha): O'ZINING RANGI
+            if (this->GetTag() == "[Object]Player1") {
+                hpFill->SetMaterial(engineContext, "[Material]HpBlue");
+            }
+            else {
+                hpFill->SetMaterial(engineContext, "[Material]HpRed");
+            }
+        }
+    }
     // TELEPORTATION 
     if (tpState != TeleportState::NONE)
     {
@@ -145,11 +205,6 @@ void Player::Update(float dt, const EngineContext& engineContext)
         }
     }
 
-    // UI UPDATES
-    if (hpText != nullptr)
-    {
-        hpText->GetTransform2D().SetPosition(GetTransform2D().GetPosition() + glm::vec2{ -25.f, 80.f });
-    }
 
     // MOVEMENT ANIMATIONS
     if (this->GetTag() == "[Object]Player1")
@@ -322,16 +377,12 @@ void Player::TakeDamage(int damageAmount)
 {
     hp -= damageAmount;
     if (hp < 0) hp = 0;
-
-    if (hpText != nullptr) hpText->SetText(std::to_string(hp));
 }
 
 void Player::AddHealth(int amount)
 {
     hp += amount;
     if (hp > 100) hp = 100;
-
-    if (hpText != nullptr) hpText->SetText(std::to_string(hp));
 }
 
 void Player::AddAmmo(int amount)
