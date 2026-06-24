@@ -78,46 +78,32 @@ void Player::LateFree(const EngineContext& engineContext) {}
 void Player::Update(float dt, const EngineContext& engineContext)
 {
     //hp bar
-    // =========================================
     if (hpBg != nullptr && hpFill != nullptr)
     {
         glm::vec2 myPos = GetTransform2D().GetPosition();
-        float barY = myPos.y + 45.0f; // Tankdan qancha tepada turishi
+        float barY = myPos.y + 45.0f; 
 
         // Orqa fon doim markazda tankka ergashadi
         hpBg->GetTransform2D().SetPosition({ myPos.x, barY });
-
-        // Jonning foizini hisoblaymiz (hp o'zgaruvchisi sizda bor)
+        // Jonning foizini hisoblaymiz
         float hpPercent = std::max(0.0f, (float)hp / 100.0f);
         float currentWidth = hpBaseWidth * hpPercent;
-
         // Rasmning enini qisqartiramiz
         hpFill->GetTransform2D().SetScale({ currentWidth, hpBaseHeight });
-
         // Markazdan emas, o'ngdan-chapga qisqarishi uchun Offset 
         float offsetX = (hpBaseWidth - currentWidth) / 2.0f;
         hpFill->GetTransform2D().SetPosition({ myPos.x - offsetX, barY });
-
-        // Critical holat: HP 30% dan tushsa Yashil/Sariqqa o'zgaradi
         if (hpPercent >= 0.75f)
         {
-            // 1. Jon 75% va undan yuqori: YASHIL
             hpFill->SetMaterial(engineContext, "[Material]HpGreen");
         }
-        else if (hpPercent <= 0.20f)
+        else if (hpPercent >= 0.20f)
         {
-            // 2. Jon 20% va undan past: QIZIL (Xavf)
-            hpFill->SetMaterial(engineContext, "[Material]HpRed");
+            hpFill->SetMaterial(engineContext, "[Material]HpBlue");
         }
         else
         {
-            // 3. O'rtacha (21% dan 74% gacha): O'ZINING RANGI
-            if (this->GetTag() == "[Object]Player1") {
-                hpFill->SetMaterial(engineContext, "[Material]HpBlue");
-            }
-            else {
-                hpFill->SetMaterial(engineContext, "[Material]HpRed");
-            }
+            hpFill->SetMaterial(engineContext, "[Material]HpRed");
         }
     }
     // TELEPORTATION 

@@ -19,7 +19,7 @@ void Turret::Init(const EngineContext& engineContext)
     ammoText = new TextObject(
         engineContext.renderManager->GetFontByTag("[Font]defaultkr"), std::to_string(ammo));
     ammoText->SetRenderLayer("[Layer]HPUI");
-    ammoText->GetTransform2D().SetScale(glm::vec2(0.8f, 0.8f));
+    ammoText->GetTransform2D().SetScale(glm::vec2(0.7f, 0.7f));
     ammoText->SetIgnoreCamera(true);
     ammoBg = new GameObject();
     ammoBg->SetMesh(engineContext, "[EngineMesh]default");
@@ -213,7 +213,7 @@ void Turret::AddAmmo(int amount)
 {
     ammo += amount;
     if (ammoText != nullptr) {
-        ammoText->SetText("Ammo: " + std::to_string(ammo));
+        ammoText->SetText(std::to_string(ammo));
     }
 }
 

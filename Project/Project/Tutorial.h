@@ -40,4 +40,7 @@ private:
     // safe sport for items and wall blocks
     std::vector<glm::vec2> wallPositions;
     bool IsSafePosition(glm::vec2 targetPos, float safeRadius);
+
+    //timer bg
+    GameObject* TimerBg = nullptr;
 };

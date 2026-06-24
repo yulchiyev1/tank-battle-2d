@@ -14,8 +14,9 @@ void Tutorial::Load(const EngineContext& engineContext)
     RenderManager* rm = engineContext.renderManager;
 
     //texture & material load
-    // HEALTH BAR RASMLARI
-    // AMMO ORQA FON RASMI
+    rm->RegisterTexture("[Texture]TimerBg", "Textures/Background/countdown_bg.png");
+    rm->RegisterMaterial("[Material]TimerBg", "[EngineShader]default_texture", { {"u_Texture", "[Texture]TimerBg"} });
+
     rm->RegisterTexture("[Texture]AmmoBg", "Textures/Background/ammo_bg.png");
     rm->RegisterMaterial("[Material]AmmoBg", "[EngineShader]default_texture", { {"u_Texture", "[Texture]AmmoBg"} });
 
@@ -89,7 +90,18 @@ void Tutorial::Load(const EngineContext& engineContext)
 void Tutorial::Init(const EngineContext& engineContext)
 {
     JIN_LOG("[Tutorial] init called");
-    // 0. MOUSE cursor
+
+    // Timer bg 
+    TimerBg = new GameObject();
+    TimerBg->SetMesh(engineContext, "[EngineMesh]default");
+    TimerBg->SetMaterial(engineContext, "[Material]TimerBg");
+    TimerBg->GetTransform2D().SetScale(glm::vec2(193.f, 112.f));
+    TimerBg->SetRenderLayer("[Layer]UI");
+    TimerBg->SetIgnoreCamera(true);
+    TimerBg->GetTransform2D().SetPosition(glm::vec2(0.f, -330.f));
+    engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(std::unique_ptr<Object>(TimerBg));
+
+    // MOUSE cursor
     cursor = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Cursor"));
     cursor->SetMaterial(engineContext, "[Material]Cursor");
     cursor->SetMesh(engineContext, "[EngineMesh]default");
@@ -97,18 +109,18 @@ void Tutorial::Init(const EngineContext& engineContext)
     cursor->SetIgnoreCamera(true, cameraManager.GetActiveCamera());
     cursor->SetRenderLayer("[Layer]Cursor");
 
-    // 1. ENG AVVAL EKRAN O'LCHAMLARINI OLAMIZ
+    // screen width and height
     screenW = engineContext.windowManager->GetWidth();
     screenH = engineContext.windowManager->GetHeight();
 
-    // 2. ORQA FONNI YARATAMIZ (Faqat bir marta!)
+    // background
     background = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Background"));
     background->SetMesh(engineContext, "[EngineMesh]default");
     background->SetMaterial(engineContext, "[Material]Background");
 
-    // Rasmning asl o'lchamlari (Sizdagi final_bg.png rasmning aniq o'lchamlarini shu yerga yozasiz)
-    float bgImgW = 1920.0f; // Rasmning eni
-    float bgImgH = 1080.0f; // Rasmning bo'yi
+    // bg image width and h
+    float bgImgW = 1920.0f; 
+    float bgImgH = 1080.0f; 
 
     // X va Y uchun proporsiyani hisoblaymiz
     float scaleX = screenW / bgImgW;
@@ -286,15 +298,15 @@ void Tutorial::Init(const EngineContext& engineContext)
     testItem->GetTransform2D().SetPosition(glm::vec2(0.0f, 0.0f));
     objectManager.AddObject(std::unique_ptr<Object>(testItem), "[Object]Item");
 
-    // timer of the game
+    // timer added
     if (timerTextObj == nullptr) {
         timerTextObj = static_cast<TextObject*>(engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(
             std::make_unique<TextObject>(engineContext.renderManager->GetFontByTag("[Font]defaultkr"), "02:00"),
             "[Object]TimerText"
         ));
     }
-    timerTextObj->SetRenderLayer("[Layer]UI");
-    timerTextObj->GetTransform2D().SetScale(glm::vec2(0.6f, 0.6f));
+    timerTextObj->SetRenderLayer("[Layer]HPUI");
+    timerTextObj->GetTransform2D().SetScale(glm::vec2(0.7f, 0.7f));
 }
 
 void Tutorial::LateInit(const EngineContext& engineContext)
@@ -460,20 +472,16 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
             winnerMessage = "TIME UP! IT'S A DRAW!";
     }
 
-    // 스크린에서 보여주기
-    if (timerTextObj != nullptr && mainCam != nullptr)
+    // timer 스크린에서 보여주기
+    if (timerTextObj != nullptr)
     {
         int minutes = static_cast<int>(roundTimer) / 60;
         int seconds = static_cast<int>(roundTimer) % 60;
-
         char timeStr[16];
         snprintf(timeStr, sizeof(timeStr), "%02d:%02d", minutes, seconds);
         timerTextObj->SetText(timeStr);
-
-        // Kameraga bog'lash
-        glm::vec2 camPos = mainCam->GetPosition();
-        glm::vec2 timerPos = camPos + glm::vec2(-30.0f, 300.0f);
-
+        timerTextObj->SetIgnoreCamera(true);
+        glm::vec2 timerPos = glm::vec2(-26.f, -306.0f);
         timerTextObj->GetTransform2D().SetPosition(timerPos);
     }
 
