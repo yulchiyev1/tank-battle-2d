@@ -1,6 +1,7 @@
 #include "GameOver.h"
 #include "MainMenu.h"
 #include "Tutorial.h"
+#include <vector> // Confetti freymlari uchun qo'shildi
 
 void GameOver::Load(const EngineContext& engineContext)
 {
@@ -29,6 +30,7 @@ void GameOver::Load(const EngineContext& engineContext)
 
 void GameOver::Init(const EngineContext& engineContext)
 {
+
     // mouse cursor
     engineContext.windowManager->SetCursorVisible(false);
     cursor = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Cursor"));
@@ -136,7 +138,7 @@ void GameOver::Update(float dt, const EngineContext& engineContext)
     float rawMouseY = static_cast<float>(engineContext.inputManager->GetMouseY());
     float mouseX = rawMouseX - (scrW / 2.0f);
     float mouseY = (scrH / 2.0f) - rawMouseY;
-    if (cursor != nullptr){cursor->GetTransform2D().SetPosition({ mouseX + 15.0f, mouseY - 15.0f });}
+    if (cursor != nullptr) { cursor->GetTransform2D().SetPosition({ mouseX + 15.0f, mouseY - 15.0f }); }
 
     bool isClicking = engineContext.inputManager->IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 
@@ -167,8 +169,8 @@ void GameOver::Update(float dt, const EngineContext& engineContext)
         loserTank->GetTransform2D().SetRotation(time * 6.0f);
         float s = 70.0f + std::sin(time * 3.0f) * 10.0f; //pulse scale
         loserTank->GetTransform2D().SetScale({ s, s });
-        float x = -800.0f + std::fmod(time * 150.0f, 3600.0f); 
-        float y = 250.0f + std::sin(time * 5.0f) * 20.0f;      
+        float x = -800.0f + std::fmod(time * 150.0f, 3600.0f);
+        float y = 250.0f + std::sin(time * 5.0f) * 20.0f;
         loserTank->GetTransform2D().SetPosition({ x, y });
     }
     else

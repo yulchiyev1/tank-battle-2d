@@ -14,8 +14,11 @@ void Tutorial::Load(const EngineContext& engineContext)
     RenderManager* rm = engineContext.renderManager;
 
     //texture & material load
-    engineContext.renderManager->RegisterTexture("[Texture]Bush", "Textures/Bush1.png");
-    engineContext.renderManager->RegisterMaterial("[Material]Bush", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Bush"} });
+    rm->RegisterTexture("[Texture]Track", "Textures/Tanks/Tire_Track_01.png"); 
+    rm->RegisterMaterial("[Material]Track", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Track"} });
+
+    rm->RegisterTexture("[Texture]Bush", "Textures/Bush1.png");
+    rm->RegisterMaterial("[Material]Bush", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Bush"} });
 
     rm->RegisterTexture("[Texture]Grass", "Textures/Background/grass.png");
     rm->RegisterMaterial("[Material]Grass", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Grass"} });
@@ -98,20 +101,13 @@ void Tutorial::Init(const EngineContext& engineContext)
     JIN_LOG("[Tutorial] init called");
 
     // grass (경기장 outside)
-    // ==========================================
-    // GRASS (O'yin maydonidan TASHQARIGA ekish - Aniq matematika)
-    // ==========================================
     float grassSize = 100.0f;
     float halfGrass = grassSize / 2.0f;
     float scrW = engineContext.windowManager->GetWidth();
     float scrH = engineContext.windowManager->GetHeight();
     float halfW = scrW / 2.0f;
     float halfH = scrH / 2.0f;
-
-    // Kamera uzoqlashganda qora ekran ko'rinmasligi uchun 6 qator ekamiz
     int rows = 6;
-
-    // O't yaratish jarayonini qisqartirib olamiz (kod toza va tushunarli bo'lishi uchun)
     auto PlantGrass = [&](float px, float py) {
         GameObject* grass = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]GrassTile"));
         grass->SetMesh(engineContext, "[EngineMesh]default");
@@ -373,29 +369,77 @@ void Tutorial::LateInit(const EngineContext& engineContext)
 void Tutorial::Update(float dt, const EngineContext& engineContext)
 {
     objectManager.UpdateAll(dt, engineContext);
+
+    // tracks of tank
+    static std::vector<std::pair<GameObject*, float>> activeTracks;
+    static glm::vec2 lastTrackPos1 = player1->GetTransform2D().GetPosition();
+    static glm::vec2 lastTrackPos2 = player2->GetTransform2D().GetPosition();
+    float trackDistance = 50.0f;
+    float trackLifeTime = 1.f; // Izlar 3 soniya saqlanadi
+
+    // 1-TANK 
+    glm::vec2 p1Pos = player1->GetTransform2D().GetPosition();
+    if (glm::distance(p1Pos, lastTrackPos1) > trackDistance)
+    {
+        GameObject* track = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Track"));
+        track->SetMesh(engineContext, "[EngineMesh]default");
+        track->SetMaterial(engineContext, "[Material]Track");
+        track->GetTransform2D().SetPosition(p1Pos);
+        track->GetTransform2D().SetRotation(player1->GetTransform2D().GetRotation());
+        track->GetTransform2D().SetScale({ 80.0f, 80.0f });
+        track->SetRenderLayer("[Layer]Items");
+
+        activeTracks.push_back({ track, trackLifeTime });
+        lastTrackPos1 = p1Pos;
+    }
+
+    // 2-TANK 
+    glm::vec2 p2Pos = player2->GetTransform2D().GetPosition();
+    if (glm::distance(p2Pos, lastTrackPos2) > trackDistance)
+    {
+        GameObject* track = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Track"));
+        track->SetMesh(engineContext, "[EngineMesh]default");
+        track->SetMaterial(engineContext, "[Material]Track");
+        track->GetTransform2D().SetPosition(p2Pos);
+        track->GetTransform2D().SetRotation(player2->GetTransform2D().GetRotation());
+        track->GetTransform2D().SetScale({ 80.0f, 80.0f });
+        track->SetRenderLayer("[Layer]Items");
+
+        activeTracks.push_back({ track, trackLifeTime });
+        lastTrackPos2 = p2Pos;
+    }
+
+    // IZLARNING TAYMERI VA XIRALASHISH MANTIG'I
+    for (auto it = activeTracks.begin(); it != activeTracks.end(); )
+    {
+        it->second -= dt;
+        if (it->second > 0.0f)
+        {
+            float alpha = std::min(it->second, 1.0f);
+            it->first->SetColor({ 1.0f, 1.0f, 1.0f, alpha });
+            ++it;
+        }
+        else
+        {
+            it->first->Kill();
+            it = activeTracks.erase(it);
+        }
+    }
+
     //bush (경기장 outside)
-    // ==========================================
-    // BUSH / FLOWER SPAWNING (Minimal versiya)
-    // ==========================================
     static float bushTimer = 0.0f;
     static int bushCount = 0;
-
     bushTimer += dt;
-    if (bushTimer >= 1.0f && bushCount < 80) // Har 1 sekundda, jami 80 ta bo'lguncha
+    if (bushTimer >= 1.0f && bushCount < 100) 
     {
         bushTimer = 0.0f;
-
-        // Ekranning yarim o'lchamlari (chegaralar)
         float hw = engineContext.windowManager->GetWidth() / 2.0f;
         float hh = engineContext.windowManager->GetHeight() / 2.0f;
-
         for (int i = 0; i < 3; ++i)
         {
             float x = 0, y = 0;
             int side = rand() % 4;                
             float offset = 0.0f + (rand() % 50); 
-
-            //  devorning orqasiga (o'tlar ustiga) joylashtirish
             if (side == 0) { x = (rand() % (int)(hw * 2)) - hw; y = hh + offset; }  // Tepa
             else if (side == 1) { x = (rand() % (int)(hw * 2)) - hw; y = -hh - offset; } // Past
             else if (side == 2) { x = -hw - offset; y = (rand() % (int)(hh * 2)) - hh; } // Chap
@@ -406,7 +450,6 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
             bush->GetTransform2D().SetScale({ 30.0f, 20.0f });
             bush->GetTransform2D().SetPosition({ x, y });
             bush->SetRenderLayer("[Layer]Items");
-
             bushCount++;
         }
     }
