@@ -121,7 +121,7 @@ void MainMenu::Init(const EngineContext& engineContext)
     btnSound->SetRenderLayer("[Layer]UI");
 
     // 8.Tanks
-    float tankSize = 400.0f * baseScale; 
+    float tankSize = 400.0f * baseScale;
     menuTankBlue = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]MenuTankBlue"));
     menuTankBlue->SetMesh(engineContext, "[EngineMesh]default");
     menuTankBlue->SetMaterial(engineContext, "[Material]MenuTankBlue");
@@ -136,13 +136,14 @@ void MainMenu::Init(const EngineContext& engineContext)
     menuTankRed->GetTransform2D().SetScale({ tankSize, tankSize });
     menuTankRed->GetTransform2D().SetPosition({ scrW, tankY });
     menuTankRed->SetRenderLayer("[Layer]UI");
-    tankTargetX_Blue = -scrW * 0.35f; 
-    tankTargetX_Red = scrW * 0.35f;  
+    tankTargetX_Blue = -scrW * 0.35f;
+    tankTargetX_Red = scrW * 0.35f;
 }
 
 void MainMenu::Update(float dt, const EngineContext& engineContext)
 {
     objectManager.UpdateAll(dt, engineContext);
+
     // 0. mouse cursor
     if (cursor != nullptr)
     {
@@ -195,8 +196,8 @@ void MainMenu::Update(float dt, const EngineContext& engineContext)
             btnStart->GetTransform2D().SetScale(btnStartBaseScale);
         }
     }
-    
-    // 00.tanks
+
+    // 3.tanks
     if (menuTankBlue != nullptr && menuTankRed != nullptr)
     {
         float moveSpeed = 400.0f * dt;
@@ -214,6 +215,35 @@ void MainMenu::Update(float dt, const EngineContext& engineContext)
             redPos.x -= moveSpeed;
             if (redPos.x < tankTargetX_Red) redPos.x = tankTargetX_Red;
             menuTankRed->GetTransform2D().SetPosition(redPos);
+        }
+    }
+
+    //  4. exit button
+    if (btnExit != nullptr)
+    {
+        float scrW = engineContext.windowManager->GetWidth();
+        float scrH = engineContext.windowManager->GetHeight();
+        float rawMouseX = static_cast<float>(engineContext.inputManager->GetMouseX());
+        float rawMouseY = static_cast<float>(engineContext.inputManager->GetMouseY());
+        float mouseX = rawMouseX - (scrW / 2.0f);
+        float mouseY = (scrH / 2.0f) - rawMouseY;
+        glm::vec2 btnPos = btnExit->GetTransform2D().GetPosition();
+        float halfW = btnExitBaseScale.x / 2.0f;
+        float halfH = btnExitBaseScale.y / 2.0f;
+        bool isHovering = (mouseX >= btnPos.x - halfW && mouseX <= btnPos.x + halfW &&
+            mouseY >= btnPos.y - halfH && mouseY <= btnPos.y + halfH);
+
+        if (isHovering)
+        {
+            btnExit->GetTransform2D().SetScale(btnExitBaseScale * 1.25f);
+            if (engineContext.inputManager->IsMouseButtonPressed(0))
+            {
+                engineContext.engine->RequestQuit();
+            }
+        }
+        else
+        {
+            btnExit->GetTransform2D().SetScale(btnExitBaseScale);
         }
     }
 }

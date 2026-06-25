@@ -21,7 +21,7 @@ private:
 
     // buttons
     GameObject* btnReplay = nullptr;
-    GameObject* btnExit = nullptr;
+    GameObject* BtnHome = nullptr;
 
     // Mouse cursor
     GameObject* cursor = nullptr;
@@ -30,5 +30,5 @@ private:
     glm::vec2 btnReplayBaseScale;
 
     // exit btn
-    glm::vec2 btnExitBaseScale;
+    glm::vec2 BtnHomeBaseScale;
 };

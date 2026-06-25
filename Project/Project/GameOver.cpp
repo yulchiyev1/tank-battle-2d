@@ -15,8 +15,8 @@ void GameOver::Load(const EngineContext& engineContext)
     engineContext.renderManager->RegisterMaterial("[Material]MenuTankRed", "[EngineShader]default_texture", { {"u_Texture", "[Texture]MenuTankRed"} });
 
     // exit
-    engineContext.renderManager->RegisterTexture("[Texture]BtnExit", "Textures/mainMenu/exit.png");
-    engineContext.renderManager->RegisterMaterial("[Material]BtnExit", "[EngineShader]default_texture", { {"u_Texture", "[Texture]BtnExit"} });
+    engineContext.renderManager->RegisterTexture("[Texture]BtnHome", "Textures/gameOver/home.png");
+    engineContext.renderManager->RegisterMaterial("[Material]BtnHome", "[EngineShader]default_texture", { {"u_Texture", "[Texture]BtnHome"} });
 
     // replay 
     engineContext.renderManager->RegisterTexture("[Texture]BtnReplay", "Textures/gameOver/replay.png");
@@ -115,14 +115,14 @@ void GameOver::Init(const EngineContext& engineContext)
     btnReplay->GetTransform2D().SetPosition(glm::vec2(0.0f, -275.0f));
     btnReplay->SetRenderLayer("[Layer]UI");
 
-    // Exit button
-    btnExit = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]BtnExit"));
-    btnExit->SetMesh(engineContext, "[EngineMesh]default");
-    btnExit->SetMaterial(engineContext, "[Material]BtnExit");
-    btnExitBaseScale = glm::vec2(50.0f * baseScale, 50.0f * baseScale);
-    btnExit->GetTransform2D().SetScale(btnExitBaseScale);
-    btnExit->GetTransform2D().SetPosition(glm::vec2(600.0f, -320.0f));
-    btnExit->SetRenderLayer("[Layer]UI");
+    // Home button
+    BtnHome = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]BtnHome"));
+    BtnHome->SetMesh(engineContext, "[EngineMesh]default");
+    BtnHome->SetMaterial(engineContext, "[Material]BtnHome");
+    BtnHomeBaseScale = glm::vec2(80.0f * baseScale, 60.0f * baseScale);
+    BtnHome->GetTransform2D().SetScale(BtnHomeBaseScale);
+    BtnHome->GetTransform2D().SetPosition(glm::vec2(600.0f, -320.0f));
+    BtnHome->SetRenderLayer("[Layer]UI");
 }
 
 void GameOver::Update(float dt, const EngineContext& engineContext)
@@ -197,15 +197,15 @@ void GameOver::Update(float dt, const EngineContext& engineContext)
     }
 
     // exit btn
-    glm::vec2 extPos = btnExit->GetTransform2D().GetPosition();
+    glm::vec2 extPos = BtnHome->GetTransform2D().GetPosition();
     if (mouseX > extPos.x - 25.0f && mouseX < extPos.x + 25.0f && mouseY > extPos.y - 25.0f && mouseY < extPos.y + 25.0f)
     {
-        btnExit->GetTransform2D().SetScale(btnExitBaseScale * 1.2f);
+        BtnHome->GetTransform2D().SetScale(BtnHomeBaseScale * 1.2f);
         if (isClicking) engineContext.stateManager->ChangeState(std::make_unique<MainMenu>());
     }
     else
     {
-        btnExit->GetTransform2D().SetScale(btnExitBaseScale);
+        BtnHome->GetTransform2D().SetScale(BtnHomeBaseScale);
     }
 
     // space key > replay
