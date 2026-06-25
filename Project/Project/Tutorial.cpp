@@ -14,6 +14,12 @@ void Tutorial::Load(const EngineContext& engineContext)
     RenderManager* rm = engineContext.renderManager;
 
     //texture & material load
+    engineContext.renderManager->RegisterTexture("[Texture]Bush", "Textures/Bush1.png");
+    engineContext.renderManager->RegisterMaterial("[Material]Bush", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Bush"} });
+
+    rm->RegisterTexture("[Texture]Grass", "Textures/Background/grass.png");
+    rm->RegisterMaterial("[Material]Grass", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Grass"} });
+
     rm->RegisterTexture("[Texture]TimerBg", "Textures/Background/countdown_bg.png");
     rm->RegisterMaterial("[Material]TimerBg", "[EngineShader]default_texture", { {"u_Texture", "[Texture]TimerBg"} });
 
@@ -90,6 +96,57 @@ void Tutorial::Load(const EngineContext& engineContext)
 void Tutorial::Init(const EngineContext& engineContext)
 {
     JIN_LOG("[Tutorial] init called");
+
+    // grass (경기장 outside)
+    // ==========================================
+    // GRASS (O'yin maydonidan TASHQARIGA ekish - Aniq matematika)
+    // ==========================================
+    float grassSize = 100.0f;
+    float halfGrass = grassSize / 2.0f;
+    float scrW = engineContext.windowManager->GetWidth();
+    float scrH = engineContext.windowManager->GetHeight();
+    float halfW = scrW / 2.0f;
+    float halfH = scrH / 2.0f;
+
+    // Kamera uzoqlashganda qora ekran ko'rinmasligi uchun 6 qator ekamiz
+    int rows = 6;
+
+    // O't yaratish jarayonini qisqartirib olamiz (kod toza va tushunarli bo'lishi uchun)
+    auto PlantGrass = [&](float px, float py) {
+        GameObject* grass = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]GrassTile"));
+        grass->SetMesh(engineContext, "[EngineMesh]default");
+        grass->SetMaterial(engineContext, "[Material]Grass");
+        grass->GetTransform2D().SetScale({ grassSize, grassSize });
+        grass->GetTransform2D().SetPosition({ px, py });
+        grass->SetRenderLayer("[Layer]Background");
+        };
+
+    // 1. TEPA va PASTNI yopish (Burchaklar bilan birga keng qilib)
+    float startX = -halfW - (rows * grassSize);
+    float endX = halfW + (rows * grassSize);
+
+    // x o'qi bo'ylab yurib chiqamiz (ochiq joy qolmasligi uchun + grassSize qo'shilgan)
+    for (float x = startX; x <= endX + grassSize; x += grassSize)
+    {
+        for (int i = 0; i < rows; ++i)
+        {
+            // Devorga aniq yopishib turishi uchun halfGrass (50px) dan boshlaymiz
+            float offset = halfGrass + (i * grassSize);
+            PlantGrass(x, halfH + offset);  // TEPA qatorlar
+            PlantGrass(x, -halfH - offset); // PASTKI qatorlar
+        }
+    }
+
+    // 2. CHAP va O'NG tomonlarni yopish (Tepa va past yopilgani uchun faqat o'rtasini yopamiz)
+    for (float y = -halfH; y <= halfH + grassSize; y += grassSize)
+    {
+        for (int i = 0; i < rows; ++i)
+        {
+            float offset = halfGrass + (i * grassSize);
+            PlantGrass(halfW + offset, y);   // O'NG qatorlar
+            PlantGrass(-halfW - offset, y);  // CHAP qatorlar
+        }
+    }
 
     // Timer bg 
     TimerBg = new GameObject();
@@ -316,7 +373,43 @@ void Tutorial::LateInit(const EngineContext& engineContext)
 void Tutorial::Update(float dt, const EngineContext& engineContext)
 {
     objectManager.UpdateAll(dt, engineContext);
+    //bush (경기장 outside)
+    // ==========================================
+    // BUSH / FLOWER SPAWNING (Minimal versiya)
+    // ==========================================
+    static float bushTimer = 0.0f;
+    static int bushCount = 0;
 
+    bushTimer += dt;
+    if (bushTimer >= 1.0f && bushCount < 80) // Har 1 sekundda, jami 80 ta bo'lguncha
+    {
+        bushTimer = 0.0f;
+
+        // Ekranning yarim o'lchamlari (chegaralar)
+        float hw = engineContext.windowManager->GetWidth() / 2.0f;
+        float hh = engineContext.windowManager->GetHeight() / 2.0f;
+
+        for (int i = 0; i < 3; ++i)
+        {
+            float x = 0, y = 0;
+            int side = rand() % 4;                
+            float offset = 0.0f + (rand() % 50); 
+
+            //  devorning orqasiga (o'tlar ustiga) joylashtirish
+            if (side == 0) { x = (rand() % (int)(hw * 2)) - hw; y = hh + offset; }  // Tepa
+            else if (side == 1) { x = (rand() % (int)(hw * 2)) - hw; y = -hh - offset; } // Past
+            else if (side == 2) { x = -hw - offset; y = (rand() % (int)(hh * 2)) - hh; } // Chap
+            else { x = hw + offset;  y = (rand() % (int)(hh * 2)) - hh; } // O'ng
+            GameObject* bush = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Bush"));
+            bush->SetMesh(engineContext, "[EngineMesh]default");
+            bush->SetMaterial(engineContext, "[Material]Bush");
+            bush->GetTransform2D().SetScale({ 30.0f, 20.0f });
+            bush->GetTransform2D().SetPosition({ x, y });
+            bush->SetRenderLayer("[Layer]Items");
+
+            bushCount++;
+        }
+    }
     //cursor
     cursor->GetTransform2D().SetPosition(glm::vec2(engineContext.inputManager->GetMousePos().x - engineContext.windowManager->GetWidth() / 2.f, engineContext.windowManager->GetHeight() / 2.f - engineContext.inputManager->GetMousePos().y) + glm::vec2(11, -11));
     if (engineContext.inputManager->IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || engineContext.inputManager->IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE) || engineContext.inputManager->IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
