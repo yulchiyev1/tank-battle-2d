@@ -113,7 +113,7 @@ void Turret::Update(float dt, const EngineContext& engineContext)
         transform2D.SetPosition(parentPlayer->GetTransform2D().GetPosition());
 
         // Rotation
-        float rotationSpeed = 1.5f;
+        float rotationSpeed = 2.5f;
         float currentAngle = transform2D.GetRotation();
 
         if (engineContext.inputManager->IsKeyDown(leftKey)) { currentAngle += rotationSpeed * dt; }

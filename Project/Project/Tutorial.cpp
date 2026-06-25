@@ -450,26 +450,23 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
     std::string winnerMessage = "";
     bool gameEnded = false;
 
+    int winnerID = 0;
     if (player1->hp <= 0)
     {
         gameEnded = true;
-        winnerMessage = "PLAYER 2 WON";
+        winnerID = 2;
     }
     else if (player2->hp <= 0)
     {
         gameEnded = true;
-        winnerMessage = "PLAYER 1 WON";
+        winnerID = 1;
     }
     else if (roundTimer <= 0.0f)
     {
         gameEnded = true;
-
-        if (player1->hp > player2->hp)
-            winnerMessage = "TIME UP! PLAYER 1 WON";
-        else if (player2->hp > player1->hp)
-            winnerMessage = "TIME UP! PLAYER 2 WON";
-        else
-            winnerMessage = "TIME UP! IT'S A DRAW!";
+        if (player1->hp > player2->hp) winnerID = 1;
+        else if (player2->hp > player1->hp) winnerID = 2;
+        else winnerID = 0; 
     }
 
     // timer 스크린에서 보여주기
@@ -488,7 +485,7 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
     // GameOver state로 바꾸기
     if (gameEnded)
     {
-        engineContext.stateManager->ChangeState(std::make_unique<GameOver>(winnerMessage));
+        engineContext.stateManager->ChangeState(std::make_unique<GameOver>(winnerID));
     }
 }
 
