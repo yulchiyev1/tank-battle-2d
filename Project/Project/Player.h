@@ -69,4 +69,11 @@ private:
     GameObject* hpFill = nullptr;
     float hpBaseWidth = 50.0f;
     float hpBaseHeight = 12.0f;
+
+    // track tile
+    std::vector<std::pair<GameObject*, float>> activeTracks;
+    glm::vec2 lastTrackPos;
+    float trackDistance = 8.0f; // track 생성 in every
+    float trackLifeTime = 1.0f;  // track lifetime
+    float trackRearOffset = 20.0f;
 };

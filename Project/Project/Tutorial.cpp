@@ -14,7 +14,7 @@ void Tutorial::Load(const EngineContext& engineContext)
     RenderManager* rm = engineContext.renderManager;
 
     //texture & material load
-    rm->RegisterTexture("[Texture]Track", "Textures/Tanks/Tire_Track_01.png"); 
+    rm->RegisterTexture("[Texture]Track", "Textures/Tanks/Tire_Track_02.png"); 
     rm->RegisterMaterial("[Material]Track", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Track"} });
 
     rm->RegisterTexture("[Texture]Bush", "Textures/Bush1.png");
@@ -370,67 +370,11 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
 {
     objectManager.UpdateAll(dt, engineContext);
 
-    // tracks of tank
-    static std::vector<std::pair<GameObject*, float>> activeTracks;
-    static glm::vec2 lastTrackPos1 = player1->GetTransform2D().GetPosition();
-    static glm::vec2 lastTrackPos2 = player2->GetTransform2D().GetPosition();
-    float trackDistance = 50.0f;
-    float trackLifeTime = 1.f; // Izlar 3 soniya saqlanadi
-
-    // 1-TANK 
-    glm::vec2 p1Pos = player1->GetTransform2D().GetPosition();
-    if (glm::distance(p1Pos, lastTrackPos1) > trackDistance)
-    {
-        GameObject* track = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Track"));
-        track->SetMesh(engineContext, "[EngineMesh]default");
-        track->SetMaterial(engineContext, "[Material]Track");
-        track->GetTransform2D().SetPosition(p1Pos);
-        track->GetTransform2D().SetRotation(player1->GetTransform2D().GetRotation());
-        track->GetTransform2D().SetScale({ 80.0f, 80.0f });
-        track->SetRenderLayer("[Layer]Items");
-
-        activeTracks.push_back({ track, trackLifeTime });
-        lastTrackPos1 = p1Pos;
-    }
-
-    // 2-TANK 
-    glm::vec2 p2Pos = player2->GetTransform2D().GetPosition();
-    if (glm::distance(p2Pos, lastTrackPos2) > trackDistance)
-    {
-        GameObject* track = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Track"));
-        track->SetMesh(engineContext, "[EngineMesh]default");
-        track->SetMaterial(engineContext, "[Material]Track");
-        track->GetTransform2D().SetPosition(p2Pos);
-        track->GetTransform2D().SetRotation(player2->GetTransform2D().GetRotation());
-        track->GetTransform2D().SetScale({ 80.0f, 80.0f });
-        track->SetRenderLayer("[Layer]Items");
-
-        activeTracks.push_back({ track, trackLifeTime });
-        lastTrackPos2 = p2Pos;
-    }
-
-    // IZLARNING TAYMERI VA XIRALASHISH MANTIG'I
-    for (auto it = activeTracks.begin(); it != activeTracks.end(); )
-    {
-        it->second -= dt;
-        if (it->second > 0.0f)
-        {
-            float alpha = std::min(it->second, 1.0f);
-            it->first->SetColor({ 1.0f, 1.0f, 1.0f, alpha });
-            ++it;
-        }
-        else
-        {
-            it->first->Kill();
-            it = activeTracks.erase(it);
-        }
-    }
-
     //bush (경기장 outside)
     static float bushTimer = 0.0f;
     static int bushCount = 0;
     bushTimer += dt;
-    if (bushTimer >= 1.0f && bushCount < 100) 
+    if (bushTimer >= 1.0f && bushCount < 25) 
     {
         bushTimer = 0.0f;
         float hw = engineContext.windowManager->GetWidth() / 2.0f;

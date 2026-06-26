@@ -15,12 +15,12 @@ void Player::Init(const EngineContext& engineContext)
 
     ObjectManager& objManager = engineContext.stateManager->GetCurrentState()->GetObjectManager();
 
-    // Turret Seup
+    // turret setup
     myTurret = static_cast<Turret*>(objManager.AddObject(std::make_unique<Turret>(this)));
 
     if (this->GetTag() == "[Object]Player1")
     {
-        // Player 1 
+        // player 1 
         transform2D.SetPosition(glm::vec2(-550.f, 0.f));
         GetCollider()->SetUseTransformScale(false);
         SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player1",
@@ -34,7 +34,7 @@ void Player::Init(const EngineContext& engineContext)
     }
     else if (this->GetTag() == "[Object]Player2")
     {
-        // Player 2
+        // player 2
         transform2D.SetPosition(glm::vec2(550.f, 0.f));
         GetCollider()->SetUseTransformScale(false);
         SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(), "[Object]Player2",
@@ -46,19 +46,19 @@ void Player::Init(const EngineContext& engineContext)
 
         myTurret->SetControls(KEY_NUMPAD_1, KEY_NUMPAD_2, KEY_NUMPAD_3);
     }
-    //hp bar
 
+    lastTrackPos = transform2D.GetPosition();
+
+    // hp bar setup
     hpBg = static_cast<GameObject*>(objManager.AddObject(std::make_unique<GameObject>(), "[Object]HpBg_" + this->GetTag()));
     hpBg->SetMesh(engineContext, "[EngineMesh]default");
     hpBg->SetMaterial(engineContext, "[Material]HpBg");
     hpBg->GetTransform2D().SetScale({ hpBaseWidth, hpBaseHeight });
     hpBg->SetRenderLayer("[Layer]UI");
 
-    // To'ladigan qism
     hpFill = static_cast<GameObject*>(objManager.AddObject(std::make_unique<GameObject>(), "[Object]HpFill_" + this->GetTag()));
     hpFill->SetMesh(engineContext, "[EngineMesh]default");
 
-    // Player tagiga qarab Rang tanlaymiz
     if (this->GetTag() == "[Object]Player1") {
         hpFill->SetMaterial(engineContext, "[Material]HpBlue");
     }
@@ -67,7 +67,7 @@ void Player::Init(const EngineContext& engineContext)
     }
 
     hpFill->GetTransform2D().SetScale({ hpBaseWidth, hpBaseHeight });
-    hpFill->SetRenderLayer("[Layer]HPUI"); // Bg dan tepada turadi
+    hpFill->SetRenderLayer("[Layer]HPUI");
 }
 
 void Player::LateInit(const EngineContext& engineContext) {}
@@ -77,40 +77,93 @@ void Player::LateFree(const EngineContext& engineContext) {}
 
 void Player::Update(float dt, const EngineContext& engineContext)
 {
-    //hp bar
-    if (hpBg != nullptr && hpFill != nullptr)
-    {
-        glm::vec2 myPos = GetTransform2D().GetPosition();
-        float barY = myPos.y + 45.0f; 
+    // tank tracks
+    glm::vec2 currentPos = transform2D.GetPosition();
 
-        // Orqa fon doim markazda tankka ergashadi
-        hpBg->GetTransform2D().SetPosition({ myPos.x, barY });
-        // Jonning foizini hisoblaymiz
-        float hpPercent = std::max(0.0f, (float)hp / 100.0f);
-        float currentWidth = hpBaseWidth * hpPercent;
-        // Rasmning enini qisqartiramiz
-        hpFill->GetTransform2D().SetScale({ currentWidth, hpBaseHeight });
-        // Markazdan emas, o'ngdan-chapga qisqarishi uchun Offset 
-        float offsetX = (hpBaseWidth - currentWidth) / 2.0f;
-        hpFill->GetTransform2D().SetPosition({ myPos.x - offsetX, barY });
-        if (hpPercent >= 0.75f)
+    if (glm::distance(currentPos, lastTrackPos) > trackDistance)
+    {
+        ObjectManager& objManager = engineContext.stateManager->GetCurrentState()->GetObjectManager();
+        glm::vec2 direction = glm::normalize(currentPos - lastTrackPos);
+        glm::vec2 rightDir = glm::vec2(-direction.y, direction.x); 
+        glm::vec2 rearCenter = currentPos - (direction * trackRearOffset);
+        float sideOffset = 15.0f; // markazdan chap/o'ngga qancha surish (razmerga qarab o'zgartirasiz)
+
+        glm::vec2 leftPos = rearCenter - (rightDir * sideOffset);
+        glm::vec2 rightPos = rearCenter + (rightDir * sideOffset);
+
+        // chap iz
+        GameObject* trackL = static_cast<GameObject*>(objManager.AddObject(std::make_unique<GameObject>(), "[Object]Track"));
+        trackL->SetMesh(engineContext, "[EngineMesh]default");
+        trackL->SetMaterial(engineContext, "[Material]Track");
+        trackL->GetTransform2D().SetPosition(leftPos);
+        trackL->GetTransform2D().SetRotation(transform2D.GetRotation());
+        trackL->GetTransform2D().SetScale({ 9.0f, 7.0f });
+        trackL->SetRenderLayer("[Layer]Items");
+        activeTracks.push_back({ trackL, trackLifeTime });
+
+        // o'ng iz
+        GameObject* trackR = static_cast<GameObject*>(objManager.AddObject(std::make_unique<GameObject>(), "[Object]Track"));
+        trackR->SetMesh(engineContext, "[EngineMesh]default");
+        trackR->SetMaterial(engineContext, "[Material]Track");
+        trackR->GetTransform2D().SetPosition(rightPos);
+        trackR->GetTransform2D().SetRotation(transform2D.GetRotation());
+        trackR->GetTransform2D().SetScale({ 9.0f, 7.0f });
+        trackR->SetRenderLayer("[Layer]Items");
+        activeTracks.push_back({ trackR, trackLifeTime });
+
+        lastTrackPos = currentPos;
+    }
+
+
+    // fade and remove tracks
+    for (auto it = activeTracks.begin(); it != activeTracks.end(); )
+    {
+        it->second -= dt;
+        if (it->second > 0.0f)
         {
-            hpFill->SetMaterial(engineContext, "[Material]HpGreen");
-        }
-        else if (hpPercent >= 0.20f)
-        {
-            hpFill->SetMaterial(engineContext, "[Material]HpBlue");
+            float alpha = std::min(it->second, 1.0f);
+            it->first->SetColor({ 1.0f, 1.0f, 1.0f, alpha });
+            ++it;
         }
         else
         {
+            it->first->Kill();
+            it = activeTracks.erase(it);
+        }
+    }
+
+    // hp bar update
+    if (hpBg != nullptr && hpFill != nullptr)
+    {
+        glm::vec2 myPos = GetTransform2D().GetPosition();
+        float barY = myPos.y + 45.0f;
+
+        hpBg->GetTransform2D().SetPosition({ myPos.x, barY });
+
+        float hpPercent = std::max(0.0f, (float)hp / 100.0f);
+        float currentWidth = hpBaseWidth * hpPercent;
+
+        hpFill->GetTransform2D().SetScale({ currentWidth, hpBaseHeight });
+
+        float offsetX = (hpBaseWidth - currentWidth) / 2.0f;
+        hpFill->GetTransform2D().SetPosition({ myPos.x - offsetX, barY });
+
+        if (hpPercent >= 0.75f) {
+            hpFill->SetMaterial(engineContext, "[Material]HpGreen");
+        }
+        else if (hpPercent >= 0.20f) {
+            hpFill->SetMaterial(engineContext, "[Material]HpBlue");
+        }
+        else {
             hpFill->SetMaterial(engineContext, "[Material]HpRed");
         }
     }
-    // TELEPORTATION 
+
+    // teleportation logic
     if (tpState != TeleportState::NONE)
     {
         tpTimer -= dt;
-        float t = tpTimer / tpDuration; 
+        float t = tpTimer / tpDuration;
         if (t < 0.0f) t = 0.0f;
 
         if (tpState == TeleportState::ENTERING)
@@ -134,12 +187,11 @@ void Player::Update(float dt, const EngineContext& engineContext)
             {
                 tpState = TeleportState::EXITING;
                 tpTimer = tpDuration;
-                transform2D.SetPosition(tpDest); 
+                transform2D.SetPosition(tpDest);
             }
         }
         else if (tpState == TeleportState::EXITING)
         {
-            // Grow animation (0 to 90)
             float currentScale = 90.0f * (1.0f - t);
             transform2D.SetScale(glm::vec2(currentScale));
 
@@ -148,13 +200,10 @@ void Player::Update(float dt, const EngineContext& engineContext)
                 myTurret->GetTransform2D().SetPosition(transform2D.GetPosition());
             }
 
-            // Expand the exit portal (100 down to 70)
-            if (outPortal != nullptr) 
-            {
+            if (outPortal != nullptr) {
                 outPortal->GetTransform2D().SetScale(glm::vec2(100.0f + (30.0f * t)));
             }
 
-            // Smoothly push other players away while exiting
             std::string otherTag = (this->GetTag() == "[Object]Player1") ? "[Object]Player2" : "[Object]Player1";
             Object* otherObj = engineContext.stateManager->GetCurrentState()->GetObjectManager().FindByTag(otherTag);
             if (otherObj != nullptr)
@@ -163,14 +212,12 @@ void Player::Update(float dt, const EngineContext& engineContext)
                 otherPlayer->PushAwayFrom(transform2D.GetPosition(), 100.0f);
             }
 
-            // Animation complete, reset states
             if (tpTimer <= 0.0f)
             {
                 tpState = TeleportState::NONE;
                 transform2D.SetScale(glm::vec2(90.0f));
                 if (myTurret != nullptr) myTurret->GetTransform2D().SetScale(glm::vec2(90.0f));
 
-                // Reset portals to default scale and clear references
                 if (inPortal) inPortal->GetTransform2D().SetScale(glm::vec2(70.0f));
                 if (outPortal) outPortal->GetTransform2D().SetScale(glm::vec2(70.0f));
                 inPortal = nullptr;
@@ -180,19 +227,18 @@ void Player::Update(float dt, const EngineContext& engineContext)
         return;
     }
 
-    // ITEM EFFECTS & TIMERS
+    // item effects & timers
     if (flashTimer > 0.0f)
     {
         flashTimer -= dt;
         if (flashTimer <= 0.0f)
         {
-            speedMultiplier = 1.0f; 
+            speedMultiplier = 1.0f;
             JIN_LOG("(FLASH EFFECT FINISHED)");
         }
     }
 
-
-    // MOVEMENT ANIMATIONS
+    // movement animations
     if (this->GetTag() == "[Object]Player1")
     {
         if (engineContext.inputManager->IsKeyPressed(KEY_W) || engineContext.inputManager->IsKeyPressed(KEY_S))
@@ -212,77 +258,55 @@ void Player::Update(float dt, const EngineContext& engineContext)
         }
     }
 
-    // PHYSICS & MOVEMENT LOGIC
-    oldPos = transform2D.GetPosition(); // Save previous position for collisions
+    // physics & movement logic
+    oldPos = transform2D.GetPosition();
 
     float speed = 130.f * speedMultiplier;
-    float diagSpeed = speed * 0.707f; // Diagonal speed
+    float diagSpeed = speed * 0.707f;
 
     glm::vec2 pos = transform2D.GetPosition();
     float currentAngle = transform2D.GetRotation();
     float targetAngle = currentAngle;
     bool isMoving = false;
 
-    // Diagonal 
-    if (engineContext.inputManager->IsKeyDown(upKey) && engineContext.inputManager->IsKeyDown(leftKey))
-    {
-        pos.y += diagSpeed * dt;
-        pos.x -= diagSpeed * dt;
-        targetAngle = glm::radians(45.0f);
-        isMoving = true;
+    if (engineContext.inputManager->IsKeyDown(upKey) && engineContext.inputManager->IsKeyDown(leftKey)) {
+        pos.y += diagSpeed * dt; pos.x -= diagSpeed * dt;
+        targetAngle = glm::radians(45.0f); isMoving = true;
     }
-    else if (engineContext.inputManager->IsKeyDown(upKey) && engineContext.inputManager->IsKeyDown(rightKey))
-    {
-        pos.y += diagSpeed * dt;
-        pos.x += diagSpeed * dt;
-        targetAngle = glm::radians(-45.0f);
-        isMoving = true;
+    else if (engineContext.inputManager->IsKeyDown(upKey) && engineContext.inputManager->IsKeyDown(rightKey)) {
+        pos.y += diagSpeed * dt; pos.x += diagSpeed * dt;
+        targetAngle = glm::radians(-45.0f); isMoving = true;
     }
-    else if (engineContext.inputManager->IsKeyDown(downKey) && engineContext.inputManager->IsKeyDown(leftKey))
-    {
-        pos.y -= diagSpeed * dt;
-        pos.x -= diagSpeed * dt;
-        targetAngle = glm::radians(135.0f);
-        isMoving = true;
+    else if (engineContext.inputManager->IsKeyDown(downKey) && engineContext.inputManager->IsKeyDown(leftKey)) {
+        pos.y -= diagSpeed * dt; pos.x -= diagSpeed * dt;
+        targetAngle = glm::radians(135.0f); isMoving = true;
     }
-    else if (engineContext.inputManager->IsKeyDown(downKey) && engineContext.inputManager->IsKeyDown(rightKey))
-    {
-        pos.y -= diagSpeed * dt;
-        pos.x += diagSpeed * dt;
-        targetAngle = glm::radians(-135.0f);
-        isMoving = true;
+    else if (engineContext.inputManager->IsKeyDown(downKey) && engineContext.inputManager->IsKeyDown(rightKey)) {
+        pos.y -= diagSpeed * dt; pos.x += diagSpeed * dt;
+        targetAngle = glm::radians(-135.0f); isMoving = true;
     }
-    // Straight
-    else if (engineContext.inputManager->IsKeyDown(upKey))
-    {
+    else if (engineContext.inputManager->IsKeyDown(upKey)) {
         pos.y += speed * dt;
-        targetAngle = glm::radians(0.0f);
-        isMoving = true;
+        targetAngle = glm::radians(0.0f); isMoving = true;
     }
-    else if (engineContext.inputManager->IsKeyDown(downKey))
-    {
+    else if (engineContext.inputManager->IsKeyDown(downKey)) {
         pos.y -= speed * dt;
-        targetAngle = glm::radians(-180.0f);
-        isMoving = true;
+        targetAngle = glm::radians(-180.0f); isMoving = true;
     }
-    else if (engineContext.inputManager->IsKeyDown(leftKey))
-    {
+    else if (engineContext.inputManager->IsKeyDown(leftKey)) {
         pos.x -= speed * dt;
-        targetAngle = glm::radians(90.0f);
-        isMoving = true;
+        targetAngle = glm::radians(90.0f); isMoving = true;
     }
-    else if (engineContext.inputManager->IsKeyDown(rightKey))
-    {
+    else if (engineContext.inputManager->IsKeyDown(rightKey)) {
         pos.x += speed * dt;
-        targetAngle = glm::radians(-90.0f);
-        isMoving = true;
+        targetAngle = glm::radians(-90.0f); isMoving = true;
     }
 
-    // Smooth Rotation
+    // smooth rotation
     if (isMoving)
     {
         float diff = targetAngle - currentAngle;
-        diff = atan2(sin(diff), cos(diff)); // Normalize angle difference
+        diff = atan2(sin(diff), cos(diff));
         currentAngle += diff * 2.0f * dt;
         transform2D.SetRotation(currentAngle);
     }
@@ -298,14 +322,11 @@ void Player::SetControls(int up, int down, int left, int right)
     rightKey = right;
 }
 
-// COLLISION HANDLING
-
+// collision handling
 void Player::OnCollision(Object* other, const EngineContext& engineContext)
 {
-    // Ignore physical collisions if currently teleporting
     if (tpState != TeleportState::NONE) return;
 
-    // Wall & Border Collisions
     if (other->GetTag() == "[Object]Wall" || other->GetTag() == "[Object]Border_H" || other->GetTag() == "[Object]Border_V")
     {
         JIN_LOG("WALL COLLISION");
@@ -313,13 +334,11 @@ void Player::OnCollision(Object* other, const EngineContext& engineContext)
         myTurret->GetTransform2D().SetPosition(oldPos);
     }
 
-    // Item Collisions
     if (other->GetTag() == "[Object]Item")
     {
         JIN_LOG("ITEM COLLISION");
         Item* hitItem = dynamic_cast<Item*>(other);
 
-        // Block movement if the item box is still locked (unbroken)
         if (hitItem != nullptr && !hitItem->IsUnlocked())
         {
             transform2D.SetPosition(oldPos);
@@ -328,7 +347,6 @@ void Player::OnCollision(Object* other, const EngineContext& engineContext)
         }
     }
 
-    // Player Collisions (Push Effect)
     if (other->GetTag() == "[Object]Player1" || other->GetTag() == "[Object]Player2")
     {
         JIN_LOG("PLAYER COLLISION");
@@ -338,11 +356,9 @@ void Player::OnCollision(Object* other, const EngineContext& engineContext)
         glm::vec2 pushDir = myPos - otherPos;
         float distance = glm::length(pushDir);
 
-        // Distance filter: Prevent overlapping tanks
         if (distance < 5.0f)
         {
             if (distance == 0.0f) pushDir = glm::vec2(1.0f, 1.0f);
-
             pushDir = glm::normalize(pushDir);
             myPos += pushDir * 2.5f;
 
@@ -357,8 +373,7 @@ void Player::OnCollision(Object* other, const EngineContext& engineContext)
     }
 }
 
-// PLAYER STATS & ITEM EFFECTS
-
+// player stats & item effects
 void Player::TakeDamage(int damageAmount)
 {
     hp -= damageAmount;
@@ -383,8 +398,8 @@ void Player::IncreaseBulletSize()
 
 void Player::IncreaseSpeed()
 {
-    speedMultiplier = 1.8f; // 1.8x speed boost
-    flashTimer = 8.0f;      // Lasts for 8 seconds
+    speedMultiplier = 1.8f;
+    flashTimer = 8.0f;
 }
 
 void Player::PushAwayFrom(glm::vec2 epicenter, float safeDistance)
@@ -398,7 +413,6 @@ void Player::PushAwayFrom(glm::vec2 epicenter, float safeDistance)
         if (dist == 0.0f) { dir = glm::vec2(1.0f, 1.0f); dist = 0.1f; }
         dir = glm::normalize(dir);
 
-        // Smooth push by 4.0f per frame
         myPos += dir * 4.0f;
 
         transform2D.SetPosition(myPos);

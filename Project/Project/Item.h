@@ -26,4 +26,10 @@ public:
 private:
 	ItemType currentType = ItemType::HEALTH;
 	bool isUnlocked = false;
+
+	//breathin effect
+	glm::vec2 baseScale;         // origin size of box
+	float currentScaleOffset = 0.0f; 
+	float breathSpeed = 0.8f;   
+	bool isGrowing = true;
 };

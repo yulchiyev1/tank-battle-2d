@@ -23,6 +23,9 @@ void Item::Init(const EngineContext& engineContext)
     currentType = static_cast<ItemType>(dist(gen));
 
     SetRenderLayer("[Layer]Items");
+
+    // original scale (for breath effect)
+    baseScale = transform2D.GetScale(); 
 }
 
 void Item::LateInit(const EngineContext& engineContext)
@@ -31,6 +34,29 @@ void Item::LateInit(const EngineContext& engineContext)
 
 void Item::Update(float dt, const EngineContext& engineContext)
 {
+    // breath effect
+    float maxScaleOffset = 8.0f; 
+    float speedMultiplier = 15.0f; 
+
+    if (isGrowing)
+    {
+        currentScaleOffset += breathSpeed * speedMultiplier * dt;
+        if (currentScaleOffset >= maxScaleOffset)
+        {
+            currentScaleOffset = maxScaleOffset;
+            isGrowing = false;
+        }
+    }
+    else
+    {
+        currentScaleOffset -= breathSpeed * speedMultiplier * dt;
+        if (currentScaleOffset <= 0.0f)
+        {
+            currentScaleOffset = 0.0f;
+            isGrowing = true;
+        }
+    }
+    GetTransform2D().SetScale(baseScale + glm::vec2(currentScaleOffset, currentScaleOffset));
 }
 
 void Item::Draw(const EngineContext& engineContext)
