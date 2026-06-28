@@ -54,6 +54,7 @@ void Portal::OnCollision(Object* other, const EngineContext& engineContext)
         Player* teleportingPlayer = static_cast<Player*>(other);
         if (teleportingPlayer->tpState != TeleportState::NONE) return;
 
+        engineContext.soundManager->Play("[Sound]PortalSound", 0.7f, 0.0f); //sound
         // animation
         teleportingPlayer->tpState = TeleportState::ENTERING;
         teleportingPlayer->tpTimer = teleportingPlayer->tpDuration;

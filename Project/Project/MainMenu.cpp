@@ -33,10 +33,16 @@ void MainMenu::Load(const EngineContext& engineContext)
     //bg
     engineContext.renderManager->RegisterTexture("[Texture]MenuBG", "Textures/mainMenu/menu_bg.png");
     engineContext.renderManager->RegisterMaterial("[Material]MenuBG", "[EngineShader]default_texture", { {"u_Texture", "[Texture]MenuBG"} });
+    
+    engineContext.soundManager->LoadSound("[Sound]MainMenuSound", "Sounds/main_menu.mp3", true);
 }
 
 void MainMenu::Init(const EngineContext& engineContext)
 {
+    //main manu bg sound
+    engineContext.soundManager->Play("[Sound]MainMenuSound", 0.4f, 0.0f);
+
+    // mouse curspr
     engineContext.windowManager->SetCursorVisible(false);
     cursor = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Cursor"));
     cursor->SetMesh(engineContext, "[EngineMesh]default");

@@ -130,6 +130,8 @@ void Turret::Update(float dt, const EngineContext& engineContext)
             if (ammo > 0 && fireTimer <= 0.0f)
             {
                 // bullet 생선
+                engineContext.soundManager->Play("[Sound]BulletSound", 0.7f, 0.0f); //sound of bullet
+
                 Projectile* bullet = new Projectile();
                 bullet->Init(engineContext);
                 bullet->SetSpeedMultiplier(parentPlayer->GetSpeedMultiplier());

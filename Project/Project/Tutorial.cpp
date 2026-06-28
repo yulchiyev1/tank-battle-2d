@@ -11,8 +11,16 @@
 void Tutorial::Load(const EngineContext& engineContext)
 {
     JIN_LOG("[Tutorial] load called");
-    RenderManager* rm = engineContext.renderManager;
 
+    // sound load
+    engineContext.soundManager->LoadSound("[Sound]MouseSound", "Sounds/mouse.mp3", false);
+    engineContext.soundManager->LoadSound("[Sound]BGSound", "Sounds/main-bg.mp3", true);
+    engineContext.soundManager->LoadSound("[Sound]BulletSound", "Sounds/bullet.mp3", false);
+    engineContext.soundManager->LoadSound("[Sound]PortalSound", "Sounds/portal.mp3", false);
+    engineContext.soundManager->LoadSound("[Sound]Explode", "Sounds/explode.mp3", false);
+    engineContext.soundManager->LoadSound("[Sound]BoxCrash", "Sounds/box_crash.mp3", false);
+    engineContext.soundManager->LoadSound("[Sound]ItemEffect", "Sounds/item_effect.mp3", false);
+    RenderManager* rm = engineContext.renderManager;
     //texture & material load
     rm->RegisterTexture("[Texture]Track", "Textures/Tanks/Tire_Track_02.png"); 
     rm->RegisterMaterial("[Material]Track", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Track"} });
@@ -360,6 +368,8 @@ void Tutorial::Init(const EngineContext& engineContext)
     }
     timerTextObj->SetRenderLayer("[Layer]HPUI");
     timerTextObj->GetTransform2D().SetScale(glm::vec2(0.7f, 0.7f));
+
+    engineContext.soundManager->Play("[Sound]BGSound", 0.2f, 0.0f); //sound
 }
 
 void Tutorial::LateInit(const EngineContext& engineContext)

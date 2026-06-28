@@ -108,6 +108,7 @@ void Projectile::OnCollision(Object* other, const EngineContext& engineContext)
         if (isExploding) return; 
 
         Player* hitPlayer = dynamic_cast<Player*>(other);
+        engineContext.soundManager->Play("[Sound]Explode", 0.4f, 0.0f); //sound
         if (hitPlayer != nullptr)
         {
             hitPlayer->TakeDamage(8);
@@ -133,6 +134,7 @@ void Projectile::OnCollision(Object* other, const EngineContext& engineContext)
     else if (other->GetTag() == "[Object]Item")
     {
         Item* hitItem = dynamic_cast<Item*>(other);
+        //engineContext.soundManager->Play("[Sound]BoxCrash", 0.4f, 0.5f); //sound
         if (hitItem != nullptr && !hitItem->IsUnlocked())
         {
             Kill();

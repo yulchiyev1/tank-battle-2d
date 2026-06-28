@@ -26,11 +26,14 @@ void GameOver::Load(const EngineContext& engineContext)
     // bg
     engineContext.renderManager->RegisterTexture("[Texture]OverBG", "Textures/gameOver/gameOver_bg.png");
     engineContext.renderManager->RegisterMaterial("[Material]OverBG", "[EngineShader]default_texture", { {"u_Texture", "[Texture]OverBG"} });
+    
+    engineContext.soundManager->LoadSound("[Sound]GameOverSound", "Sounds/game_over.mp3", true);
 }
 
 void GameOver::Init(const EngineContext& engineContext)
 {
-
+    //sound 
+    engineContext.soundManager->Play("[Sound]GameOverSound", 0.5f, 0.0f);
     // mouse cursor
     engineContext.windowManager->SetCursorVisible(false);
     cursor = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Cursor"));
@@ -78,22 +81,12 @@ void GameOver::Init(const EngineContext& engineContext)
         winnerTank->SetMaterial(engineContext, "[Material]MenuTankBlue");
         winnerTank->GetTransform2D().SetPosition({ -1000.0f, 55.0f }); // right
         winnerTank->GetTransform2D().SetScale({ 400.0f, 350.0f });
-
-        loserTank->SetMaterial(engineContext, "[Material]MenuTankRed");
-        loserTank->GetTransform2D().SetPosition({ scrW / 2.0f - 150.0f, -scrH / 2.0f + 150.0f });
-        loserTank->GetTransform2D().SetScale({ 60.0f, 60.0f });
-        loserTank->GetTransform2D().SetRotation(glm::radians(45.0f));
     }
     else if (winnerID == 2) // red wins
     {
         winnerTank->SetMaterial(engineContext, "[Material]MenuTankRed");
         winnerTank->GetTransform2D().SetPosition({ 1000.0f, 55.0f }); // left
         winnerTank->GetTransform2D().SetScale({ 400.0f, 350.0f });
-
-        loserTank->SetMaterial(engineContext, "[Material]MenuTankBlue");
-        loserTank->GetTransform2D().SetPosition({ scrW / 2.0f - 150.0f, -scrH / 2.0f + 150.0f });
-        loserTank->GetTransform2D().SetScale({ 60.0f, 60.0f });
-        loserTank->GetTransform2D().SetRotation(glm::radians(45.0f));
     }
     else // draw
     {

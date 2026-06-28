@@ -86,12 +86,12 @@ void Player::Update(float dt, const EngineContext& engineContext)
         glm::vec2 direction = glm::normalize(currentPos - lastTrackPos);
         glm::vec2 rightDir = glm::vec2(-direction.y, direction.x); 
         glm::vec2 rearCenter = currentPos - (direction * trackRearOffset);
-        float sideOffset = 15.0f; // markazdan chap/o'ngga qancha surish (razmerga qarab o'zgartirasiz)
+        float sideOffset = 15.0f; 
 
         glm::vec2 leftPos = rearCenter - (rightDir * sideOffset);
         glm::vec2 rightPos = rearCenter + (rightDir * sideOffset);
 
-        // chap iz
+        // track left
         GameObject* trackL = static_cast<GameObject*>(objManager.AddObject(std::make_unique<GameObject>(), "[Object]Track"));
         trackL->SetMesh(engineContext, "[EngineMesh]default");
         trackL->SetMaterial(engineContext, "[Material]Track");
@@ -100,8 +100,7 @@ void Player::Update(float dt, const EngineContext& engineContext)
         trackL->GetTransform2D().SetScale({ 9.0f, 7.0f });
         trackL->SetRenderLayer("[Layer]Items");
         activeTracks.push_back({ trackL, trackLifeTime });
-
-        // o'ng iz
+        // right track
         GameObject* trackR = static_cast<GameObject*>(objManager.AddObject(std::make_unique<GameObject>(), "[Object]Track"));
         trackR->SetMesh(engineContext, "[EngineMesh]default");
         trackR->SetMaterial(engineContext, "[Material]Track");
