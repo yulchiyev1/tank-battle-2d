@@ -13,7 +13,6 @@ void Tutorial::Load(const EngineContext& engineContext)
     JIN_LOG("[Tutorial] load called");
 
     // sound load
-    engineContext.soundManager->LoadSound("[Sound]MouseSound", "Sounds/mouse.mp3", false);
     engineContext.soundManager->LoadSound("[Sound]BGSound", "Sounds/main-bg.mp3", true);
     engineContext.soundManager->LoadSound("[Sound]BulletSound", "Sounds/bullet.mp3", false);
     engineContext.soundManager->LoadSound("[Sound]PortalSound", "Sounds/portal.mp3", false);
@@ -369,7 +368,7 @@ void Tutorial::Init(const EngineContext& engineContext)
     timerTextObj->SetRenderLayer("[Layer]HPUI");
     timerTextObj->GetTransform2D().SetScale(glm::vec2(0.7f, 0.7f));
 
-    engineContext.soundManager->Play("[Sound]BGSound", 0.2f, 0.0f); //sound
+    engineContext.soundManager->Play("[Sound]BGSound", 0.1f, 0.0f); //sound
 }
 
 void Tutorial::LateInit(const EngineContext& engineContext)

@@ -80,39 +80,35 @@ void Player::Update(float dt, const EngineContext& engineContext)
     // tank tracks
     glm::vec2 currentPos = transform2D.GetPosition();
 
-    if (glm::distance(currentPos, lastTrackPos) > trackDistance)
+    if (glm::distance(currentPos, lastTrackPos) > 12.0f)
     {
         ObjectManager& objManager = engineContext.stateManager->GetCurrentState()->GetObjectManager();
-        glm::vec2 direction = glm::normalize(currentPos - lastTrackPos);
-        glm::vec2 rightDir = glm::vec2(-direction.y, direction.x); 
-        glm::vec2 rearCenter = currentPos - (direction * trackRearOffset);
-        float sideOffset = 15.0f; 
+        float angle = transform2D.GetRotation();
+        glm::vec2 Center = currentPos - glm::vec2(-sin(angle), cos(angle));
+        float sideOffset = 13.0f;
+        glm::vec2 leftPos = Center - glm::vec2(cos(angle) * sideOffset, sin(angle) * sideOffset);
+        glm::vec2 rightPos = Center + glm::vec2(cos(angle) * sideOffset, sin(angle) * sideOffset);
 
-        glm::vec2 leftPos = rearCenter - (rightDir * sideOffset);
-        glm::vec2 rightPos = rearCenter + (rightDir * sideOffset);
-
-        // track left
         GameObject* trackL = static_cast<GameObject*>(objManager.AddObject(std::make_unique<GameObject>(), "[Object]Track"));
         trackL->SetMesh(engineContext, "[EngineMesh]default");
         trackL->SetMaterial(engineContext, "[Material]Track");
         trackL->GetTransform2D().SetPosition(leftPos);
-        trackL->GetTransform2D().SetRotation(transform2D.GetRotation());
+        trackL->GetTransform2D().SetRotation(angle);
         trackL->GetTransform2D().SetScale({ 9.0f, 7.0f });
         trackL->SetRenderLayer("[Layer]Items");
         activeTracks.push_back({ trackL, trackLifeTime });
-        // right track
+
         GameObject* trackR = static_cast<GameObject*>(objManager.AddObject(std::make_unique<GameObject>(), "[Object]Track"));
         trackR->SetMesh(engineContext, "[EngineMesh]default");
         trackR->SetMaterial(engineContext, "[Material]Track");
         trackR->GetTransform2D().SetPosition(rightPos);
-        trackR->GetTransform2D().SetRotation(transform2D.GetRotation());
+        trackR->GetTransform2D().SetRotation(angle);
         trackR->GetTransform2D().SetScale({ 9.0f, 7.0f });
         trackR->SetRenderLayer("[Layer]Items");
         activeTracks.push_back({ trackR, trackLifeTime });
 
         lastTrackPos = currentPos;
     }
-
 
     // fade and remove tracks
     for (auto it = activeTracks.begin(); it != activeTracks.end(); )
@@ -257,7 +253,7 @@ void Player::Update(float dt, const EngineContext& engineContext)
         }
     }
 
-    // physics & movement logic
+    //movement 
     oldPos = transform2D.GetPosition();
 
     float speed = 130.f * speedMultiplier;
@@ -301,13 +297,10 @@ void Player::Update(float dt, const EngineContext& engineContext)
         targetAngle = glm::radians(-90.0f); isMoving = true;
     }
 
-    // smooth rotation
+    // rotation
     if (isMoving)
     {
-        float diff = targetAngle - currentAngle;
-        diff = atan2(sin(diff), cos(diff));
-        currentAngle += diff * 2.0f * dt;
-        transform2D.SetRotation(currentAngle);
+        transform2D.SetRotation(targetAngle);
     }
 
     transform2D.SetPosition(pos);

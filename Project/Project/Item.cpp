@@ -77,6 +77,7 @@ void Item::OnCollision(Object* other, const EngineContext& engineContext)
     {
         if (!isUnlocked)
         {
+            engineContext.soundManager->Play("[Sound]BoxCrash", 1.0f, 0.0f); //sound
             isUnlocked = true;
             other->Kill();
 
@@ -95,7 +96,7 @@ void Item::OnCollision(Object* other, const EngineContext& engineContext)
         if (isUnlocked)
         {
             Player* hitPlayer = dynamic_cast<Player*>(other);
-            engineContext.soundManager->Play("[Sound]ItemEffect", 0.2f, 0.0f); //sound
+            engineContext.soundManager->Play("[Sound]ItemEffect", 0.4f, 0.0f); //sound
             if (hitPlayer != nullptr)
             {
                 if (currentType == ItemType::HEALTH)

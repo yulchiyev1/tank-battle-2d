@@ -134,7 +134,7 @@ void Projectile::OnCollision(Object* other, const EngineContext& engineContext)
     else if (other->GetTag() == "[Object]Item")
     {
         Item* hitItem = dynamic_cast<Item*>(other);
-        //engineContext.soundManager->Play("[Sound]BoxCrash", 0.4f, 0.5f); //sound
+       
         if (hitItem != nullptr && !hitItem->IsUnlocked())
         {
             Kill();

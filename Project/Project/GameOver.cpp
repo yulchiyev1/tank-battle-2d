@@ -33,7 +33,7 @@ void GameOver::Load(const EngineContext& engineContext)
 void GameOver::Init(const EngineContext& engineContext)
 {
     //sound 
-    engineContext.soundManager->Play("[Sound]GameOverSound", 0.5f, 0.0f);
+    engineContext.soundManager->Play("[Sound]GameOverSound", 0.4f, 0.0f);
     // mouse cursor
     engineContext.windowManager->SetCursorVisible(false);
     cursor = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Cursor"));
@@ -134,6 +134,9 @@ void GameOver::Update(float dt, const EngineContext& engineContext)
     if (cursor != nullptr) { cursor->GetTransform2D().SetPosition({ mouseX + 15.0f, mouseY - 15.0f }); }
 
     bool isClicking = engineContext.inputManager->IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+    if (isClicking) {
+        engineContext.soundManager->Play("[Sound]MouseSound", 0.8f, 0.0f); //sound
+    }
 
     // 2. tanks anim
     glm::vec2 winPos = winnerTank->GetTransform2D().GetPosition();

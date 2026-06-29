@@ -35,12 +35,13 @@ void MainMenu::Load(const EngineContext& engineContext)
     engineContext.renderManager->RegisterMaterial("[Material]MenuBG", "[EngineShader]default_texture", { {"u_Texture", "[Texture]MenuBG"} });
     
     engineContext.soundManager->LoadSound("[Sound]MainMenuSound", "Sounds/main_menu.mp3", true);
+    engineContext.soundManager->LoadSound("[Sound]MouseSound", "Sounds/mouse.mp3", false);
 }
 
 void MainMenu::Init(const EngineContext& engineContext)
 {
     //main manu bg sound
-    engineContext.soundManager->Play("[Sound]MainMenuSound", 0.4f, 0.0f);
+    engineContext.soundManager->Play("[Sound]MainMenuSound", 0.3f, 0.0f);
 
     // mouse curspr
     engineContext.windowManager->SetCursorVisible(false);
@@ -193,7 +194,9 @@ void MainMenu::Update(float dt, const EngineContext& engineContext)
             btnStart->GetTransform2D().SetScale(btnStartBaseScale * 1.25f);
             if (engineContext.inputManager->IsMouseButtonPressed(0))
             {
-                JIN_LOG("[MainMenu] START tugmasi bosildi!");
+                engineContext.soundManager->Play("[Sound]MouseSound", 1.0f, 0.0f);
+                int i = 2;
+
                 engineContext.stateManager->ChangeState(std::make_unique<Tutorial>());
             }
         }
@@ -252,6 +255,38 @@ void MainMenu::Update(float dt, const EngineContext& engineContext)
             btnExit->GetTransform2D().SetScale(btnExitBaseScale);
         }
     }
+
+    //5. info button > pop-up
+
+    if (btnInfo != nullptr)
+    {
+        float scrW = engineContext.windowManager->GetWidth();
+        float scrH = engineContext.windowManager->GetHeight();
+        float rawMouseX = static_cast<float>(engineContext.inputManager->GetMouseX());
+        float rawMouseY = static_cast<float>(engineContext.inputManager->GetMouseY());
+        float mouseX = rawMouseX - (scrW / 2.0f);
+        float mouseY = (scrH / 2.0f) - rawMouseY;
+        glm::vec2 btnPos = btnInfo->GetTransform2D().GetPosition();
+        float halfW = btnInfoBaseScale.x / 2.0f;
+        float halfH = btnInfoBaseScale.y / 2.0f;
+        bool isHovering = (mouseX >= btnPos.x - halfW && mouseX <= btnPos.x + halfW &&
+            mouseY >= btnPos.y - halfH && mouseY <= btnPos.y + halfH);
+
+        if (isHovering)
+        {
+            btnStart->GetTransform2D().SetScale(btnInfoBaseScale * 1.25f);
+            if (engineContext.inputManager->IsMouseButtonPressed(0))
+            {
+                engineContext.soundManager->Play("[Sound]MouseSound", 1.0f, 0.0f);
+                //engineContext.stateManager->ChangeState(std::make_unique<Tutorial>());
+            }
+        }
+        else
+        {
+            btnStart->GetTransform2D().SetScale(btnInfoBaseScale);
+        }
+    }
+
 }
 
 void MainMenu::Draw(const EngineContext& engineContext)
