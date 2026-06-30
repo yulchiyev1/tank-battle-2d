@@ -77,6 +77,7 @@ void Item::OnCollision(Object* other, const EngineContext& engineContext)
     {
         if (!isUnlocked)
         {
+            engineContext.soundManager->Play("[Sound]BoxCrash", 1.0f, 0.0f); //sound
             isUnlocked = true;
             other->Kill();
 
