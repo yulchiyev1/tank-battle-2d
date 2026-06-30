@@ -72,7 +72,7 @@ void Portal::OnCollision(Object* other, const EngineContext& engineContext)
         teleportingPlayer->tpCenter = this->GetTransform2D().GetPosition();
         teleportingPlayer->tpDest = linkedPortal->GetTransform2D().GetPosition();
 
-        this->cooldownTimer = 1.5f;
-        linkedPortal->cooldownTimer = 1.5f;
+        this->cooldownTimer = 3.0f;
+        linkedPortal->cooldownTimer = 3.0f;
     }
 }

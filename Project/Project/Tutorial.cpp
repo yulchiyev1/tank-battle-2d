@@ -124,31 +124,24 @@ void Tutorial::Init(const EngineContext& engineContext)
         grass->GetTransform2D().SetPosition({ px, py });
         grass->SetRenderLayer("[Layer]Background");
         };
-
-    // 1. TEPA va PASTNI yopish (Burchaklar bilan birga keng qilib)
     float startX = -halfW - (rows * grassSize);
     float endX = halfW + (rows * grassSize);
-
-    // x o'qi bo'ylab yurib chiqamiz (ochiq joy qolmasligi uchun + grassSize qo'shilgan)
     for (float x = startX; x <= endX + grassSize; x += grassSize)
     {
         for (int i = 0; i < rows; ++i)
         {
-            // Devorga aniq yopishib turishi uchun halfGrass (50px) dan boshlaymiz
             float offset = halfGrass + (i * grassSize);
-            PlantGrass(x, halfH + offset);  // TEPA qatorlar
-            PlantGrass(x, -halfH - offset); // PASTKI qatorlar
+            PlantGrass(x, halfH + offset);  
+            PlantGrass(x, -halfH - offset); 
         }
     }
-
-    // 2. CHAP va O'NG tomonlarni yopish (Tepa va past yopilgani uchun faqat o'rtasini yopamiz)
     for (float y = -halfH; y <= halfH + grassSize; y += grassSize)
     {
         for (int i = 0; i < rows; ++i)
         {
             float offset = halfGrass + (i * grassSize);
-            PlantGrass(halfW + offset, y);   // O'NG qatorlar
-            PlantGrass(-halfW - offset, y);  // CHAP qatorlar
+            PlantGrass(halfW + offset, y);   
+            PlantGrass(-halfW - offset, y);  
         }
     }
 
@@ -186,8 +179,6 @@ void Tutorial::Init(const EngineContext& engineContext)
     // X va Y uchun proporsiyani hisoblaymiz
     float scaleX = screenW / bgImgW;
     float scaleY = screenH / bgImgH;
-
-    // Ekranni to'liq yopish uchun kattasini tanlaymiz
     float finalScale = std::max(scaleX, scaleY);
 
     // Asl nisbatni buzmasdan ekranga tortamiz
@@ -236,15 +227,31 @@ void Tutorial::Init(const EngineContext& engineContext)
     addInvisibleCollider(left_x, 0.0f, wall_len, screenH, "[Object]Border_V");
     addInvisibleCollider(right_x, 0.0f, wall_len, screenH, "[Object]Border_V");
 
-    // ENG MUHIM QADAM: Xaritani oldin yuklab olamiz
-    bool isMapLoaded = MapLoader::Load("map.txt", engineContext);
+    // Map Loading
+    bool isMapLoaded;
 
     std::random_device rd;
     std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> mapRandom(0, 2);
+    int randomMap = mapRandom(gen);
+
+    if (randomMap == 0)
+    {
+        isMapLoaded = MapLoader::Load("map1.txt", engineContext);
+    }
+    else if (randomMap == 1)
+    {
+        isMapLoaded = MapLoader::Load("map2.txt", engineContext);
+    }
+    else if (randomMap == 2)
+    {
+        isMapLoaded = MapLoader::Load("map3.txt", engineContext);
+    }
+
     std::uniform_real_distribution<float> randX(-450.0f, 450.0f);
     std::uniform_real_distribution<float> randY(-250.0f, 250.0f);
 
-    // Agar xarita yuklanmagan bo'lsa, eski random devorlarni chiqaramiz
+    // No map -> random map
     if (!isMapLoaded)
     {
         int wallsSpawned = 0;

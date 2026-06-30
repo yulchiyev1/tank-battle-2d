@@ -91,28 +91,28 @@ void MainMenu::Init(const EngineContext& engineContext)
     btnStart = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]BtnStart"));
     btnStart->SetMesh(engineContext, "[EngineMesh]default");
     btnStart->SetMaterial(engineContext, "[Material]BtnStart");
-    btnStartBaseScale = glm::vec2(140.0f * baseScale, 94.0f * baseScale);
+    btnStartBaseScale = glm::vec2(160.0f * baseScale, 100.0f * baseScale);
     btnStart->GetTransform2D().SetScale(btnStartBaseScale);
-    btnStart->GetTransform2D().SetPosition(glm::vec2(0.0f, -250.0f));
+    btnStart->GetTransform2D().SetPosition(glm::vec2(120.0f, -250.0f));
     btnStart->SetRenderLayer("[Layer]UI");
 
     // 4. Info button
     btnInfo = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]BtnInfo"));
     btnInfo->SetMesh(engineContext, "[EngineMesh]default");
     btnInfo->SetMaterial(engineContext, "[Material]BtnInfo");
-    btnInfoBaseScale = glm::vec2(140.0f * baseScale, 94.0f * baseScale);
+    btnInfoBaseScale = glm::vec2(160.0f * baseScale, 100.0f * baseScale);
     btnInfo->GetTransform2D().SetScale(btnInfoBaseScale);
-    btnInfo->GetTransform2D().SetPosition(glm::vec2(-250.0f, -250.0f));
+    btnInfo->GetTransform2D().SetPosition(glm::vec2(-120.0f, -250.0f));
     btnInfo->SetRenderLayer("[Layer]UI");
 
     // 5. Maps button
-    btnMaps = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]BtnMaps"));
-    btnMaps->SetMesh(engineContext, "[EngineMesh]default");
-    btnMaps->SetMaterial(engineContext, "[Material]BtnMaps");
-    btnMapsBaseScale = glm::vec2(140.0f * baseScale, 94.0f * baseScale);
-    btnMaps->GetTransform2D().SetScale(btnMapsBaseScale);
-    btnMaps->GetTransform2D().SetPosition(glm::vec2(250.0f, -250.0f));
-    btnMaps->SetRenderLayer("[Layer]UI");
+    //btnMaps = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]BtnMaps"));
+    //btnMaps->SetMesh(engineContext, "[EngineMesh]default");
+    //btnMaps->SetMaterial(engineContext, "[Material]BtnMaps");
+    //btnMapsBaseScale = glm::vec2(140.0f * baseScale, 94.0f * baseScale);
+    //btnMaps->GetTransform2D().SetScale(btnMapsBaseScale);
+    //btnMaps->GetTransform2D().SetPosition(glm::vec2(250.0f, -250.0f));
+    //btnMaps->SetRenderLayer("[Layer]UI");
 
 
     // 6. Exit button
@@ -322,7 +322,6 @@ void MainMenu::Update(float dt, const EngineContext& engineContext)
                 if (infoPos.y <= 0) {
                     infoStatus = 0.0f;
                     btnClose->SetRenderLayer("[Layer]HPUI");
-                    JIN_LOG("CLOSe oldinda");
                 }
             }
         }
@@ -361,7 +360,6 @@ void MainMenu::Update(float dt, const EngineContext& engineContext)
                             {
                                 infoPos.y = 800;
                                 btnClose->SetRenderLayer("[Layer]Back");
-                                JIN_LOG("Close button orqaga otti");
                             }
                             InfoPopUp->GetTransform2D().SetPosition(infoPos);
                         }
