@@ -44,15 +44,17 @@ int main(int argc, char* argv[])
     jinEngine.GetEngineContext().renderManager->RegisterMaterial("[Material]Animation", "[Shader]Animation", { });
 
 
-   
-    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Background", 0);
-    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Items", 1);
-    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]TankBody", 2);
-    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Turret", 3);
-    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Projectile", 4);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Back", 0);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Background", 1);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Items", 2);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]TankBody", 3);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Turret", 4);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Projectile", 5);
     jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]UI", 11);
-    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]HPUI", 12);
-    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Cursor", 13);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]POPUP", 12);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]HPUI", 13);
+    jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Cursor", 14);
+
     
     jinEngine.GetEngineContext().renderManager->RegisterFont("[Font]default", "Fonts/NotoSans-VariableFont_wdth,wght.ttf", 50);
     jinEngine.GetEngineContext().renderManager->RegisterFont("[Font]defaultkr", "Fonts/NanumPenScript-Regular.ttf", 50);

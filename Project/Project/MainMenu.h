@@ -39,6 +39,10 @@ private:
     GameObject* btnExit = nullptr;
     glm::vec2 btnExitBaseScale;
 
+    //close bn
+    GameObject* btnClose = nullptr;
+    glm::vec2 btnCloseBaseScale;
+
     // sound btn
     GameObject* btnSound = nullptr;
     glm::vec2 btnSoundBaseScale;
@@ -48,4 +52,9 @@ private:
     GameObject* menuTankRed = nullptr;
     float tankTargetX_Blue = 0.0f;
     float tankTargetX_Red = 0.0f;
+
+    //Info popup
+    GameObject* InfoPopUp = nullptr;
+    float infoStatus = 0.0f;
+
 };

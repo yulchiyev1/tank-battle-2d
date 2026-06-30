@@ -3,6 +3,13 @@
 
 void MainMenu::Load(const EngineContext& engineContext)
 {
+    // close
+    engineContext.renderManager->RegisterTexture("[Texture]BtnClose", "Textures/mainMenu/close.png");
+    engineContext.renderManager->RegisterMaterial("[Material]BtnClose", "[EngineShader]default_texture", { {"u_Texture", "[Texture]BtnClose"} });
+    //pop up info png
+    engineContext.renderManager->RegisterTexture("[Texture]InfoPopUp", "Textures/mainMenu/infoPU.png");
+    engineContext.renderManager->RegisterMaterial("[Material]InfoPopUp", "[EngineShader]default_texture", { {"u_Texture", "[Texture]InfoPopUp"} });
+
     //tanks on Main Menu
     engineContext.renderManager->RegisterTexture("[Texture]MenuTankBlue", "Textures/mainMenu/blue_blue.png");
     engineContext.renderManager->RegisterMaterial("[Material]MenuTankBlue", "[EngineShader]default_texture", { {"u_Texture", "[Texture]MenuTankBlue"} });
@@ -67,7 +74,7 @@ void MainMenu::Init(const EngineContext& engineContext)
     background->GetTransform2D().SetPosition({ 0.0f, 0.0f });
     background->SetRenderLayer("[Layer]Background");
 
-    // 2. SWORDS (XATO TO'G'RILANDI: "GameObject*" olib tashlandi)
+    // 2. SWORDS 
     float baseScale = scrW / 1000.0f;
     swords = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]Swords"));
     swords->SetMesh(engineContext, "[EngineMesh]default");
@@ -144,6 +151,24 @@ void MainMenu::Init(const EngineContext& engineContext)
     menuTankRed->SetRenderLayer("[Layer]UI");
     tankTargetX_Blue = -scrW * 0.35f;
     tankTargetX_Red = scrW * 0.35f;
+
+
+    // 9. Pop-UP Info
+    InfoPopUp = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]InfoPopUp"));
+    InfoPopUp->SetMesh(engineContext, "[EngineMesh]default");
+    InfoPopUp->SetMaterial(engineContext, "[Material]InfoPopUp");
+    InfoPopUp->GetTransform2D().SetScale({ 1152, 756 });
+    InfoPopUp->GetTransform2D().SetPosition({ 0, 800 });
+    InfoPopUp->SetRenderLayer("[Layer]POPUP");
+
+    //10.Close button
+    btnClose = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]BtnClose"));
+    btnClose->SetMesh(engineContext, "[EngineMesh]default");
+    btnClose->SetMaterial(engineContext, "[Material]BtnClose");
+    btnCloseBaseScale = glm::vec2(50.0f * baseScale, 50.0f * baseScale);
+    btnClose->GetTransform2D().SetScale(btnCloseBaseScale);
+    btnClose->GetTransform2D().SetPosition(glm::vec2(450.0f, 290.0f));
+    btnClose->SetRenderLayer("[Layer]Back");
 }
 
 void MainMenu::Update(float dt, const EngineContext& engineContext)
@@ -250,6 +275,103 @@ void MainMenu::Update(float dt, const EngineContext& engineContext)
         else
         {
             btnExit->GetTransform2D().SetScale(btnExitBaseScale);
+        }
+    }
+
+    // 5. info button 
+    if (btnInfo != nullptr)
+    {
+        float scrW = engineContext.windowManager->GetWidth();
+        float scrH = engineContext.windowManager->GetHeight();
+        float rawMouseX = static_cast<float>(engineContext.inputManager->GetMouseX());
+        float rawMouseY = static_cast<float>(engineContext.inputManager->GetMouseY());
+        float mouseX = rawMouseX - (scrW / 2.0f);
+        float mouseY = (scrH / 2.0f) - rawMouseY;
+        glm::vec2 btnPosInfo = btnInfo->GetTransform2D().GetPosition();
+        float halfW = btnInfoBaseScale.x / 2.0f;
+        float halfH = btnInfoBaseScale.y / 2.0f;
+        bool isHovering = (mouseX >= btnPosInfo.x - halfW && mouseX <= btnPosInfo.x + halfW &&
+            mouseY >= btnPosInfo.y - halfH && mouseY <= btnPosInfo.y + halfH);
+
+        if (isHovering)
+        {
+            btnInfo->GetTransform2D().SetScale(btnInfoBaseScale * 1.25f);
+            if (engineContext.inputManager->IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            {
+                infoStatus = 1.0f;
+            }
+        }
+        else
+        {
+            btnInfo->GetTransform2D().SetScale(btnInfoBaseScale);
+        }
+        if (infoStatus == 1.0f) {
+            if (InfoPopUp != nullptr)
+            {
+                float moveSpeed = 1800.0f * dt;
+                glm::vec2 infoPos = InfoPopUp->GetTransform2D().GetPosition();
+
+                if (infoPos.y > 0)
+                {
+                    infoPos.y -= moveSpeed;
+
+                    if (infoPos.y < 0) infoPos.y = 0;
+                    InfoPopUp->GetTransform2D().SetPosition(infoPos);
+                }
+
+                if (infoPos.y <= 0) {
+                    infoStatus = 0.0f;
+                    btnClose->SetRenderLayer("[Layer]HPUI");
+                    JIN_LOG("CLOSe oldinda");
+                }
+            }
+        }
+    }
+    //  6. close button
+    if (btnClose != nullptr)
+    {
+        float scrW = engineContext.windowManager->GetWidth();
+        float scrH = engineContext.windowManager->GetHeight();
+        float rawMouseX = static_cast<float>(engineContext.inputManager->GetMouseX());
+        float rawMouseY = static_cast<float>(engineContext.inputManager->GetMouseY());
+        float mouseX = rawMouseX - (scrW / 2.0f);
+        float mouseY = (scrH / 2.0f) - rawMouseY;
+        glm::vec2 btnPos = btnClose->GetTransform2D().GetPosition();
+        float halfW = btnCloseBaseScale.x / 2.0f;
+        float halfH = btnCloseBaseScale.y / 2.0f;
+        bool isHovering = (mouseX >= btnPos.x - halfW && mouseX <= btnPos.x + halfW &&
+            mouseY >= btnPos.y - halfH && mouseY <= btnPos.y + halfH);
+
+        if (isHovering)
+        {
+            btnClose->GetTransform2D().SetScale(btnCloseBaseScale * 1.25f);
+            if (engineContext.inputManager->IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            {
+                //info pop up 위로 가도록
+                if (infoStatus == 0.0f) {
+                    if (InfoPopUp != nullptr)
+                    {
+                        glm::vec2 infoPos = InfoPopUp->GetTransform2D().GetPosition();
+
+                        if (infoPos.y < 800)
+                        {
+                            infoPos.y += 810;
+
+                            if (infoPos.y >= 800)
+                            {
+                                infoPos.y = 800;
+                                btnClose->SetRenderLayer("[Layer]Back");
+                                JIN_LOG("Close button orqaga otti");
+                            }
+                            InfoPopUp->GetTransform2D().SetPosition(infoPos);
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            btnClose->GetTransform2D().SetScale(btnCloseBaseScale);
         }
     }
 }

@@ -77,60 +77,6 @@ void Player::LateFree(const EngineContext& engineContext) {}
 
 void Player::Update(float dt, const EngineContext& engineContext)
 {
-    // tank tracks
-    glm::vec2 currentPos = transform2D.GetPosition();
-
-    if (glm::distance(currentPos, lastTrackPos) > trackDistance)
-    {
-        ObjectManager& objManager = engineContext.stateManager->GetCurrentState()->GetObjectManager();
-        glm::vec2 direction = glm::normalize(currentPos - lastTrackPos);
-        glm::vec2 rightDir = glm::vec2(-direction.y, direction.x); 
-        glm::vec2 rearCenter = currentPos - (direction * trackRearOffset);
-        float sideOffset = 15.0f; 
-
-        glm::vec2 leftPos = rearCenter - (rightDir * sideOffset);
-        glm::vec2 rightPos = rearCenter + (rightDir * sideOffset);
-
-        // track left
-        GameObject* trackL = static_cast<GameObject*>(objManager.AddObject(std::make_unique<GameObject>(), "[Object]Track"));
-        trackL->SetMesh(engineContext, "[EngineMesh]default");
-        trackL->SetMaterial(engineContext, "[Material]Track");
-        trackL->GetTransform2D().SetPosition(leftPos);
-        trackL->GetTransform2D().SetRotation(transform2D.GetRotation());
-        trackL->GetTransform2D().SetScale({ 9.0f, 7.0f });
-        trackL->SetRenderLayer("[Layer]Items");
-        activeTracks.push_back({ trackL, trackLifeTime });
-        // right track
-        GameObject* trackR = static_cast<GameObject*>(objManager.AddObject(std::make_unique<GameObject>(), "[Object]Track"));
-        trackR->SetMesh(engineContext, "[EngineMesh]default");
-        trackR->SetMaterial(engineContext, "[Material]Track");
-        trackR->GetTransform2D().SetPosition(rightPos);
-        trackR->GetTransform2D().SetRotation(transform2D.GetRotation());
-        trackR->GetTransform2D().SetScale({ 9.0f, 7.0f });
-        trackR->SetRenderLayer("[Layer]Items");
-        activeTracks.push_back({ trackR, trackLifeTime });
-
-        lastTrackPos = currentPos;
-    }
-
-
-    // fade and remove tracks
-    for (auto it = activeTracks.begin(); it != activeTracks.end(); )
-    {
-        it->second -= dt;
-        if (it->second > 0.0f)
-        {
-            float alpha = std::min(it->second, 1.0f);
-            it->first->SetColor({ 1.0f, 1.0f, 1.0f, alpha });
-            ++it;
-        }
-        else
-        {
-            it->first->Kill();
-            it = activeTracks.erase(it);
-        }
-    }
-
     // hp bar update
     if (hpBg != nullptr && hpFill != nullptr)
     {
@@ -256,7 +202,6 @@ void Player::Update(float dt, const EngineContext& engineContext)
             GetSpriteAnimator()->PlayClip("[Clip]TankR");
         }
     }
-
     // physics & movement logic
     oldPos = transform2D.GetPosition();
 
@@ -310,7 +255,72 @@ void Player::Update(float dt, const EngineContext& engineContext)
         transform2D.SetRotation(currentAngle);
     }
 
+
+    if (glm::distance(pos, lastTrackPos) > trackDistance)
+    {
+        ObjectManager& objManager = engineContext.stateManager->GetCurrentState()->GetObjectManager();
+
+        glm::vec2 forward = glm::vec2(-sin(currentAngle), cos(currentAngle));
+        glm::vec2 rightDir = glm::vec2(cos(currentAngle), sin(currentAngle));
+
+        glm::vec2 rearCenter = pos - forward * trackRearOffset;
+
+        float sideOffset = 15.0f;
+
+        glm::vec2 leftPos = rearCenter - rightDir * sideOffset;
+        glm::vec2 rightPos = rearCenter + rightDir * sideOffset;
+
+        // track left
+        GameObject* trackL = static_cast<GameObject*>(
+            objManager.AddObject(std::make_unique<GameObject>(), "[Object]Track")
+            );
+
+        trackL->SetMesh(engineContext, "[EngineMesh]default");
+        trackL->SetMaterial(engineContext, "[Material]Track");
+        trackL->GetTransform2D().SetPosition(leftPos);
+        trackL->GetTransform2D().SetRotation(currentAngle);
+        trackL->GetTransform2D().SetScale({ 9.0f, 7.0f });
+        trackL->SetRenderLayer("[Layer]Items");
+        activeTracks.push_back({ trackL, trackLifeTime });
+
+        // track right
+        GameObject* trackR = static_cast<GameObject*>(
+            objManager.AddObject(std::make_unique<GameObject>(), "[Object]Track")
+            );
+
+        trackR->SetMesh(engineContext, "[EngineMesh]default");
+        trackR->SetMaterial(engineContext, "[Material]Track");
+        trackR->GetTransform2D().SetPosition(rightPos);
+        trackR->GetTransform2D().SetRotation(currentAngle);
+        trackR->GetTransform2D().SetScale({ 9.0f, 7.0f });
+        trackR->SetRenderLayer("[Layer]Items");
+        activeTracks.push_back({ trackR, trackLifeTime });
+
+        lastTrackPos = pos;
+    }
+
+
+    // fade and remove tracks
+    for (auto it = activeTracks.begin(); it != activeTracks.end(); )
+    {
+        it->second -= dt;
+
+        if (it->second > 0.0f)
+        {
+            float alpha = it->second / trackLifeTime;
+            alpha = glm::clamp(alpha, 0.0f, 1.0f);
+
+            it->first->SetColor({ 1.0f, 1.0f, 1.0f, alpha });
+            ++it;
+        }
+        else
+        {
+            it->first->Kill();
+            it = activeTracks.erase(it);
+        }
+    }
     transform2D.SetPosition(pos);
+
 }
 
 void Player::SetControls(int up, int down, int left, int right)
