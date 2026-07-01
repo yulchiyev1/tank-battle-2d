@@ -7,6 +7,7 @@
 #include "GameOver.h" 
 #include "Portal.h"
 #include "MapLoader.h"
+#include "MainMenu.h"
 
 void Tutorial::Load(const EngineContext& engineContext)
 {
@@ -385,7 +386,19 @@ void Tutorial::LateInit(const EngineContext& engineContext)
 
 void Tutorial::Update(float dt, const EngineContext& engineContext)
 {
+   
     objectManager.UpdateAll(dt, engineContext);
+
+    // sound on/off
+    if (MainMenu::isMuted == true)
+    {
+        engineContext.soundManager->SetVolumeAll(0.0f);
+
+    }
+    else
+    {
+        engineContext.soundManager->SetVolumeAll(1.0f);
+    }
 
     //bush (경기장 outside)
     static float bushTimer = 0.0f;

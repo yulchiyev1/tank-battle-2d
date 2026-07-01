@@ -17,7 +17,7 @@ void MainMenu::Load(const EngineContext& engineContext)
     engineContext.renderManager->RegisterMaterial("[Material]MenuTankRed", "[EngineShader]default_texture", { {"u_Texture", "[Texture]MenuTankRed"} });
 
     //sound off
-    engineContext.renderManager->RegisterTexture("[Texture]SoundOff", "Textures/mainMenu/Sound_Off.png");
+    engineContext.renderManager->RegisterTexture("[Texture]BtnSoundOff", "Textures/mainMenu/Sound_Off.png");
     engineContext.renderManager->RegisterMaterial("[Material]BtnSoundOff", "[EngineShader]default_texture", { {"u_Texture", "[Texture]BtnSoundOff"} });
     //sound
     engineContext.renderManager->RegisterTexture("[Texture]BtnSound", "Textures/mainMenu/Sound.png");
@@ -25,9 +25,6 @@ void MainMenu::Load(const EngineContext& engineContext)
     //info
     engineContext.renderManager->RegisterTexture("[Texture]BtnInfo", "Textures/mainMenu/info.png");
     engineContext.renderManager->RegisterMaterial("[Material]BtnInfo", "[EngineShader]default_texture", { {"u_Texture", "[Texture]BtnInfo"} });
-    // maps
-    engineContext.renderManager->RegisterTexture("[Texture]BtnMaps", "Textures/mainMenu/maps.png");
-    engineContext.renderManager->RegisterMaterial("[Material]BtnMaps", "[EngineShader]default_texture", { {"u_Texture", "[Texture]BtnMaps"} });
     // exit
     engineContext.renderManager->RegisterTexture("[Texture]BtnExit", "Textures/mainMenu/exit.png");
     engineContext.renderManager->RegisterMaterial("[Material]BtnExit", "[EngineShader]default_texture", { {"u_Texture", "[Texture]BtnExit"} });
@@ -47,7 +44,7 @@ void MainMenu::Load(const EngineContext& engineContext)
 void MainMenu::Init(const EngineContext& engineContext)
 {
     //main manu bg sound
-    engineContext.soundManager->Play("[Sound]MainMenuSound", 0.4f, 0.0f);
+    engineContext.soundManager->Play("[Sound]MainMenuSound", 1.0f, 0.0f);
 
     // mouse curspr
     engineContext.windowManager->SetCursorVisible(false);
@@ -105,16 +102,6 @@ void MainMenu::Init(const EngineContext& engineContext)
     btnInfo->GetTransform2D().SetPosition(glm::vec2(-120.0f, -250.0f));
     btnInfo->SetRenderLayer("[Layer]UI");
 
-    // 5. Maps button
-    //btnMaps = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]BtnMaps"));
-    //btnMaps->SetMesh(engineContext, "[EngineMesh]default");
-    //btnMaps->SetMaterial(engineContext, "[Material]BtnMaps");
-    //btnMapsBaseScale = glm::vec2(140.0f * baseScale, 94.0f * baseScale);
-    //btnMaps->GetTransform2D().SetScale(btnMapsBaseScale);
-    //btnMaps->GetTransform2D().SetPosition(glm::vec2(250.0f, -250.0f));
-    //btnMaps->SetRenderLayer("[Layer]UI");
-
-
     // 6. Exit button
     btnExit = static_cast<GameObject*>(objectManager.AddObject(std::make_unique<GameObject>(), "[Object]BtnExit"));
     btnExit->SetMesh(engineContext, "[EngineMesh]default");
@@ -132,6 +119,7 @@ void MainMenu::Init(const EngineContext& engineContext)
     btnSound->GetTransform2D().SetScale(btnSoundBaseScale);
     btnSound->GetTransform2D().SetPosition(glm::vec2(-600.0f, -320.0f));
     btnSound->SetRenderLayer("[Layer]UI");
+    isMuted = false;
 
     // 8.Tanks
     float tankSize = 400.0f * baseScale;
@@ -372,7 +360,52 @@ void MainMenu::Update(float dt, const EngineContext& engineContext)
             btnClose->GetTransform2D().SetScale(btnCloseBaseScale);
         }
     }
+
+    // 7. sound /no sound
+    if (btnSound != nullptr)
+    {
+        float scrW = engineContext.windowManager->GetWidth();
+        float scrH = engineContext.windowManager->GetHeight();
+        float rawMouseX = static_cast<float>(engineContext.inputManager->GetMouseX());
+        float rawMouseY = static_cast<float>(engineContext.inputManager->GetMouseY());
+        float mouseX = rawMouseX - (scrW / 2.0f);
+        float mouseY = (scrH / 2.0f) - rawMouseY;
+        glm::vec2 btnPos = btnSound->GetTransform2D().GetPosition();
+        float halfW = btnSoundBaseScale.x / 2.0f;
+        float halfH = btnSoundBaseScale.y / 2.0f;
+        bool isHovering = (mouseX >= btnPos.x - halfW && mouseX <= btnPos.x + halfW &&
+            mouseY >= btnPos.y - halfH && mouseY <= btnPos.y + halfH);
+
+        if (isHovering)
+        {
+            btnSound->GetTransform2D().SetScale(btnSoundBaseScale * 1.25f);
+            if (engineContext.inputManager->IsMouseButtonPressed(0))
+            {    
+                if (!isMuted) 
+                {
+                    isMuted = true;
+                    btnSound->SetMaterial(engineContext, "[Material]BtnSoundOff");
+                    engineContext.soundManager->SetVolumeAll(0.0f);
+               
+                }
+                else
+                {
+                    isMuted = false;
+                    btnSound->SetMaterial(engineContext, "[Material]BtnSound");
+                    engineContext.soundManager->SetVolumeAll(1.0f);
+                }
+                
+            }
+        }
+        else
+        {
+            btnSound->GetTransform2D().SetScale(btnSoundBaseScale);
+        }
+    }
+
 }
+
+    
 
 void MainMenu::Draw(const EngineContext& engineContext)
 {

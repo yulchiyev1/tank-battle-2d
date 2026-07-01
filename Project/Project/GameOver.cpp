@@ -124,6 +124,17 @@ void GameOver::Update(float dt, const EngineContext& engineContext)
 {
     objectManager.UpdateAll(dt, engineContext);
 
+    // sound on/off
+    if (MainMenu::isMuted == true)
+    {
+        engineContext.soundManager->SetVolumeAll(0.0f);
+
+    }
+    else
+    {
+        engineContext.soundManager->SetVolumeAll(1.0f);
+    }
+
     // 1. mouse cursor 
     float scrW = engineContext.windowManager->GetWidth();
     float scrH = engineContext.windowManager->GetHeight();

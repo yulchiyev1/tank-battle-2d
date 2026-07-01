@@ -14,6 +14,10 @@ public:
     virtual void PostProcessing(const EngineContext& engineContext) override;
     virtual void Free(const EngineContext& engineContext) override;
     virtual void Unload(const EngineContext& engineContext) override;
+
+    // sound on/of
+    static inline bool isMuted = false;
+
 private:
     //cursor
     GameObject* cursor = nullptr;
@@ -56,5 +60,4 @@ private:
     //Info popup
     GameObject* InfoPopUp = nullptr;
     float infoStatus = 0.0f;
-
 };
