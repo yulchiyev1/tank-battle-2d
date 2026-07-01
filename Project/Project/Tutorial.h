@@ -34,8 +34,8 @@ private:
 
     void WallBlock(float x, float y, float size, const EngineContext& engineContext, bool isBorder = false);
 
-    float itemSpawnTimer = 12.0f;
-    float roundTimer = 120.0f; // 120 sekundlik raund
+    float itemSpawnTimer = 8.0f;
+    float roundTimer = 120.0f; 
 
     // safe sport for items and wall blocks
     std::vector<glm::vec2> wallPositions;

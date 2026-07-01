@@ -35,10 +35,6 @@ private:
     GameObject* btnInfo = nullptr;
     glm::vec2 btnInfoBaseScale;
 
-    // maps btn
-    GameObject* btnMaps = nullptr;
-    glm::vec2 btnMapsBaseScale;
-
     // exit btn
     GameObject* btnExit = nullptr;
     glm::vec2 btnExitBaseScale;

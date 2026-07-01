@@ -23,6 +23,9 @@ void Tutorial::Load(const EngineContext& engineContext)
     engineContext.soundManager->LoadSound("[Sound]ItemEffect", "Sounds/item_effect.mp3", false);
     RenderManager* rm = engineContext.renderManager;
     //texture & material load
+    rm->RegisterTexture("[Texture]GemWall", "Textures/wall/gem_wall.png");
+    rm->RegisterMaterial("[Material]GemWall", "[EngineShader]default_texture", { {"u_Texture", "[Texture]GemWall"} });
+
     rm->RegisterTexture("[Texture]Track", "Textures/Tanks/Tire_Track_02.png"); 
     rm->RegisterMaterial("[Material]Track", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Track"} });
 
@@ -253,62 +256,78 @@ void Tutorial::Init(const EngineContext& engineContext)
     std::uniform_real_distribution<float> randY(-250.0f, 250.0f);
 
     // No map -> random map
-    if (!isMapLoaded)
-    {
-        int wallsSpawned = 0;
-        wallPositions.clear();
+    //if (!isMapLoaded)
+    //{
+    //    int wallsSpawned = 0;
+    //    wallPositions.clear();
 
-        int maxAttempts = 1000;
-        int attempts = 0;
+    //    int maxAttempts = 1000;
+    //    int attempts = 0;
 
-        while (wallsSpawned < 8 && attempts < maxAttempts)
-        {
-            attempts++;
-            glm::vec2 testPos(randX(gen), randY(gen));
+    //    while (wallsSpawned < 8 && attempts < maxAttempts)
+    //    {
+    //        attempts++;
+    //        glm::vec2 testPos(randX(gen), randY(gen));
 
-            if (IsSafePosition(testPos, 60.0f))
-            {
-                WallBlock(testPos.x, testPos.y, wall_len, engineContext, false);
-                wallPositions.push_back(testPos);
-                wallsSpawned++;
-            }
-        }
-    }
+    //        if (IsSafePosition(testPos, 60.0f))
+    //        {
+    //            WallBlock(testPos.x, testPos.y, wall_len, engineContext, false);
+    //            wallPositions.push_back(testPos);
+    //            wallsSpawned++;
+    //        }
+    //    }
+    //}
 
     // PORTAL 만들기 and 서로 연결하기
     glm::vec2 posA, posB;
     bool foundA = false;
     bool foundB = false;
 
-    // 1-REJIM: Agar .txt xarita yuklangan va ochiq joylar bo'lsa
+    // map loaded and have free space
     if (isMapLoaded && !MapLoader::freeSpaces.empty())
     {
-        std::uniform_int_distribution<int> dist(0, MapLoader::freeSpaces.size() - 1);
-
         // Portal A uchun
-        int idxA = dist(gen);
-        posA = MapLoader::freeSpaces[idxA];
-        MapLoader::freeSpaces.erase(MapLoader::freeSpaces.begin() + idxA);
-        foundA = true;
-
-        // Portal B uchun
         for (int i = 0; i < 50; ++i)
         {
             if (MapLoader::freeSpaces.empty()) break;
 
-            std::uniform_int_distribution<int> distB(0, MapLoader::freeSpaces.size() - 1);
-            int idxB = distB(gen);
-            glm::vec2 testPos = MapLoader::freeSpaces[idxB];
+            std::uniform_int_distribution<int> dist(0, MapLoader::freeSpaces.size() - 1);
+            int idxA = dist(gen);
+            glm::vec2 testPos = MapLoader::freeSpaces[idxA];
 
-            if (glm::distance(posA, testPos) > 500.0f)
+            // Xavfsizlikni tekshirish
+            if (IsSafePosition(testPos, 200.0f))
             {
-                posB = testPos;
-                MapLoader::freeSpaces.erase(MapLoader::freeSpaces.begin() + idxB);
-                foundB = true;
+                posA = testPos;
+                MapLoader::freeSpaces.erase(MapLoader::freeSpaces.begin() + idxA);
+                foundA = true;
                 break;
             }
         }
 
+        // Portal B uchun
+        if (foundA)
+        {
+            for (int i = 0; i < 50; ++i)
+            {
+                if (MapLoader::freeSpaces.empty()) break;
+
+                std::uniform_int_distribution<int> distB(0, MapLoader::freeSpaces.size() - 1);
+                int idxB = distB(gen);
+                glm::vec2 testPos = MapLoader::freeSpaces[idxB];
+
+                // Ham xavfsizlik, ham masofani tekshirish
+                if (IsSafePosition(testPos, 200.0f) && glm::distance(posA, testPos) > 500.0f)
+                {
+                    posB = testPos;
+                    MapLoader::freeSpaces.erase(MapLoader::freeSpaces.begin() + idxB);
+                    foundB = true;
+                    break;
+                }
+            }
+        }
+
+        // Agar qat'iy shartlar bilan topilmasa, borini qo'yish
         if (!foundB && !MapLoader::freeSpaces.empty())
         {
             posB = MapLoader::freeSpaces[0];
@@ -316,34 +335,34 @@ void Tutorial::Init(const EngineContext& engineContext)
             foundB = true;
         }
     }
-    // 2-REJIM: Xarita yo'q bo'lsa, eski usulda topamiz
-    else
-    {
-        for (int i = 0; i < 50; ++i)
-        {
-            glm::vec2 testPos(randX(gen), randY(gen));
-            if (IsSafePosition(testPos, 100.0f))
-            {
-                posA = testPos;
-                foundA = true;
-                break;
-            }
-        }
+    //// if no map
+    //else
+    //{
+    //    for (int i = 0; i < 50; ++i)
+    //    {
+    //        glm::vec2 testPos(randX(gen), randY(gen));
+    //        if (IsSafePosition(testPos, 100.0f))
+    //        {
+    //            posA = testPos;
+    //            foundA = true;
+    //            break;
+    //        }
+    //    }
 
-        if (foundA)
-        {
-            for (int i = 0; i < 50; ++i)
-            {
-                glm::vec2 testPos(randX(gen), randY(gen));
-                if (IsSafePosition(testPos, 100.0f) && glm::distance(posA, testPos) > 500.0f)
-                {
-                    posB = testPos;
-                    foundB = true;
-                    break;
-                }
-            }
-        }
-    }
+    //    if (foundA)
+    //    {
+    //        for (int i = 0; i < 50; ++i)
+    //        {
+    //            glm::vec2 testPos(randX(gen), randY(gen));
+    //            if (IsSafePosition(testPos, 100.0f) && glm::distance(posA, testPos) > 500.0f)
+    //            {
+    //                posB = testPos;
+    //                foundB = true;
+    //                break;
+    //            }
+    //        }
+    //    }
+    //}
 
     // after found safe spots, addObject
     if (foundA && foundB)
@@ -362,10 +381,10 @@ void Tutorial::Init(const EngineContext& engineContext)
     }
 
     // Test Item (Birinchi item doim markazda (0,0) paydo bo'ladi!)
-    Item* testItem = new Item();
-    testItem->Init(engineContext);
-    testItem->GetTransform2D().SetPosition(glm::vec2(0.0f, 0.0f));
-    objectManager.AddObject(std::unique_ptr<Object>(testItem), "[Object]Item");
+    //Item* testItem = new Item();
+    //testItem->Init(engineContext);
+    //testItem->GetTransform2D().SetPosition(glm::vec2(0.0f, 0.0f));
+    //objectManager.AddObject(std::unique_ptr<Object>(testItem), "[Object]Item");
 
     // timer added
     if (timerTextObj == nullptr) {
@@ -507,10 +526,8 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
         glm::vec2 spawnPos;
         bool foundSafePos = false;
 
-        // IKKI REJIMLI TEKSHIRUV
         if (!MapLoader::freeSpaces.empty())
         {
-            // Xarita o'qilgan bo'lsa, zamonaviy generator orqali haqiqiy random qilamiz
             static std::random_device rd;
             static std::mt19937 gen(rd());
             std::uniform_int_distribution<int> dist(0, MapLoader::freeSpaces.size() - 1);
@@ -518,28 +535,8 @@ void Tutorial::Update(float dt, const EngineContext& engineContext)
             int idx = dist(gen);
             spawnPos = MapLoader::freeSpaces[idx];
 
-            // Item ustma-ust tushmasligi uchun ro'yxatdan o'chiramiz
             MapLoader::freeSpaces.erase(MapLoader::freeSpaces.begin() + idx);
             foundSafePos = true;
-        }
-        else
-        {
-            // Eski random rejim (agar xarita bo'lmasa)
-            static std::random_device rd;
-            static std::mt19937 gen(rd());
-            std::uniform_real_distribution<float> xDist(-500.0f, 500.0f);
-            std::uniform_real_distribution<float> yDist(-280.0f, 280.0f);
-
-            for (int i = 0; i < 10; ++i)
-            {
-                spawnPos = glm::vec2(xDist(gen), yDist(gen));
-
-                if (IsSafePosition(spawnPos, 90.0f))
-                {
-                    foundSafePos = true;
-                    break;
-                }
-            }
         }
 
         if (foundSafePos)

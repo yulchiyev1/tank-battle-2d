@@ -53,7 +53,7 @@ bool MapLoader::Load(const std::string& filename, const EngineContext& context)
             {
                 GameObject* block = static_cast<GameObject*>(objManager.AddObject(std::make_unique<GameObject>(), "[Object]Wall"));
                 block->SetMesh(context, "[EngineMesh]default");
-                block->SetMaterial(context, "[Material]StoneWall");
+                block->SetMaterial(context, "[Material]GemWall");
                 block->GetTransform2D().SetScale({ wallScale, wallScale });
                 block->SetRenderLayer("[Layer]Items");
                 block->GetTransform2D().SetPosition(pos);
