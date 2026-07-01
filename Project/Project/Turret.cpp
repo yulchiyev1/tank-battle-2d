@@ -41,7 +41,7 @@ void Turret::Init(const EngineContext& engineContext)
         // Joylashuv (Chap tomonda)
         ammoBg->GetTransform2D().SetPosition(glm::vec2(-590.f, -330.f));
         // Yozuv rasmning qoq markazida turishi uchun biroz offset (siljish) beramiz
-        ammoText->GetTransform2D().SetPosition(glm::vec2(-595.f, -300.f));
+        ammoText->GetTransform2D().SetPosition(glm::vec2(-595.f, -306.f));
     }
     else if (parentPlayer->GetTag() == "[Object]Player2")
     {
@@ -54,7 +54,7 @@ void Turret::Init(const EngineContext& engineContext)
 
         // Joylashuv (O'ng tomonda)
         ammoBg->GetTransform2D().SetPosition(glm::vec2(590.f, -330.f));
-        ammoText->GetTransform2D().SetPosition(glm::vec2(586.f, -300.f));
+        ammoText->GetTransform2D().SetPosition(glm::vec2(586.f, -306.f));
     }
 
     SetRenderLayer("[Layer]Turret");

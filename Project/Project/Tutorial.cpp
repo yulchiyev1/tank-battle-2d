@@ -152,7 +152,7 @@ void Tutorial::Init(const EngineContext& engineContext)
     TimerBg->GetTransform2D().SetScale(glm::vec2(193.f, 112.f));
     TimerBg->SetRenderLayer("[Layer]UI");
     TimerBg->SetIgnoreCamera(true);
-    TimerBg->GetTransform2D().SetPosition(glm::vec2(0.f, -330.f));
+    TimerBg->GetTransform2D().SetPosition(glm::vec2(0.f, -325.f));
     engineContext.stateManager->GetCurrentState()->GetObjectManager().AddObject(std::unique_ptr<Object>(TimerBg));
 
     // MOUSE cursor

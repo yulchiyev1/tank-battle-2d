@@ -56,8 +56,8 @@ int main(int argc, char* argv[])
     jinEngine.GetEngineContext().renderManager->RegisterRenderLayer("[Layer]Cursor", 14);
 
     
-    jinEngine.GetEngineContext().renderManager->RegisterFont("[Font]default", "Fonts/NotoSans-VariableFont_wdth,wght.ttf", 50);
-    jinEngine.GetEngineContext().renderManager->RegisterFont("[Font]defaultkr", "Fonts/NanumPenScript-Regular.ttf", 50);
+    jinEngine.GetEngineContext().renderManager->RegisterFont("[Font]default", "Fonts/JungleAdventurer.ttf", 50);
+    jinEngine.GetEngineContext().renderManager->RegisterFont("[Font]defaultkr", "Fonts/JungleAdventurer.ttf", 40);
 
     jinEngine.GetEngineContext().renderManager->RegisterTexture("[Texture]Cursor", "Textures/cursor.png");
     jinEngine.GetEngineContext().renderManager->RegisterMaterial("[Material]Cursor", "[EngineShader]default_texture", { {"u_Texture","[Texture]Cursor"} });
