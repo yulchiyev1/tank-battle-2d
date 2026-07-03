@@ -84,6 +84,11 @@ private:
 
 enum InputKey
 {
+    KEY_NUMPAD_1 = 321,
+    KEY_NUMPAD_2 = 322,
+    KEY_NUMPAD_3 = 323,
+    KEY_NUMPAD_ENTER = 335,
+
     KEY_UNKNOWN = -1,
     KEY_SPACE = 32,
     KEY_APOSTROPHE = 39,
