@@ -23,6 +23,13 @@ void Tutorial::Load(const EngineContext& engineContext)
     engineContext.soundManager->LoadSound("[Sound]ItemEffect", "Sounds/item_effect.mp3", false);
     RenderManager* rm = engineContext.renderManager;
     //texture & material load
+
+    rm->RegisterTexture("[Texture]Explosion", "Textures/Projectile/Explosion.png");
+    rm->RegisterSpriteSheet("[SpriteSheet]Explosion", "[Texture]Explosion", 64, 64);
+
+    rm->RegisterTexture("[Texture]HitAnim", "Textures/Projectile/hit_anim.png");
+    rm->RegisterSpriteSheet("[SpriteSheet]HitAnim", "[Texture]HitAnim", 64, 64);
+
     rm->RegisterTexture("[Texture]GemWall", "Textures/wall/gem_wall.png");
     rm->RegisterMaterial("[Material]GemWall", "[EngineShader]default_texture", { {"u_Texture", "[Texture]GemWall"} });
 
@@ -52,9 +59,6 @@ void Tutorial::Load(const EngineContext& engineContext)
 
     rm->RegisterTexture("[Texture]HpGreen", "Textures/HP_Bar/green.png");
     rm->RegisterMaterial("[Material]HpGreen", "[EngineShader]default_texture", { {"u_Texture", "[Texture]HpGreen"} });
-
-    rm->RegisterTexture("[Texture]HitAnim", "Textures/Projectile/hit_anim.png");
-    rm->RegisterSpriteSheet("[SpriteSheet]HitAnim", "[Texture]HitAnim", 64, 64);
 
     rm->RegisterTexture("[Texture]Portal", "Textures/portal.png");
     rm->RegisterSpriteSheet("[SpriteSheet]Portal", "[Texture]Portal", 32, 32);
@@ -101,7 +105,8 @@ void Tutorial::Load(const EngineContext& engineContext)
     rm->RegisterTexture("[Texture]Tank2", "Textures/Tanks/red/body_tracks_r.png");
     rm->RegisterMaterial("[Material]Tank2", "[EngineShader]default_texture", { {"u_Texture", "[Texture]Tank2"} });
 
-    rm->RegisterTexture("[Texture]StoneWall", "Textures/Wall/stone_wall.jpg");
+    rm->RegisterTexture("[Texture]StoneWall", "Textures/Wall/stone_wall.png");
+    //rm->RegisterTexture("[Texture]StoneWall", "Textures/Wall/stone_walll.jpg");
     rm->RegisterMaterial("[Material]StoneWall", "[EngineShader]default_texture", { {"u_Texture", "[Texture]StoneWall"} });
 
     rm->RegisterTexture("[Texture]Bullet", "Textures/Projectile/bullet2.png");

@@ -3,7 +3,7 @@
 #include "GameState.h"
 #include "Player.h"
 #include "Item.h"
-#include <cstdlib> // rand() ishlashi uchun qo'shildi
+#include <cstdlib> // rand()
 
 void Projectile::Init(const EngineContext& engineContext)
 {

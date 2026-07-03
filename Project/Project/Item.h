@@ -32,4 +32,7 @@ private:
 	float currentScaleOffset = 0.0f; 
 	float breathSpeed = 0.8f;   
 	bool isGrowing = true;
+	// somke effect
+	float smokeTimer = 0.0f;
+	bool isSmoking = false;
 };

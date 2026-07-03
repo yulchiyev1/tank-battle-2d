@@ -26,6 +26,10 @@ void Item::Init(const EngineContext& engineContext)
 
     // original scale (for breath effect)
     baseScale = transform2D.GetScale(); 
+
+    //auto crashed = engineContext.renderManager->GetSpriteSheetByTag("[SpriteSheet]Explosion");
+    //crashed->AddClip("[Clip]Smoke", { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 }, 0.11f);
+    //AttachAnimator(std::make_unique<SpriteAnimator>(crashed, 1.0f, false));
 }
 
 void Item::LateInit(const EngineContext& engineContext)
@@ -77,9 +81,13 @@ void Item::OnCollision(Object* other, const EngineContext& engineContext)
     {
         if (!isUnlocked)
         {
-            engineContext.soundManager->Play("[Sound]BoxCrash", 1.0f, 0.0f); //sound
+            engineContext.soundManager->Play("[Sound]BoxCrash", 1.0f, 0.0f); 
             isUnlocked = true;
             other->Kill();
+
+            
+            //GetSpriteAnimator()->PlayClip("[Clip]Smoke");
+
 
             if (currentType == ItemType::HEALTH)
                 SetMaterial(engineContext, "[Material]ItemHealth");

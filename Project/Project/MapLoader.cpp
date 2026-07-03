@@ -58,7 +58,8 @@ bool MapLoader::Load(const std::string& filename, const EngineContext& context)
                 block->SetRenderLayer("[Layer]Items");
                 block->GetTransform2D().SetPosition(pos);
 
-                block->SetCollider(std::make_unique<AABBCollider>(block, glm::vec2{ wallScale, wallScale }));
+               //block->SetCollider(std::make_unique<AABBCollider>(block, glm::vec2{ wallScale, wallScale }));
+                block->SetCollider(std::make_unique<CircleCollider>(block, 40.0f));
                 block->GetCollider()->SetUseTransformScale(false);
                 block->SetCollision(objManager, "[Object]Wall", { "[Object]Player1", "[Object]Player2", "[Object]Bullet" });
             }
