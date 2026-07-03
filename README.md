@@ -1,246 +1,43 @@
-[![Latest release](https://img.shields.io/github/v/release/Nero-TheThrill/JinEngine)](https://github.com/Nero-TheThrill/JinEngine/releases)
-[![Changelog](https://img.shields.io/badge/Changelog-keep%20a%20changelog-blue)](./CHANGELOG.md)
+# TANK BATTLE
+
+설명
+2분 제한 시간과 40발의 총알을 가지고, 맵에 등장하는 아이템(체력 회복, 추가 총알 5개, 총알 크기 확대, flash)을 활용해 3가지 렌덤 맵에서 대결하는 2인용 탱크 전투 게임입니다 
 
 
-# JinEngine
+### Development Plan
+| 마일스톤 | 주차 | 기간 | 목표 | 주요 작업 | 비고 |
+|----------|------|-------|-------|------------|------|
+| 개발 | 1주차 | 05-25 ~ 05-29 | 발사체 및 충돌 기초 | - 발사체(Projectile) 클래스 초기 설계 및 구조 잡기 <br>- AABB 및 원형 콜라이더 기반 기초 충돌(onCollision) 감지 로직 구현 | 기초 뼈대 |
+| 개발 | 2주차 | 06-01 ~ 06-05 | 전투 시스템 및 장애물 구현 | - 투렛(Turret) 회전 및 플레이어 체력(HP) 시스템 구축 <br>- 총알 발사 처리 및 플레이어 피격 대미지 구현 <br>- 경기장 내 8개의 돌벽 및 아이템 박스 프리팹 배치 | 전투 시스템 |
+| 개발 | 3주차 | 06-08 ~ 06-12 | 아이템 확장 및 반사 로직 | - 화면 경계 및 오브젝트 모서리 총알 입사/반사각(Reflection) 튕김 구현 <br>- 신규 아이템 2종(2.5배 거대 총알, 2배속 플래시) 및 콜라이더 판정 개선 <br>- 게임 오버 상태(State) 전환 로직 및 카메라 뷰포트 설정 | 맵 경계선 처리 |
+| 개발 | 4주차 | 06-15 ~ 06-19 | 포털 시스템 및 이펙트 | - 탱크 차체(Body) 회전 및 이동 최적화 <br>- 포털(Portal) 엔티티 추가 및 양방향 텔레포트 충돌 처리 구현 <br>- 포털 진출입 이펙트 연출 <br>- portal에서 나올 때 겹치는 오류 fixing | teleporting |
+| 개발 | 5주차 | 06-22 ~ 06-26 | UI/UX 및 환경 디자인 | - 메인 메뉴 구현, 커스텀 마우스 커서 및 카운트다운 타이머 전면 개편 <br>- text 대신 직관적인 체력 바(Health Bar) 및 탄약(Ammo) UI 시스템 최적화 <br>- 맵 환경(경기장 밖, 트랙 타일) 및 아이템 브레스(Breath) 애니메이션 적용 | 시각적 완성도 |
+| 폴리싱 | 6주차 | 06-29 ~ 07-03 | 맵 시스템 및 최적화 | - 맵 렌돔으로 불러오기 - 3가지 구조의 랜덤 맵(MapLoader) 시스템 구축 및 적용 <br>- 포털 및 아이템 스폰 시 위치 겹침 방지(IsSafePosition) 수정 <br>- 사운드 매니저(파괴음, 전체 음소거 제어) 통합 및 신규 폰트 디자인 적용 | 최종 마무리 |
 
-A lightweight C++ game engine (sample framework) that bundles 2D rendering, input, sound, text, collision, and state management in one place. Built on OpenGL 4.6, it supports batched rendering and instancing, and handles text via runtime glyph baking (FreeType). It provides a dependency/tag–based resource system so you can pull in only the modules your project needs.
+### 게임의 특이한 요소
+- **벽 반사 시스템 (당구 방식):** 발사된 총알이 맵의 벽에 부딪히면 입사각/반사각 물리 로직에 따라 튕겨 나감.
+- **포털 텔레포트 기능:** 맵에 배치된 포털에 들어가면 지정된 다른 포털 위치로 즉시 순간이동함.
+- **랜덤 환경 요소:** 게임 시작 시 3가지 맵 구조 중 1개가 무작위로 로딩되며, 아이템 박스 역시 랜덤한 위치에 스폰됨.
+- **자원 제한 시스템:** 무제한 사격이 불가하며, 제한된 탄약(Ammo)과 체력(HP)을 확인하고 관리해야 함.
 
-<img width="605" height="410" alt="sn" src="https://github.com/user-attachments/assets/e3324563-7210-484a-85d3-f3ff0d2b710e" />
+### 핵심 플레이 루프
+- **독립적인 조작:** 키보드로 탱크 차체를 이동시키고, turret도 따로 회전시켜 사격함.
+- **버프 획득:** 맵에 나타나는 아이템 박스를 부수고 4가지 버프(HP 10 회복, 탄약 5 보충, 총알 크기 2.5배 증가, 이동 속도 2배 증가) 중 하나를 획득함.
+- **지형지물 활용:** 벽의 반사각을 이용해 장애물 뒤의 적을 맞추거나, 포털을 타고 이동해 상대방의 공격을 회피함.
+- **승리 조건:** 한 대의 PC에서 두 명의 플레이어가 상대방을 공격하며, 체력(HP)을 먼저 0으로 만드는 쪽이 승리함 (1vs1 로컬 멀티플레이).
 
----
+### 타겟 유저층
+- 하나의 PC에서 두 명이 함께 키보드와 마우스를 나누어 플레이할 수 있는 1vs1 로컬 대전(PvP) 게임을 찾는 유저.
+- 단순한 사격 슈팅이 아닌, 당구 게임처럼 벽의 반사각도를 계산하고 아이템을 선점하는 게임을 선호하는 게이머.
 
-## Key Features
+1주차 영상 https://drive.google.com/file/d/12yPDMaBC5PucaJdBxEvZA1Ys1ftWZurk/view?usp=sharing
 
-* **State transition framework:** Separates the lifecycle into Load/Init/Update/Draw/Free/Unload per `GameState`.
-* **Camera & frustum culling:** `Camera2D` coordinate system + automatic exclusion of off–screen objects.
-* **Batching & instancing:** Groups identical Mesh/Material pairs; instancing based on the `i_Model` attribute.
-* **Runtime text engine:** Bakes glyphs on demand via FreeType; supports alignment and multi-line text (font size range 4–64).
-* **Input utilities:** Compare current/previous key/mouse states, convert between screen/world coordinates, read scroll delta.
-* **Collision & broad phase:** AABB/Circle colliders + spatial hash grid to minimize pair comparisons.
-* **Collision groups/masks:** Tag-based collision filtering for selective checks.
-* **Sound:** miniaudio-based play/pause/stop, instance ID management, tag-level controls.
-* **Async resource loading:** Background loading with progress tracking via `LoadingState`.
-* **Compute shader support:** Dispatch compute shaders for post-processing (e.g., water ripple, glitch).
-* **Window utilities:** Fullscreen toggle, resize restriction, cursor visibility control.
-* **Debug draw:** Line-drawing API (with camera/projection) to visualize colliders, etc.
-* **Built-in logger:** Unified `Log`, `Warn`, `Error` system with configurable log levels.
-* **Resource registry:** Tag-based register/lookup/release for Shader/Texture/Mesh/Material/Font/SpriteSheet.
-* **Window interaction handling:** Update loop is automatically paused while dragging or resizing the window to prevent unstable behavior.
-* **Stable timing:** Delta time is internally clamped to avoid spikes, and input states are reset when large frame delays occur.
-* **Dynamic text mesh update:** TextObjects automatically rebuild their mesh when the font atlas changes (runtime glyph baking).
-* **Collision system:** Double-dispatch based collision handling with spatial hash grid broad phase and large-object optimization.
-* **Offscreen rendering:** Built-in framebuffer rendering pipeline with post-processing support.
-* **Deterministic object lifecycle:** Objects added during `Init()` are guaranteed to be initialized within the same frame (Init → LateInit pipeline).
-* **Advanced sound system:** Supports instance ID reuse and completion callbacks for sound playback.
-* **Frame-consistent input system:** Uses staged input buffering to ensure correct key/mouse transitions per frame.
-* **Safe resource release:** Resources cannot be unregistered while still in use (reference-count protected).
----
+2주차 영상 https://drive.google.com/file/d/15xt_NJKWnIhjpuUkuS1DVilq2dZX08XT/view?usp=sharing
 
-## Engine Architecture Overview
+3주차 영상 https://drive.google.com/file/d/1HYeYgk3PZPzcZXrWea5VUOQLAJ3KF1tW/view?usp=sharing
 
-```
-JinEngine
- ├─ WindowManager : GLFW/GLAD init, event callbacks, swap/clear
- ├─ InputManager  : Key/mouse state, scroll, world-coordinate conversion
- ├─ SoundManager  : miniaudio system, sound loading/playback/control
- ├─ RenderManager : Resource registry, batching/instancing, debug draw
- │   ├─ RenderLayerManager : Manages 0–16 layer tags
- │   └─ FrustumCuller      : Camera-based visibility filtering
- ├─ StateManager  : Switch/update/draw for GameState
- └─ (GameState)   : Owns ObjectManager + CameraManager
-      └─ ObjectManager : Object creation/lifetime/collision/draw submit
-          ├─ Object    : Transform2D, Mesh/Material/Animator/Collider
-          ├─ TextObject: Font + text mesh generation
-          └─ Collider  : Circle/AABB + SpatialHashGrid
-```
-→ Rendering is batched, layer-sorted, and optionally instanced before submission.
+4주차 영상 https://drive.google.com/file/d/1j79RG3BA6-rRP3mWGLDn9yKJJlcqk-0y/view?usp=sharing
 
----
+5주차 영상 https://drive.google.com/file/d/1rczyERGMYvMPHoJUTWAkJauSHmB7nJCr/view?usp=sharing
 
-## Requirements
-
-* C++17 or later
-* OpenGL 4.6 driver
-* Platform libraries: **GLFW**, **GLAD**, **GLM**, **stb_image**, **FreeType**, **miniaudio**
-
----
-
-## Usage by System
-
-### 1) Rendering / Resources
-
-* **Tag register/lookup:** Use `Register*` / `Get*ByTag`. Re-registering the same tag warns and is ignored.
-
-* **Material uniforms/textures:**
-
-  ```cpp
-  Material* m = engineContext.renderManager->GetMaterialByTag("mat.brick");
-  m->SetUniform("u_Color", glm::vec4(1,1,1,1));
-  m->SetTexture("u_Texture", engineContext.renderManager->GetTextureByTag("brick"));
-  ```
-
-* **Instancing:** Your shader must expose the `i_Model` attribute. After enabling, same Mesh/Material pairs are drawn in one call.
-
-  ```cpp
-  Material* m = engineContext.renderManager->GetMaterialByTag("mat.instanced");
-  Mesh* mesh = engineContext.renderManager->GetMeshByTag("[EngineMesh]default");
-  m->EnableInstancing(true, mesh);
-  ```
-
-### 2) Text / Fonts
-
-```cpp
-engineContext.renderManager->RegisterFont("NotoSans16", "fonts/NotoSans-Regular.ttf", 16);
-Font* font = engineContext.renderManager->GetFontByTag("NotoSans16");
-auto text = std::make_unique<TextObject>(font, "Hello, World!", TextAlignH::Center, TextAlignV::Middle);
-text->SetColor({0.4,0.7,1.0,0.7});
-text->SetIgnoreCamera(true, engineContext.stateManager->GetCurrentState()->GetActiveCamera());
-objects.AddObject(std::move(text), "title");
-```
-
-* Text bakes only the needed glyphs into the atlas at runtime, and supports alignment/multi-line.
-* Text meshes are automatically rebuilt when new glyphs are baked into the atlas at runtime.
-
-### 3) Animation (Sprite Sheets)
-
-```cpp
-engineContext.renderManager->RegisterTexture("hero", "Textures/hero.jpg");
-engineContext.renderManager->RegisterSpriteSheet("heroSpriteSheet", "hero", 32, 32);
-SpriteSheet* sheet = engineContext.renderManager->GetSpriteSheetByTag("heroSpriteSheet");
-sheet->AddClip("sidewalk",  { 0,1,2,3,4,5,6,7,8 }, 0.08f, true);
-sheet->AddClip("frontwalk", { 86,87,88,89,90,91 }, 0.08f, true);
-sheet->AddClip("idle",      { 9 },                 0.08f, false);
-AttachAnimator(sheet, 0.08f);
-GetSpriteAnimator()->PlayClip("idle");
-```
-
-### 4) Input
-
-```cpp
-if (engineContext.inputManager->IsKeyPressed(GLFW_KEY_SPACE)) { /* ... */ }
-```
-
-### 5) Camera / Layers
-
-```cpp
-engineContext.renderManager->RegisterRenderLayer("UI", 2);
-
-Camera2D* cam = cameraManager.GetCamera("main"); // default camera
-cam->SetZoom(1.25f);
-cam->SetPosition({100,50});
-
-obj->SetRenderLayer("UI");
-```
-
-### 6) Collision
-
-```cpp
-obj->SetCollider(std::make_unique<AABBCollider>(obj, glm::vec2(1.f, 1.f)));
-obj->GetCollider()->SetUseTransformScale(true);
-obj->SetCollision(engineContext.stateManager->GetCurrentState()->GetObjectManager(),
-                  "button", { "player" });
-```
-
-* Supports circle/box colliders, point tests, collision groups/masks,
-  double-dispatch collision handling, and spatial hash grid broad phase optimization.
-
-### 7) Sound
-
-```cpp
-engineContext.soundManager->LoadSound("bgm", "audio/bgm.ogg", /*loop=*/true);
-auto id = engineContext.soundManager->Play("bgm", 0.7f);
-engineContext.soundManager->ControlByID(SoundManager::SoundControlType::Pause, id);
-engineContext.soundManager->ControlByTag(SoundManager::SoundControlType::Resume, "bgm");
-```
-
-### 8) Async Loading
-
-```cpp
-// In LoadingState
-loading->QueueTexture(engineContext, "tex.bg", "Textures/bg.png");
-loading->QueueFont(engineContext, "font.ui", "Fonts/NotoSans.ttf", 32);
-loading->QueueSound("bgm", "audio/bgm.ogg", true);
-```
-
-### 9) Compute Shaders
-
-```cpp
-ComputeMaterial* mat = engineContext.renderManager->GetMaterialByTag("waterDrop");
-engineContext.renderManager->DispatchCompute(mat); // assumes 8x8 workgroup size
-```
-
-### 10) Debug Draw
-
-```cpp
-engineContext.renderManager->DrawDebugLine({-50,-50}, {50,50}, GetActiveCamera(), {1,0,0,1}, 2.0f);
-// StateManager flushes every frame; shown when the engine allows debug draws
-```
-
----
-
-## Performance Tips
-
-* Maximize identical **Mesh/Material** combinations to reduce draw calls.
-* Use **instancing** whenever possible.
-* For large maps, **spatial hashing** and **frustum culling** provide significant gains in collision/visibility.
-* Unload unused textures/shaders/materials via `Unregister*` to free GPU memory.
-* Offscreen rendering is used internally, so resolution changes may trigger framebuffer reallocation.
-
----
-
-## Troubleshooting
-
-* Seeing a black/yellow checker texture? Your material doesn’t have a texture bound.
-* Garbled fonts? Check the TTF path/pixel size range (4–64) and logs to ensure the atlas expands dynamically.
-* State transition stops BGM? Engine automatically stops all sounds when switching states.
-* Sudden input loss after window drag? → Engine resets input to prevent invalid states (expected behavior).
-
----
-
-## Third-Party
-
-* **GLFW** — window/input
-* **GLAD** — OpenGL loader
-* **OpenGL 4.6** — rendering
-* **GLM** — math
-* **stb_image** — image loader
-* **FreeType** — fonts/glyphs
-* **miniaudio** — audio
-
-Please comply with each library’s license.
-
----
-
-## License
-
-This project is licensed under the **MIT License**.  
-You are free to use, modify, and distribute this engine in both personal and commercial projects, as long as you include the original license notice.
-
----
-
-## Building as a Library
-
-If you want to build **JinEngine** as a separate library and link it to your project:
-
-1. **Build the Engine**  
-   - Use Visual Studio to compile the engine as a static library (`.lib`) with the **EngineOnly** configuration.  
-   - The build will produce:
-     - `JinEngine.lib`
-     - `Headers/` folder (contains engine-facing headers)
-     - `Thirdparty/` folder (external dependencies: GLFW, GLM, stb_image, FreeType, miniaudio)
-
-
-2. **Setup in Your Project (Visual Studio example)**  
-   - Go to **Project Properties → C/C++ → General → Additional Include Directories**
-     - Add `$(JinEngineRoot)/public`
-     - Add `$(JinEngineRoot)/thirdparty/include`
-   - Go to **Project Properties → Linker → General → Additional Library Directories**
-     - Add the path to your built `JinEngine.lib`
-   - Go to **Project Properties → Linker → Input → Additional Dependencies**
-     - Add `JinEngine.lib`
-
-4. **Notes**  
-   - When distributing, provide the license notices for all included third-party libraries.
-
----
+6주차 영상 https://drive.google.com/file/d/1DFRMGZYvf3GMyLtD3KFVXd-yoPwtnqtZ/view?usp=sharing
